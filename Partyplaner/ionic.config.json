@@ -1,0 +1,7 @@
+{
+  "name": "Partyplaner",
+  "integrations": {
+    "cordova": {}
+  },
+  "type": "angular"
+}
