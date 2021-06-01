@@ -1,4 +1,6 @@
 import { Component } from '@angular/core';
+import { AngularFireAuth } from '@angular/fire/auth';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-home',
@@ -7,6 +9,16 @@ import { Component } from '@angular/core';
 })
 export class HomePage {
 
-  constructor() {}
+ 
+
+  constructor(public afAuth: AngularFireAuth) {}
+
+  signOut(){
+    console.log("jnjdnfs"+this.afAuth.currentUser);
+    //this.afAuth.signOut().then(() => {
+      //location.reload();
+    //});
+
+  }
 
 }
