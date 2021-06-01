@@ -14,10 +14,10 @@ export class HomePage {
   constructor(public afAuth: AngularFireAuth) {}
 
   signOut(){
-    console.log("jnjdnfs"+this.afAuth.currentUser);
-    //this.afAuth.signOut().then(() => {
-      //location.reload();
-    //});
+    this.afAuth.signOut().then(() => {
+      location.reload();
+    });
+
 
   }
 

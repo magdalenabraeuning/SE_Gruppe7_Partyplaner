@@ -14,6 +14,8 @@
   </ion-header>
 
   <firebase-ui></firebase-ui>
-
+  <div *ngIf="afAuth.user | async as user">
+    <h1>Hello {{ user.displayName }}!</h1>
+  </div>
 <ion-button (click)="signOut()">Sign Out</ion-button>
 </ion-content>
