@@ -17,6 +17,12 @@
   <div *ngIf="afAuth.user | async as user">
     <h1>Hello {{ user.displayName }}!</h1>
   
+
+    <ion-button (click)="addParty()">Party erstellen</ion-button>
+    <!--Video: 2:12-->
+
+
+
 <ion-button (click)="signOut()">Sign Out</ion-button>
 </div>
 </ion-content>
