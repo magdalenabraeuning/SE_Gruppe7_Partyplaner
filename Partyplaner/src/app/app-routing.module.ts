@@ -18,6 +18,22 @@ const routes: Routes = [
     path: 'privacy',
     loadChildren: () => import('./privacy/privacy.module').then( m => m.PrivacyPageModule)
   },
+  {
+    path: 'cocktail',
+    loadChildren: () => import('./cocktail/cocktail.module').then( m => m.CocktailPageModule)
+  },
+  {
+    path: 'info',
+    loadChildren: () => import('./info/info.module').then( m => m.InfoPageModule)
+  },
+  {
+    path: 'listen',
+    loadChildren: () => import('./listen/listen.module').then( m => m.ListenPageModule)
+  },
+  {
+    path: 'partymodus',
+    loadChildren: () => import('./partymodus/partymodus.module').then( m => m.PartymodusPageModule)
+  },
 
 
 ];
