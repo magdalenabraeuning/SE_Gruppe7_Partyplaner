@@ -67,7 +67,7 @@ export class HomePage {
       res.forEach(task => {
         tmp.push({key: task.payload.doc.id, ...task.payload.doc.data});
       })
-      console.log(tmp[0]);
+      console.log("hier:" +tmp[0]);
       console.log(tmp[0]);
       console.log(tmp.length);
       this.tasks = tmp;
