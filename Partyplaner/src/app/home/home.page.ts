@@ -11,7 +11,7 @@ import { AlertController } from '@ionic/angular';
 })
 export class HomePage {
 
- 
+  tasks:any = [];
 
   constructor(
     public afAuth: AngularFireAuth,
@@ -27,8 +27,8 @@ export class HomePage {
 
 
   async addParty(){
-    let userID = (await this.afAuth.currentUser.then((user)=>{return user.uid;}));
-    console.log(userID);
+    //let userID = (await this.afAuth.currentUser.then((user)=>{return user.uid;}));
+    //console.log(userID);
     
     this.alertCtrl.create({
       message: "Party erstellen",
@@ -41,8 +41,7 @@ export class HomePage {
           text: 'Add', 
           handler:(res) => {
             console.log(res);
-            this.afFirestore.collection(userID).add({
-              //statt userID oben "Partys" -> alle Partys auf der Ebene darunter
+            this.afFirestore.collection(this.afFirestore.createId()).add({
               
               title: res.title,
               desc: res.desc,
@@ -59,6 +58,21 @@ export class HomePage {
     }).then(a => a.present());
   }
 
+  ionViewDidEnter(){}
+
+   fetch(){
+    this.afFirestore.collection('3').snapshotChanges().subscribe(res => {
+      console.log(res);
+      let tmp = [];
+      res.forEach(task => {
+        tmp.push({key: task.payload.doc.id, ...task.payload.doc.data});
+      })
+      console.log(tmp[0]);
+      console.log(tmp[0]);
+      console.log(tmp.length);
+      this.tasks = tmp;
+    })
+  }
 
 
 }
