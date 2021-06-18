@@ -28,11 +28,15 @@
     <ion-list *ngIf="tasks.length !=0">
       <ion-item *ngFor="let item of tasks">
         <ion-label>
-          <h3>{{item.key}}</h3>
-          <h3>{{item.title}}</h3>
-          <p>{{item.desc}}</p>
+          <h3>{{item.Name}}</h3>
+          <h3>{{item.Age}}</h3>
+          <p>{{item.Address}}</p>
+          <p>{{item.id}}</p>
         </ion-label>
-
+        <ion-button (click)="update(item.id, item.Age)">Update
+          <ion-icon color="{{item.Age ? 'success' : 'dark'}}" name="checkbox-outline"></ion-icon>
+        </ion-button>
+        <ion-button (click)="delete(item.id)">Löschen</ion-button>
       </ion-item>
     </ion-list>
 
