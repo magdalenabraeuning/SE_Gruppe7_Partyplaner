@@ -15,33 +15,84 @@ on:
     branches: [main]
 
 jobs:
-  test:
-    runs-on: ${{ matrix.os }} # runs a test on Ubuntu, Windows and macOS
+  build: 
+  # github runner eintragen 
+   rruns-on: ubuntu-latest
+    
+    steps:
+    
+# Code auschecken, erste Version kann man auch wiederverwenden
+      - uses: actions/checkout@v1
+      
+# Setup tooling & Enviroment
+      - name: Set Up JDK
+        uses: actions/setup-java@v1
+        
+# Properties um die Enviroment Variablen zu customizen
+        with: 
+          java-version: 1.8
+        
+# Pasta aus Website
+      - name: Setup Node.js
+          uses: actions/setup-node@v1
+          with:
+            node-version: 14.17.0
+      - name: Install Cordova
+        run: npm install -g cordova
+      - name: Install Ionic
+        run: npm install -g @ionic/cli
+      - name: Install app dependencies
+        run: npm install
+      - name: Add Android platform
+        run: ionic cordova platform add android@latest
+      - name: Build Android Dev APK
+        run: ionic cordova build android
+      - name: Build Android Release APK
+        run: ionic cordova build android --release --prod
+      - name: Generate the Android App Bundle
+        working-directory: ./platforms/android/
+        run: ./gradlew bundle
+      - name: Upload dev APK
+        uses: actions/upload-artifact@v1
+          with:
+            name: app-dev
+            path: platforms/android/app/build/outputs/apk/debug/app-debug.apk
+      
+      
+# Das was man normal in die Console zum Build eintippt? 
+      - name: Run Tests 
+        run: ./gradlew test
+      - name: Build Project
+        run: ./gradlew assemble
 
-    strategy:
-      matrix:
-        deno: ["v1.x", "canary"]
-        os: [macOS-latest, windows-latest, ubuntu-latest]
 
-    steps:
-      - name: Setup repo
-        uses: actions/checkout@v2
+  # test:
+  #   runs-on: ${{ matrix.os }} # runs a test on Ubuntu
 
-      - name: Setup Deno
-        # uses: denoland/setup-deno@v1
-        uses: denoland/setup-deno@4a4e59637fa62bd6c086a216c7e4c5b457ea9e79
-        with:
-          deno-version: ${{ matrix.deno }} # tests across multiple Deno versions
+  #   strategy:
+  #     matrix:
+  #       deno: ["v1.x", "canary"]
+  #       os: [ubuntu-latest]
 
-      # Uncomment this step to verify the use of 'deno fmt' on each commit.
-      # - name: Verify formatting
-      #   run: deno fmt --check
+  #   steps:
+  #     - name: Setup repo
+  #       uses: actions/checkout@v2
 
-      - name: Run linter
-        run: deno lint
+  #     - name: Setup Deno
+  #       # uses: denoland/setup-deno@v1
+  #       uses: denoland/setup-deno@4a4e59637fa62bd6c086a216c7e4c5b457ea9e79
+  #       with:
+  #         deno-version: ${{ matrix.deno }} # tests across multiple Deno versions
 
-      - name: Cache dependencies
-        run: deno cache deps.ts
+  #     # Uncomment this step to verify the use of 'deno fmt' on each commit.
+  #     # - name: Verify formatting
+  #     #   run: deno fmt --check
 
-      - name: Run tests
-        run: deno test -A --unstable
+  #     - name: Run linter
+  #       run: deno lint
+
+  #     - name: Cache dependencies
+  #       run: deno cache deps.ts
+
+  #     - name: Run tests
+  #       run: deno test -A --unstable
