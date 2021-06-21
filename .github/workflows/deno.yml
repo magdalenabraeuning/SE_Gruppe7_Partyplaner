@@ -17,8 +17,14 @@ on:
 jobs:
   build: 
   # github runner eintragen 
-   runs-on: ubuntu-latest
-
+  
+  # runs-on: ubuntu-latest
+    
+    runs-on: ${{ matrix.os }} # runs a test on Ubuntu
+     strategy:
+       matrix:
+         deno: ["v1.x", "canary"]
+         os: [ubuntu-latest]
 
 
     steps:
