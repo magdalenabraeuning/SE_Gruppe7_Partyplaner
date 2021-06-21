@@ -27,14 +27,16 @@ jobs:
     steps: 
     - name: Setup repo
       uses: actions/checkout@v1
-    - name: Set Up JDK
-      uses: actions/setup-java@v1
+    
+    - name: Set Up JDK
+      uses: actions/setup-java@v1
     - name: Setup Node.js
-      uses: actions/setup-node@v1
+      uses: actions/setup-node@v1
           with:
             node-version: 14.17.0
-      - name: Install Cordova
-        run: npm install -g cordova
+     
+    - name: Install Cordova
+      run: npm install -g cordova
       - name: Install Ionic
         run: npm install -g @ionic/cli
       - name: Install app dependencies
