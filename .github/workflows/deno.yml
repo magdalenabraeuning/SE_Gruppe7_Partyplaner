@@ -17,7 +17,7 @@ on:
 jobs:
   build: 
   # github runner eintragen 
-   rruns-on: ubuntu-latest
+   runs-on: ubuntu-latest
     
     steps:
     
