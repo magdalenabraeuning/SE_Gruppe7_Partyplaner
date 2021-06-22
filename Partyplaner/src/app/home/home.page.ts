@@ -11,6 +11,7 @@ export interface PartyForUser{
   Partys:[];
 }
 
+
 @Component({
   selector: 'app-home',
   templateUrl: 'home.page.html',
@@ -21,6 +22,7 @@ export class HomePage {
   tasks: any = [];
   meinePartys: any= [];
   userProfileCollection;
+  partyArr : any [];
 
   constructor(
     public afAuth: AngularFireAuth,
@@ -29,6 +31,21 @@ export class HomePage {
   ) {
     this.userProfileCollection = afFirestore.collection<any>('3');
     console.log(this.userProfileCollection);
+  }
+
+
+  getP(){
+    return this.afFirestore.collection("User").doc<PartyForUser>("userID").valueChanges();
+  }
+  getDocuments()
+  {
+    this.getP().subscribe( res => {
+      
+      console.log(res)
+      this.partyArr = res.Partys;
+      console.log(this.partyArr[0]);
+      
+    })
   }
 
   signOut() {
@@ -96,14 +113,16 @@ export class HomePage {
   async fetch() {
 
     let userID = (await this.afAuth.currentUser.then((user)=>{return user.uid;}));
+    this.getDocuments();
+  
     
     //this.getPartys(userID).subscribe(data => {this.meinePartys = data});
 
-    this.afFirestore.collection('Partys').doc<PartyForUser>(userID).snapshotChanges().subscribe(data => {
+   // this.afFirestore.collection('Partys').doc<PartyForUser>(userID).snapshotChanges().subscribe(data => {
 
-      this.meinePartys = data.payload.data()['Partys']
-      });
-      console.log(this.meinePartys);
+     // this.meinePartys = data.payload.data()['Partys']
+     // });
+      //console.log(this.meinePartys);
 
   
     
