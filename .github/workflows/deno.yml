@@ -25,8 +25,8 @@ jobs:
         os: [macOS-latest, windows-latest, ubuntu-latest]
     
     steps: 
-    - name: Setup repo
-      uses: actions/checkout@v1
+    #- name: Setup repo
+    #  uses: actions/checkout@v1
     - name: Set up JDK
       uses: actions/setup-java@v1
 
@@ -37,24 +37,31 @@ jobs:
      
     - name: Install Cordova
       run: npm install -g cordova
-      - name: Install Ionic
-        run: npm install -g @ionic/cli
-      - name: Install app dependencies
-        run: npm install
-      - name: Add Android platform
-        run: ionic cordova platform add android@latest
-      - name: Build Android Dev APK
-        run: ionic cordova build android
-      - name: Build Android Release APK
-        run: ionic cordova build android --release --prod
-      - name: Generate the Android App Bundle
-        working-directory: ./platforms/android/
+    
+    - name: Install Ionic
+      run: npm install -g @ionic/cli
+
+    - name: Install app dependencies
+      run: npm install
+
+    - name: Add Android platform
+      run: ionic cordova platform add android@latest
+
+    - name: Build Android Dev APK
+      run: ionic cordova build android
+
+    - name: Build Android Release APK
+      run: ionic cordova build android --release --prod
+
+    - name: Generate the Android App Bundle
+      working-directory: ./platforms/android/
         run: ./gradlew bundle
-      - name: Upload dev APK
-        uses: actions/upload-artifact@v1
-          with:
-            name: app-dev
-            path: platforms/android/app/build/outputs/apk/debug/app-debug.apk
+
+    - name: Upload dev APK
+      uses: actions/upload-artifact@v1
+        with:
+          name: app-dev
+          path: platforms/android/app/build/outputs/apk/debug/app-debug.apk
      
 
 #----------------------------------------------------
