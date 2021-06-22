@@ -54,9 +54,10 @@ jobs:
         run: ionic cordova build android
       - name: Build Android Release APK
         run: ionic cordova build android --release --prod
-      - name: Generate the Android App Bundle
-        working-directory: ./platforms/android/
-        run: ./gradlew bundle
+      # Braucht man vielleicht nicht? Schauen ob test trotzdem läuft
+      #- name: Generate the Android App Bundle
+      #  working-directory: ./platforms/android/
+      #  run: ./gradlew bundle
       
 
 
