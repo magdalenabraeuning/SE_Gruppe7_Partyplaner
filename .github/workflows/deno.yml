@@ -65,7 +65,7 @@ jobs:
   test:
     needs: build
     name: Testet unsere Dev-Umgebung
-    runs-on: ${{ matrix.os }} # runs a test on Ubuntu, Windows and macOS
+    runs-on: ${{ matrix.os }} # runs a test on Ubuntu
 
     strategy:
       matrix:
