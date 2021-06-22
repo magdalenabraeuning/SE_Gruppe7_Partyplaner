@@ -6,6 +6,11 @@ import  firebase  from 'firebase/app';
 import { AlertController } from '@ionic/angular';
 import { PartymodusPage } from '../partymodus/partymodus.page';
 
+
+export interface PartyForUser{
+  Partys:[];
+}
+
 @Component({
   selector: 'app-home',
   templateUrl: 'home.page.html',
@@ -14,6 +19,7 @@ import { PartymodusPage } from '../partymodus/partymodus.page';
 export class HomePage {
 
   tasks: any = [];
+  meinePartys: any= [];
   userProfileCollection;
 
   constructor(
@@ -36,7 +42,7 @@ export class HomePage {
     let userID = (await this.afAuth.currentUser.then((user)=>{return user.uid;}));
     //console.log(userID);
 
-    let randomID = this.afFirestore.createId();
+    //let randomID = this.afFirestore.createId();
     let meineID;
     
 
@@ -58,11 +64,11 @@ export class HomePage {
               createdAt: Date.now(),
               isDone: false,
               //Sammlung Einkaufsliste, ...
-              cry: firebase.firestore.FieldValue.toString(),
-              documentID: randomID
+              //cry: firebase.firestore.FieldValue.toString(),
+             // documentID: randomID
               
             }).then((r)=>{
-              meineID = r.id
+              meineID = r.id;
 
               this.afFirestore.collection("User").doc(userID).update({
               
@@ -81,12 +87,26 @@ export class HomePage {
       ]
     }).then(a => a.present());
   }
+  ionViewDidEnter() { this.fetch(); }
+
+  getPartys(id){
+    return this.afFirestore.collection('User').doc<PartyForUser>(id).valueChanges();
+  }
+
+  async fetch() {
+
+    let userID = (await this.afAuth.currentUser.then((user)=>{return user.uid;}));
+    
+    //this.getPartys(userID).subscribe(data => {this.meinePartys = data});
+
+    this.afFirestore.collection('Partys').doc<PartyForUser>(userID).snapshotChanges().subscribe(data => {
+
+      this.meinePartys = data.payload.data()['Partys']
+      });
+      console.log(this.meinePartys);
+
   
-  ionViewDidEnter() { this.fetch(); 
-}
-
-
-  fetch() {
+    
     this.afFirestore.collection('Partys').snapshotChanges().subscribe(data => {
 
       this.tasks = data.map(e => {
@@ -108,8 +128,12 @@ export class HomePage {
     });
   }
 
-  delete(id){
+  async delete(id){
     this.afFirestore.collection("Partys").doc(id).delete();
+    let userID = (await this.afAuth.currentUser.then((user)=>{return user.uid;}));
+    this.afFirestore.collection("User").doc(userID).update({
+      Partys: firebase.firestore.FieldValue.arrayRemove(id)
+    });
   }
 
 }
