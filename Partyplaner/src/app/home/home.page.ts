@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { AngularFireAuth } from '@angular/fire/auth';
-import { Observable } from 'rxjs';
+// auskommentiert für CI 
+//import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-home',
