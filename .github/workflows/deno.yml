@@ -46,11 +46,8 @@ jobs:
         uses: coturiv/setup-ionic@v1
         with:
           cordova-version: 8
-     
-      # kannst du eingeben im terminal "ionic init --help"?
-      # fehlermeldung: Please specify name, the first argument of ionic init. See ionic init --help for details.
       - name: Ionic init
-        run: ionic init SE_Gruppe7_Partyplanner
+        run: ionic init SE_Gruppe7_Partyplanner --type=angular
       - name: Add Android platform
         run: ionic cordova platform add android@latest
       - name: Build Android Dev APK
