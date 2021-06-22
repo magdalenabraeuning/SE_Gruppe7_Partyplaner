@@ -42,8 +42,11 @@ jobs:
       - name: Install app dependencies
         run: npm install
       - name: Add Android platform
-        run: ioic cordova platform add android@latest
-      
+        run: ionic cordova platform add android@latest
+      - name: Build Android Dev APK
+        run: ionic cordova build android
+      - name: Build Android Release APK
+        run: ionic cordova build android --release --prod
 
 
   #----------------------------------------------------
