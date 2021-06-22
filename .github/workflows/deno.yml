@@ -41,12 +41,20 @@ jobs:
         run: npm install -g @ionic/cli
       - name: Install app dependencies
         run: npm install
+      - name: Use coturiv/setup-ionic
+        uses: coturiv/setup-ionic@v1
+        with:
+          cordova-version: 8
       - name: Add Android platform
         run: ionic cordova platform add android@latest
       - name: Build Android Dev APK
         run: ionic cordova build android
       - name: Build Android Release APK
         run: ionic cordova build android --release --prod
+      - name: Generate the Android App Bundle
+        working-directory: ./platforms/android/
+        run: ./gradlew bundle
+      - name: 
 
 
   #----------------------------------------------------
