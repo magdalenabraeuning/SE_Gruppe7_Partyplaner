@@ -42,12 +42,15 @@ jobs:
       - name: Install app dependencies
         run: npm install
       - name: Use coturiv/setup-ionic
-      # unten war ein fehler push nochmal einfach mit dem gleichen namen
-      # mom 
-      # 
+      # hat nichts gebracht aber hatte funktioniert also drin lassen ;)
         uses: coturiv/setup-ionic@v1
         with:
           cordova-version: 8
+      # wieder gleicher fehler: deswegen vielleicht so?
+      # kannst du commiten und pushen mit nachricht "ionic init"
+      #oki
+      - name: Ionic init
+        run: ionic init  
       - name: Add Android platform
         run: ionic cordova platform add android@latest
       - name: Build Android Dev APK
