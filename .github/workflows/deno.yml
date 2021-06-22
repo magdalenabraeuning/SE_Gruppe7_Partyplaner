@@ -35,6 +35,12 @@ jobs:
         uses: actions/setup-node@v1
         with:
           node-version: 14.17
+      - name: Install Cordova
+        run: npm install -g cordova
+      - name: Install Ionic
+        run: npm install -g @ionic/cli
+      
+
 
   #----------------------------------------------------
   test:
