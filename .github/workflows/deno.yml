@@ -42,6 +42,9 @@ jobs:
       - name: Install app dependencies
         run: npm install
       - name: Use coturiv/setup-ionic
+      # unten war ein fehler push nochmal einfach mit dem gleichen namen
+      # mom 
+      # 
         uses: coturiv/setup-ionic@v1
         with:
           cordova-version: 8
@@ -54,7 +57,7 @@ jobs:
       - name: Generate the Android App Bundle
         working-directory: ./platforms/android/
         run: ./gradlew bundle
-      - name: 
+      
 
 
   #----------------------------------------------------
