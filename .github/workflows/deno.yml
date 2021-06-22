@@ -30,7 +30,7 @@ jobs:
       - name: Set up JDK
         uses: actions/setup-java@v1
           with:
-            java-version: 1.8.0_252
+            java-version: 1.8.0
 
 
   #----------------------------------------------------
