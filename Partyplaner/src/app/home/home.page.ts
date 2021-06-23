@@ -45,7 +45,7 @@ export class HomePage {
   getPartys(id) {
     return this.afFirestore.collection("User").doc<PartyForUser>(id).valueChanges();
   }
-  getDocuments(id) {
+  async getDocuments(id) {
     this.getPartys(id).subscribe(res => {
 
       console.log("getDocuments PartyIDs"+res)
@@ -129,13 +129,20 @@ export class HomePage {
       ]
     }).then(a => a.present());
   }
-  ionViewDidEnter() { this.fetch(); }
+  //ionViewDidEnter() { this.fetch(); }
 
 
   async fetch() {
 
     let userID = (await this.afAuth.currentUser.then((user) => { return user.uid; }));
-    this.getDocuments(userID);
+    await this.getDocuments(userID);
+   /* this.afFirestore.collection("User").doc<PartyForUser>(userID).valueChanges().subscribe(res => {
+
+      console.log("getDocuments PartyIDs"+res);
+      this.partyArr = res.Partys;
+      console.log("Eine PartyID"+this.partyArr[0]);
+
+    });*/
 
     console.log("Partyarray: "+this.partyArr);
 
