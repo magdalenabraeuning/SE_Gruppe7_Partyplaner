@@ -24,7 +24,7 @@
 
     <ion-button (click)="fetch()">fetch</ion-button> <!--kann weggelassen werden wenn der code nicht in fetch() 
       sondern ionViewDidEnter kommt (wenn nicht die userID als schlüssel verwendet wird (ladezeit zu lang))-->
-
+<!--
     <ion-list *ngIf="tasks.length !=0">
       <ion-item *ngFor="let item of tasks">
         <ion-label>
@@ -41,9 +41,26 @@
     </ion-list>
 
 
+<ion-list *ngIf="partyData.length !=0">
+  <ion-item *ngFor="let item of partyData">
+    <ion-label>
+      <h3>{{item[0]}}</h3>
+      <h3>{{item[1]}}</h3>
+      <h3>{{item[2]}}</h3>
+      <h3>{{item[3]}}</h3>
+      <h3>{{item[4]}}</h3>
+      <p>{{item.isDone}}</p>
+      <p>{{item.createdAt}}</p>
+    </ion-label>
+    <ion-button (click)="update(item.id, item.Age)">Update
+      <ion-icon color="{{item.Age ? 'success' : 'dark'}}" name="checkbox-outline"></ion-icon>
+    </ion-button>
+    <ion-button (click)="delete(item.id)">Löschen</ion-button>
+  </ion-item>
+</ion-list>
 
 
-
+-->
 
 <ion-button (click)="signOut()">Sign Out</ion-button>
 </div>

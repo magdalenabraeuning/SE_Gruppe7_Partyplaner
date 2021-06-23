@@ -2,13 +2,20 @@ import { Component } from '@angular/core';
 import { AngularFireAuth } from '@angular/fire/auth';
 import { Observable } from 'rxjs';
 import { AngularFirestore } from '@angular/fire/firestore';
-import  firebase  from 'firebase/app';
+import firebase from 'firebase/app';
 import { AlertController } from '@ionic/angular';
 import { PartymodusPage } from '../partymodus/partymodus.page';
 
 
-export interface PartyForUser{
-  Partys:[];
+export interface PartyForUser {
+  Partys: [];
+}
+
+export interface AllPartyData {
+  createdAt: number;
+  desc: string;
+  isDone: boolean;
+  title: string;
 }
 
 
@@ -20,31 +27,46 @@ export interface PartyForUser{
 export class HomePage {
 
   tasks: any = [];
-  meinePartys: any= [];
+  //meinePartys: any= [];
   userProfileCollection;
-  partyArr : any [];
+  partyArr: any[];
+  partyData: any[];
 
   constructor(
     public afAuth: AngularFireAuth,
     public afFirestore: AngularFirestore,
     private alertCtrl: AlertController
   ) {
-    this.userProfileCollection = afFirestore.collection<any>('3');
-    console.log(this.userProfileCollection);
+    //this.userProfileCollection = afFirestore.collection<any>('3');
+    //console.log(this.userProfileCollection);
   }
 
 
-  getP(){
-    return this.afFirestore.collection("User").doc<PartyForUser>("userID").valueChanges();
+  getPartys(id) {
+    return this.afFirestore.collection("User").doc<PartyForUser>(id).valueChanges();
   }
-  getDocuments()
-  {
-    this.getP().subscribe( res => {
-      
-      console.log(res)
+  getDocuments(id) {
+    this.getPartys(id).subscribe(res => {
+
+      console.log("getDocuments PartyIDs"+res)
       this.partyArr = res.Partys;
-      console.log(this.partyArr[0]);
+      console.log("Eine PartyID"+this.partyArr[0]);
+
+    })
+  }
+
+  getPartyData(id) {
+    return this.afFirestore.collection("Partys").doc<AllPartyData>(id).valueChanges();
+  }
+
+  getPartyDocuments(id) {
+    this.getPartyData(id).subscribe(res => {
+
+      console.log("Partydaten alle"+res)
       
+      this.partyData[id] = [res.createdAt, res.isDone, res.desc, res.title];
+      console.log("Partydaten idddddddd"+this.partyData[id]);
+
     })
   }
 
@@ -53,15 +75,15 @@ export class HomePage {
       location.reload();
     });
   }
-  myEventList:any;
+  myEventList: any;
 
   async addParty() {
-    let userID = (await this.afAuth.currentUser.then((user)=>{return user.uid;}));
+    let userID = (await this.afAuth.currentUser.then((user) => { return user.uid; }));
     //console.log(userID);
 
     //let randomID = this.afFirestore.createId();
     let meineID;
-    
+
 
     this.alertCtrl.create({
       message: "Party erstellen",
@@ -82,20 +104,20 @@ export class HomePage {
               isDone: false,
               //Sammlung Einkaufsliste, ...
               //cry: firebase.firestore.FieldValue.toString(),
-             // documentID: randomID
-              
-            }).then((r)=>{
+              // documentID: randomID
+
+            }).then((r) => {
               meineID = r.id;
 
               this.afFirestore.collection("User").doc(userID).update({
-              
+
                 Partys: firebase.firestore.FieldValue.arrayUnion(meineID)
               });
-              console.log("ID"+meineID);
+              console.log("ID" + meineID);
             })
-            
 
-            
+
+
           }
         }, {
           text: 'Cancel'
@@ -106,26 +128,21 @@ export class HomePage {
   }
   ionViewDidEnter() { this.fetch(); }
 
-  getPartys(id){
-    return this.afFirestore.collection('User').doc<PartyForUser>(id).valueChanges();
-  }
 
   async fetch() {
 
-    let userID = (await this.afAuth.currentUser.then((user)=>{return user.uid;}));
-    this.getDocuments();
-  
-    
-    //this.getPartys(userID).subscribe(data => {this.meinePartys = data});
+    let userID = (await this.afAuth.currentUser.then((user) => { return user.uid; }));
+    this.getDocuments(userID);
 
-   // this.afFirestore.collection('Partys').doc<PartyForUser>(userID).snapshotChanges().subscribe(data => {
+    console.log("Partyarray: "+this.partyArr);
 
-     // this.meinePartys = data.payload.data()['Partys']
-     // });
-      //console.log(this.meinePartys);
+    for (let i = 0; i < this.partyArr.length; i++) {
+      console.log("Hiiiiiier IDs"+this.partyArr[i])
+      this.getPartyDocuments(this.partyArr[i]);
+    }
 
-  
-    
+
+    /*
     this.afFirestore.collection('Partys').snapshotChanges().subscribe(data => {
 
       this.tasks = data.map(e => {
@@ -138,18 +155,18 @@ export class HomePage {
         };
       })
       console.log(this.tasks);
-    });
+    });*/
   }
 
   update(id, status) {
     this.afFirestore.collection("Partys").doc(id).update({
-      isDone:!status
+      isDone: !status
     });
   }
 
-  async delete(id){
+  async delete(id) {
     this.afFirestore.collection("Partys").doc(id).delete();
-    let userID = (await this.afAuth.currentUser.then((user)=>{return user.uid;}));
+    let userID = (await this.afAuth.currentUser.then((user) => { return user.uid; }));
     this.afFirestore.collection("User").doc(userID).update({
       Partys: firebase.firestore.FieldValue.arrayRemove(id)
     });
