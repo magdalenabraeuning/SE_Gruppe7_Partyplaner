@@ -1,9 +1,95 @@
 <ion-header>
   <ion-toolbar>
-    <ion-title>info</ion-title>
+    <ion-title>
+      <!-- Hier eigentlich der Name der Veranstaltung party.name oder so-->
+      info
+    </ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content>
+  <!-- Erste Karte mit Details -->
+  <ion-card>
+    <ion-item>
+      <ion-icon name="calendar" slot="start"></ion-icon>
+      <ion-label><h2>Details</h2></ion-label>
+      <ion-fab horizontal="end" slot="end">
+        <ion-fab-button size="small">
+          <ion-icon name="pencil"></ion-icon>
+        </ion-fab-button>
+      </ion-fab>
+    </ion-item>
 
+    <ion-card-content>
+      <ion-label>
+        Datum und Uhrzeit<br />Straße bzw. Ob Onlinemeeting<br />
+      </ion-label>
+    </ion-card-content>
+  </ion-card>
+
+  <!-- Zweite Karte mit Teilnehmern -->
+  <ion-card>
+    <ion-item>
+      <ion-icon name="people" slot="start"></ion-icon>
+      <ion-label><h2>Teilnehmer</h2></ion-label>
+      <ion-fab horizontal="end" slot="end">
+        <ion-fab-button size="small">
+          <ion-icon name="add"></ion-icon>
+        </ion-fab-button>
+      </ion-fab>
+    </ion-item>
+
+    <ion-card-content>
+      <!-- Organisatoren: -->
+      <ion-list-header>
+        <ion-label><h3 style="font-weight: bold">Organisatoren:</h3></ion-label>
+      </ion-list-header>
+      <ion-list>
+        <ion-item-sliding>
+          <ion-item>
+            <ion-label>
+              <ion-badge slot="start" style="margin-right: 3%"> MB </ion-badge>
+              Magdalena Bräuning
+            </ion-label>
+          </ion-item>
+          <ion-item-options side="end" style="width: 35%">
+            <ion-item-option
+              onClick="unread(item)"
+              style="background-color: red; width: 100%"
+            >
+              <ion-icon name="trash" style="size: 100%"></ion-icon>
+            </ion-item-option>
+            <ion-item-option onClick="unread(item)" style="width: 100%">
+              <ion-icon name="pencil" style="size: 100%"></ion-icon>
+            </ion-item-option>
+          </ion-item-options>
+        </ion-item-sliding>
+      </ion-list>
+      <!-- Teilnehmer: -->
+      <ion-list-header>
+        <ion-label><h3 style="font-weight: bold">Teilnehmer:</h3></ion-label>
+      </ion-list-header>
+      <ion-list>
+        <ion-item-sliding>
+          <ion-item>
+            <ion-label>
+              <ion-badge slot="start" style="margin-right: 3%"> MB </ion-badge>
+              Magdalena Bräuning
+            </ion-label>
+          </ion-item>
+          <ion-item-options side="end" style="width: 35%">
+            <ion-item-option
+              onClick="unread(item)"
+              style="background-color: red; width: 100%"
+            >
+              <ion-icon name="trash" style="size: 100%"></ion-icon>
+            </ion-item-option>
+            <ion-item-option onClick="unread(item)" style="width: 100%">
+              <ion-icon name="pencil" style="size: 100%"></ion-icon>
+            </ion-item-option>
+          </ion-item-options>
+        </ion-item-sliding>
+      </ion-list>
+    </ion-card-content>
+  </ion-card>
 </ion-content>
