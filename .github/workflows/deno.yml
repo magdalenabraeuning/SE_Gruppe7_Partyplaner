@@ -87,7 +87,7 @@ jobs:
         run: deno lint
 
       - name: Cache dependencies
-        run: deno cache package-lock.json
+        run: deno cache SE_Gruppe7_Partyplaner/Partyplaner/package-lock.json
         # run: deno cache deps.ts
 
       - name: Run tests
