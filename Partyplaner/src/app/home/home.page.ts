@@ -30,7 +30,7 @@ export class HomePage {
   //meinePartys: any= [];
   userProfileCollection;
   partyArr: any[];
-  partyData: any[];
+  partyData: any = [];
 
   constructor(
     public afAuth: AngularFireAuth,
@@ -59,13 +59,16 @@ export class HomePage {
     return this.afFirestore.collection("Partys").doc<AllPartyData>(id).valueChanges();
   }
 
-  getPartyDocuments(id) {
+  getPartyDocuments(id,i) {
     this.getPartyData(id).subscribe(res => {
 
-      console.log("Partydaten alle"+res)
+      console.log("Partydaten alle an Stelle"+i+" = "+res.createdAt)
       
-      this.partyData[id] = [res.createdAt, res.isDone, res.desc, res.title];
-      console.log("Partydaten idddddddd"+this.partyData[id]);
+      this.partyData[i] = {createdAt: res.createdAt, title: res.title, desc: res.desc, isDone: res.isDone};
+      console.log("Partydaten idddddddd 1"+this.partyData[i].createdAt);
+      console.log("Partydaten idddddddd 2"+this.partyData[i].title);
+      console.log("Partydaten idddddddd 3"+this.partyData[i].desc);
+      console.log("Partydaten idddddddd 4"+this.partyData[i].isDone);
 
     })
   }
@@ -138,10 +141,10 @@ export class HomePage {
 
     for (let i = 0; i < this.partyArr.length; i++) {
       console.log("Hiiiiiier IDs"+this.partyArr[i])
-      this.getPartyDocuments(this.partyArr[i]);
+      this.getPartyDocuments(this.partyArr[i],i);
     }
 
-
+console.log("biiiitteee"+this.partyData[0]);
     /*
     this.afFirestore.collection('Partys').snapshotChanges().subscribe(data => {
 

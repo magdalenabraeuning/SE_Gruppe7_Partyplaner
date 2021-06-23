@@ -40,17 +40,16 @@
       </ion-item>
     </ion-list>
 
-
+-->
 <ion-list *ngIf="partyData.length !=0">
   <ion-item *ngFor="let item of partyData">
     <ion-label>
-      <h3>{{item[0]}}</h3>
-      <h3>{{item[1]}}</h3>
-      <h3>{{item[2]}}</h3>
-      <h3>{{item[3]}}</h3>
-      <h3>{{item[4]}}</h3>
-      <p>{{item.isDone}}</p>
-      <p>{{item.createdAt}}</p>
+      <h3>{{item.title}}</h3>
+      <h3>{{item.desc}}</h3>
+      <h3>{{item.isDone}}</h3>
+      <h3>{{item.createdAt}}</h3>
+     
+    
     </ion-label>
     <ion-button (click)="update(item.id, item.Age)">Update
       <ion-icon color="{{item.Age ? 'success' : 'dark'}}" name="checkbox-outline"></ion-icon>
@@ -60,7 +59,7 @@
 </ion-list>
 
 
--->
+
 
 <ion-button (click)="signOut()">Sign Out</ion-button>
 </div>
