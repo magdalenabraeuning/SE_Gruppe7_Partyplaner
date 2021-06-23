@@ -16,6 +16,7 @@ export interface AllPartyData {
   desc: string;
   isDone: boolean;
   title: string;
+  id:string;
 }
 
 
@@ -73,9 +74,9 @@ export class HomePage {
   getPartyDocuments(id, i) {
     this.getPartyData(id).subscribe(res => {
 
-      console.log("Partydaten alle an Stelle" + i + " = " + res.createdAt)
+      //console.log("Partydaten alle an Stelle" + i + " = " + res.createdAt)
 
-      this.partyData[i] = { createdAt: res.createdAt, title: res.title, desc: res.desc, isDone: res.isDone };
+      this.partyData[i] = { createdAt: res.createdAt, title: res.title, desc: res.desc, isDone: res.isDone, id: res.id};
       console.log("Partydaten idddddddd 1" + this.partyData[i].createdAt);
       console.log("Partydaten idddddddd 2" + this.partyData[i].title);
       console.log("Partydaten idddddddd 3" + this.partyData[i].desc);
@@ -93,11 +94,6 @@ export class HomePage {
 
   async addParty() {
     let userID = (await this.afAuth.currentUser.then((user) => { return user.uid; }));
-    //console.log(userID);
-
-    //let randomID = this.afFirestore.createId();
-    
-
 
     this.alertCtrl.create({
       message: "Party erstellen",
@@ -121,7 +117,10 @@ export class HomePage {
               // documentID: randomID
 
             }).then((r) => {
+              this.afFirestore.collection("Partys").doc(r.id).update({
 
+                id: r.id
+              });
               this.getAllUserData();
               console.log(this.allIDs);
               if (this.pruefeUserVorhanden(userID)) {
@@ -133,19 +132,10 @@ export class HomePage {
                 this.afFirestore.collection("User").doc(userID).set({
                   Partys: firebase.firestore.FieldValue.arrayUnion(r.id)
                 })
-
                 
               }
-
-
-
-              
-              
     
             })
-
-
-
           }
         }, {
           text: 'Cancel'
@@ -154,7 +144,8 @@ export class HomePage {
       ]
     }).then(a => a.present());
   }
-  //ionViewDidEnter() { this.fetch(); }
+  ionViewDidEnter() { this.fetch(); 
+  console.log("ION VIEW DID ENTER")}
 
   pruefeUserVorhanden(userID) {
     let userVorhanden = false;
@@ -211,11 +202,13 @@ export class HomePage {
   }
 
   async delete(id) {
+    console.log("DELETE START")
     this.afFirestore.collection("Partys").doc(id).delete();
     let userID = (await this.afAuth.currentUser.then((user) => { return user.uid; }));
     this.afFirestore.collection("User").doc(userID).update({
       Partys: firebase.firestore.FieldValue.arrayRemove(id)
     });
+    console.log("DELETE END")
   }
 
 }

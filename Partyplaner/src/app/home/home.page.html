@@ -47,11 +47,12 @@
       <h3>{{item.desc}}</h3>
       <h3>{{item.isDone}}</h3>
       <h3>{{item.createdAt}}</h3>
+      <h3>ID: {{item.id}}</h3>
      
     
     </ion-label>
-    <ion-button (click)="update(item.id, item.Age)">Update
-      <ion-icon color="{{item.Age ? 'success' : 'dark'}}" name="checkbox-outline"></ion-icon>
+    <ion-button (click)="update(item.id, item.isDone)">Update
+      <ion-icon color="{{item.isDone ? 'success' : 'dark'}}" name="checkbox-outline"></ion-icon>
     </ion-button>
     <ion-button (click)="delete(item.id)">Löschen</ion-button>
   </ion-item>
