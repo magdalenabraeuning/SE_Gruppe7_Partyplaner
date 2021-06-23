@@ -42,7 +42,7 @@ jobs:
       - name: Install app dependencies
         run: npm install
       - name: Use coturiv/setup-ionic
-      # hat nichts gebracht aber hatte funktioniert also drin lassen ;)
+        # hat nichts gebracht aber hatte funktioniert also drin lassen ;)
         uses: coturiv/setup-ionic@v1
         with:
           cordova-version: 8
@@ -58,8 +58,6 @@ jobs:
       #- name: Generate the Android App Bundle
       #  working-directory: ./platforms/android/
       #  run: ./gradlew bundle
-      
-
 
   #----------------------------------------------------
   test:
@@ -89,7 +87,7 @@ jobs:
         run: deno lint
 
       - name: Cache dependencies
-        run: deno cache 
+        run: deno cache package-lock.json
         # run: deno cache deps.ts
 
       - name: Run tests
