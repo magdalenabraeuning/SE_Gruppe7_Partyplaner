@@ -94,12 +94,12 @@ jobs:
 
     # Geht beides noch nicht 
 
-      - name: Cache dependencies
-      # run: deno cache DENO_DIR
-        run: deno cache deps.ts
+      # - name: Cache dependencies
+      # # run: deno cache DENO_DIR
+      #   run: deno cache deps.ts
 
-      - name: Run tests
-        run: deno test -A --unstable
+      # - name: Run tests
+      #   run: deno test -A --unstable
 
   #---------------------------------------------------- 
 
