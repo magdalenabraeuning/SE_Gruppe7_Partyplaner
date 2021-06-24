@@ -17,7 +17,7 @@ on:
 
 jobs:
   build:
-    name: Buildet unsere Dev-Umgebung
+    name: Build
     runs-on: ${{ matrix.os }} # runs a test on Ubuntu, Windows and macOS
 
     strategy:
@@ -63,7 +63,7 @@ jobs:
   #----------------------------------------------------
   test:
     needs: build
-    name: Testet unsere Dev-Umgebung
+    name: Tests
     runs-on: ${{ matrix.os }} # runs a test on Ubuntu
 
     strategy:
@@ -89,17 +89,18 @@ jobs:
 
     # Geht beides noch nicht 
 
-      #- name: Cache dependencies
-      #  run: deno cache DENO_DIR
-      # run: deno cache deps.ts
+      - name: Cache dependencies
+      # run: deno cache DENO_DIR
+        run: deno cache deps.ts
 
-      # - name: Run tests
-      #   run: deno test -A --unstable
+      - name: Run tests
+        run: deno test -A --unstable
 
-      
+  #---------------------------------------------------- 
+
   cypress-run:
     needs: test
-    name: Cypress-Tests durchlaufen
+    name: Cypress-Tests 
     runs-on: ${{ matrix.os }} # runs a test on Ubuntu
 
     strategy:
