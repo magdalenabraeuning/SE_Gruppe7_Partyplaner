@@ -55,21 +55,37 @@ export class HomePage {
   }
 
   getPartys(id) {
+    console.log("start getPartys: "+this.afFirestore.collection("User").doc<PartyForUser>(id).valueChanges());
     return this.afFirestore.collection("User").doc<PartyForUser>(id).valueChanges();
   }
   async getDocuments(id) {
-    this.getPartys(id).subscribe(res => {
+    console.log("start getDocuments")
 
-      console.log("getDocuments PartyIDs" + res)
-      this.partyArr = res.Partys;
-      console.log("Eine PartyID" + this.partyArr[0]);
+    const secondFunction = async () => {
+      const result = await this.firstFunction(id);
+      console.log("end getDocuments")
+    }
+    secondFunction();
+  }
+
+  async firstFunction(id){
+    await console.log("start firstFunction" )
+    await this.afFirestore.collection("User").doc<PartyForUser>(id).valueChanges().subscribe(async res => {
+
+      await console.log("getDocuments PartyIDs" + res.Partys);
+      this.partyArr = await res.Partys;
+      await console.log("Eine PartyID" + this.partyArr[0]);
 
     })
+    await console.log("end firstFunction" )
   }
 
   getPartyData(id) {
     return this.afFirestore.collection("Partys").doc<AllPartyData>(id).valueChanges();
   }
+  
+   
+  
 
   getPartyDocuments(id, i) {
     this.getPartyData(id).subscribe(res => {
@@ -144,7 +160,7 @@ export class HomePage {
       ]
     }).then(a => a.present());
   }
-  ionViewDidEnter() { this.fetch(); 
+  ionViewDidEnter() { //this.fetch(); 
   console.log("ION VIEW DID ENTER")}
 
   pruefeUserVorhanden(userID) {
@@ -159,10 +175,11 @@ export class HomePage {
   }
 
   async fetch() {
-
+    console.log("start")
     let userID = (await this.afAuth.currentUser.then((user) => { return user.uid; }));
+    console.log("end")
     console.log("cry" + userID)
-    await this.getDocuments(userID);
+    //await this.getDocuments(userID);
     /* this.afFirestore.collection("User").doc<PartyForUser>(userID).valueChanges().subscribe(res => {
  
        console.log("getDocuments PartyIDs"+res);
@@ -171,7 +188,10 @@ export class HomePage {
  
      });*/
 
-    console.log("Partyarray: " + this.partyArr);
+     const secondFunction = async () => {
+       console.log("secondFunction");
+      const result = await this.getDocuments(userID);
+      await console.log("Partyarray: " + this.partyArr);
 
     for (let i = 0; i < this.partyArr.length; i++) {
       console.log("Hiiiiiier IDs" + this.partyArr[i])
@@ -179,6 +199,10 @@ export class HomePage {
     }
 
     console.log("biiiitteee" + this.partyData[0]);
+    }
+
+    secondFunction();
+    
     /*
     this.afFirestore.collection('Partys').snapshotChanges().subscribe(data => {
 
