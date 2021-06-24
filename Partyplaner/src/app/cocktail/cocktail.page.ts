@@ -22,7 +22,7 @@ export class CocktailPage implements OnInit {
     this.loadData();
   }
 
-  private readonly basicURL = "https://www.thecocktaildb.com/api/json/v1/1/filter.php?c=Cocktail";
+  private readonly basicURL = "https://www.thecocktaildb.com/api/json/v1/1/random.php";
   private readonly searchURL = "https://www.thecocktaildb.com/api/json/v1/1/search.php?s=";
   private URL = "";
   private showList = true;
@@ -31,6 +31,7 @@ export class CocktailPage implements OnInit {
   private APIError = false;
   private cocktails: Promise<any[]>;
   private showSkeleton = true;
+  private RandomC = true;
 
   private async loadData(){
     
@@ -40,11 +41,13 @@ export class CocktailPage implements OnInit {
       this.URL = this.basicURL;
       this.showList = true;
       this.httpClient.get(this.basicURL, this.OPTIONS_OBJECT).subscribe(this.verarbeiteHttpResponse, this.verarbeiteHttpFehler);
+      this.RandomC=true;
     }
     else{
       this.URL = this.searchURL + this.searchTerm;
       this.showList = true;
       this.httpClient.get(this.URL, this.OPTIONS_OBJECT).subscribe(this.verarbeiteHttpResponse, this.verarbeiteHttpFehler);
+      this.RandomC=false;
     }
   }
 

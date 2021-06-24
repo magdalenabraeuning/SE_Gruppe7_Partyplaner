@@ -7,6 +7,9 @@
 <ion-content>
 
   <ion-searchbar showCancelButton="never" [(ngModel)]="searchTerm" (search)="loadData()"></ion-searchbar>
+  <div *ngIf=RandomC>
+    <h1>Random: </h1>
+  </div>
  
   <ion-refresher slot="fixed" (ionRefresh)="doRefresh($event)">
     <ion-refresher-content pullingIcon="chevron-down-circle-outline" pullingText="Pull to refresh"
@@ -46,15 +49,16 @@
         <ion-item class="ion-activated">
           <!--<ion-img id="image" src={{fische.image_url}} slot="start"></ion-img>-->
           <ion-card-header>
-            <ion-card-title>{{cocktails.strDrink}}</ion-card-title>
+            <ion-card-title> {{cocktails.strDrink}}</ion-card-title>
           </ion-card-header>
         </ion-item>
       </ion-card>
     </ion-list>
  
+
     <div *ngIf="showList&&!APIError">
       <ion-list *ngFor="let cocktail of cocktails" lines="none">
-        <ion-card>
+         <ion-card>
           <ion-item class="ion-activated">
             <!--<ion-img id="image" src={{fisch.image_url}} slot="start"></ion-img>-->
             <ion-card-header>
