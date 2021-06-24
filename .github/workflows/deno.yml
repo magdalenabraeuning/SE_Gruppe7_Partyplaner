@@ -55,7 +55,11 @@ jobs:
       - name: Build Android Dev APK
         run: ionic cordova build android
       - name: Build Android Release APK
-        run: ionic cordova build android --release --prod
+        run: ionic cordova build android --release
+        # --prod : raus genommen um fehler zu beheben:
+        # Error: src/app/app.module.ts:55:49 - error TS2339: Property 'firebase' does not exist on type '{ production: boolean; }'.
+        # AngularFireModule.initializeApp(environment.firebase),
+      
       # Braucht man vielleicht nicht? Schauen ob test trotzdem läuft
       #- name: Generate the Android App Bundle
       #  working-directory: ./platforms/android/
