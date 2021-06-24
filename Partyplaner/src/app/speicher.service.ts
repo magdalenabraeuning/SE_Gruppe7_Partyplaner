@@ -65,7 +65,7 @@ export class SpeicherService {
       this.partyArrObsrv.next(res.Partys);
       console.log("Eine PartyID" + this.partyArr[0]);
 
-    })
+    });
   }
 
   getPartyData(id) {
@@ -166,7 +166,30 @@ export class SpeicherService {
     return userVorhanden;
   }
 
+async delete(id):Promise<any>{
+  console.log("DELETE START")
+  
+  
+    this.afAuth.currentUser.then((x) => {
+      let userID = x.uid;
+      
+      this.afFirestore.collection("User").doc(userID).update({
+        Partys: firebase.firestore.FieldValue.arrayRemove(id)
+      });
+      this.afFirestore.collection("Partys").doc(id).delete();
+      
+    });
+    
+    
+    
+}
 
+
+update(id, status) {
+  this.afFirestore.collection("Partys").doc(id).update({
+    isDone: !status
+  });
+}
 
 
 }

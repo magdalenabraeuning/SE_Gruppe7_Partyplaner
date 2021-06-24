@@ -1,13 +1,11 @@
 import { Subject } from 'rxjs';
 import { Component } from '@angular/core';
 import { AngularFireAuth } from '@angular/fire/auth';
-import { Observable } from 'rxjs';
 import { AngularFirestore } from '@angular/fire/firestore';
-import firebase from 'firebase/app';
 import { AlertController } from '@ionic/angular';
-import { PartymodusPage } from '../partymodus/partymodus.page';
-import { take } from 'rxjs/operators';
 import { SpeicherService } from '../speicher.service';
+import firebase from 'firebase/app';
+import { ChangeDetectorRef } from '@angular/core'
 
 export interface PartyForUser {
   Partys: [];
@@ -42,6 +40,7 @@ export class HomePage {
     public afFirestore: AngularFirestore,
     private alertCtrl: AlertController,
     private speicherService: SpeicherService,
+    private changeRef: ChangeDetectorRef
   ) { }
   
   signOut() {
@@ -75,8 +74,10 @@ export class HomePage {
 
 
 
-  ionViewDidEnter() { //this.fetch();
+  ionViewDidEnter() {     
+    //this.fetch();
     console.log("ION VIEW DID ENTER")
+
   }
 
   pruefeUserVorhanden(userID) {
@@ -91,24 +92,18 @@ export class HomePage {
   }
 
   async fetch() {
+    this.changeRef.detectChanges();
     this.partyData = await this.speicherService.loadAllData();
+    this.changeRef.detectChanges();
   }
 
-  update(id, status) {
-    this.afFirestore.collection("Partys").doc(id).update({
-      isDone: !status
-    });
+  updateButton(id, status) {
+    this.speicherService.update(id, status);
   }
 
-  async delete(id) {
-    console.log("DELETE START")
-    this.afFirestore.collection("Partys").doc(id).delete();
-    let userID = (await this.afAuth.currentUser.then((user) => { return user.uid; }));
-    this.afFirestore.collection("User").doc(userID).update({
-      Partys: firebase.firestore.FieldValue.arrayRemove(id)
-    });
-    console.log("DELETE END")
-  }
-
+  async deleteButton(id) {
+    console.log("ID ID ID ID ID ID "+id);
+    let test = await this.speicherService.delete(id);
+}
 }
 
