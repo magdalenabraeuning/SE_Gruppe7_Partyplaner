@@ -1,3 +1,4 @@
+import { Subject } from 'rxjs';
 import { Component } from '@angular/core';
 import { AngularFireAuth } from '@angular/fire/auth';
 import { Observable } from 'rxjs';
@@ -5,7 +6,7 @@ import { AngularFirestore } from '@angular/fire/firestore';
 import firebase from 'firebase/app';
 import { AlertController } from '@ionic/angular';
 import { PartymodusPage } from '../partymodus/partymodus.page';
-
+import { take } from 'rxjs/operators';
 
 export interface PartyForUser {
   Partys: [];
@@ -33,6 +34,8 @@ export class HomePage {
   partyArr: any[];
   partyData: any = [];
   allIDs: any = [];
+  partyArrObsrv: Subject<any> = new Subject<any>();
+
 
   constructor(
     public afAuth: AngularFireAuth,
@@ -55,39 +58,26 @@ export class HomePage {
   }
 
   getPartys(id) {
-    console.log("start getPartys: "+this.afFirestore.collection("User").doc<PartyForUser>(id).valueChanges());
     return this.afFirestore.collection("User").doc<PartyForUser>(id).valueChanges();
   }
   async getDocuments(id) {
-    console.log("start getDocuments")
 
-    const secondFunction = async () => {
-      const result = await this.firstFunction(id);
-      console.log("end getDocuments")
-    }
-    secondFunction();
-  }
+    this.getPartys(id).subscribe(res => {
 
-  async firstFunction(id){
-    await console.log("start firstFunction" )
-    await this.afFirestore.collection("User").doc<PartyForUser>(id).valueChanges().subscribe(async res => {
-
-      await console.log("getDocuments PartyIDs" + res.Partys);
-      this.partyArr = await res.Partys;
-      await console.log("Eine PartyID" + this.partyArr[0]);
+      console.log("getDocuments PartyIDs" + res)
+      this.partyArr = res.Partys;
+      this.partyArrObsrv.next(res.Partys);
+      console.log("Eine PartyID" + this.partyArr[0]);
 
     })
-    await console.log("end firstFunction" )
   }
 
   getPartyData(id) {
     return this.afFirestore.collection("Partys").doc<AllPartyData>(id).valueChanges();
   }
-  
-   
-  
 
   getPartyDocuments(id, i) {
+
     this.getPartyData(id).subscribe(res => {
 
       //console.log("Partydaten alle an Stelle" + i + " = " + res.createdAt)
@@ -148,9 +138,9 @@ export class HomePage {
                 this.afFirestore.collection("User").doc(userID).set({
                   Partys: firebase.firestore.FieldValue.arrayUnion(r.id)
                 })
-                
+
               }
-    
+
             })
           }
         }, {
@@ -160,7 +150,7 @@ export class HomePage {
       ]
     }).then(a => a.present());
   }
-  ionViewDidEnter() { //this.fetch(); 
+  ionViewDidEnter() { this.fetch();
   console.log("ION VIEW DID ENTER")}
 
   pruefeUserVorhanden(userID) {
@@ -175,48 +165,51 @@ export class HomePage {
   }
 
   async fetch() {
-    console.log("start")
-    let userID = (await this.afAuth.currentUser.then((user) => { return user.uid; }));
-    console.log("end")
-    console.log("cry" + userID)
-    //await this.getDocuments(userID);
-    /* this.afFirestore.collection("User").doc<PartyForUser>(userID).valueChanges().subscribe(res => {
- 
-       console.log("getDocuments PartyIDs"+res);
-       this.partyArr = res.Partys;
-       console.log("Eine PartyID"+this.partyArr[0]);
- 
-     });*/
 
-     const secondFunction = async () => {
-       console.log("secondFunction");
-      const result = await this.getDocuments(userID);
-      await console.log("Partyarray: " + this.partyArr);
+    this.afAuth.currentUser.then((user) => {
+      let userID = user.uid;
+      this.getDocuments(userID);
 
-    for (let i = 0; i < this.partyArr.length; i++) {
-      console.log("Hiiiiiier IDs" + this.partyArr[i])
-      this.getPartyDocuments(this.partyArr[i], i);
-    }
+      this.partyArrObsrv.pipe(take(1)).subscribe( (partyArr)=>{
+        for (let i = 0; i < partyArr.length; i++) {
+          console.log("Hiiiiiier IDs" + partyArr[i])
+          this.getPartyDocuments(partyArr[i], i);
+        }
+      });
 
-    console.log("biiiitteee" + this.partyData[0]);
-    }
+    });
 
-    secondFunction();
-    
-    /*
-    this.afFirestore.collection('Partys').snapshotChanges().subscribe(data => {
 
-      this.tasks = data.map(e => {
-        return {
-          id: e.payload.doc.id,
-          isEdit: false,
-          Name: e.payload.doc.data()['title'],
-          Age: e.payload.doc.data()['isDone'],
-          Address: e.payload.doc.data()['desc'],
-        };
-      })
-      console.log(this.tasks);
-    });*/
+    // /* this.afFirestore.collection("User").doc<PartyForUser>(userID).valueChanges().subscribe(res => {
+
+    //    console.log("getDocuments PartyIDs"+res);
+    //    this.partyArr = res.Partys;
+    //    console.log("Eine PartyID"+this.partyArr[0]);
+
+    //  });*/
+
+    // console.log("Partyarray: " + this.partyArr);
+
+    // for (let i = 0; i < this.partyArr.length; i++) {
+    //   console.log("Hiiiiiier IDs" + this.partyArr[i])
+    //   this.getPartyDocuments(this.partyArr[i], i);
+    // }
+
+    // console.log("biiiitteee" + this.partyData[0]);
+    // /*
+    // this.afFirestore.collection('Partys').snapshotChanges().subscribe(data => {
+
+    //   this.tasks = data.map(e => {
+    //     return {
+    //       id: e.payload.doc.id,
+    //       isEdit: false,
+    //       Name: e.payload.doc.data()['title'],
+    //       Age: e.payload.doc.data()['isDone'],
+    //       Address: e.payload.doc.data()['desc'],
+    //     };
+    //   })
+    //   console.log(this.tasks);
+    // });*/
   }
 
   update(id, status) {
