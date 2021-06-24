@@ -98,7 +98,6 @@ jobs:
 
       
   cypress-run:
-    needs: build
     needs: test
     steps:
       - name: Checkout
