@@ -65,6 +65,11 @@ jobs:
       #  working-directory: ./platforms/android/
       #  run: ./gradlew bundle
 
+      #Builds für Cypress
+      - name: Cypress install
+        uses: cypress-io/github-action@v2
+
+        
   #----------------------------------------------------
   test:
     needs: build
