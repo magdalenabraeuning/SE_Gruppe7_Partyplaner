@@ -99,6 +99,14 @@ jobs:
       
   cypress-run:
     needs: test
+    name: Cypress-Tests durchlaufen
+    runs-on: ${{ matrix.os }} # runs a test on Ubuntu
+
+    strategy:
+      matrix:
+        deno: ['v1.x', 'canary']
+        os: [ubuntu-latest]
+
     steps:
       - name: Checkout
         uses: actions/checkout@v2
