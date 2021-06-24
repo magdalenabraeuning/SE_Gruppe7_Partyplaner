@@ -43,52 +43,7 @@ export class HomePage {
     private alertCtrl: AlertController,
     private speicherService: SpeicherService,
   ) { }
-  /*
-    getAllUserData() {
-      this.afFirestore.collection('User').snapshotChanges().subscribe(data => {
   
-        this.allIDs = data.map(e => {
-          return {
-            id: e.payload.doc.id
-          };
-        })
-      });
-    }
-  
-    getPartys(id) {
-      return this.afFirestore.collection("User").doc<PartyForUser>(id).valueChanges();
-    }
-    async getDocuments(id) {
-  
-      this.getPartys(id).subscribe(res => {
-  
-        console.log("getDocuments PartyIDs" + res)
-        this.partyArr = res.Partys;
-        this.partyArrObsrv.next(res.Partys);
-        console.log("Eine PartyID" + this.partyArr[0]);
-  
-      })
-    }
-  
-    getPartyData(id) {
-      return this.afFirestore.collection("Partys").doc<AllPartyData>(id).valueChanges();
-    }
-  
-    getPartyDocuments(id, i) {
-  
-      this.getPartyData(id).subscribe(res => {
-  
-        //console.log("Partydaten alle an Stelle" + i + " = " + res.createdAt)
-  
-        this.partyData[i] = { createdAt: res.createdAt, title: res.title, desc: res.desc, isDone: res.isDone, id: res.id};
-        console.log("Partydaten idddddddd 1" + this.partyData[i].createdAt);
-        console.log("Partydaten idddddddd 2" + this.partyData[i].title);
-        console.log("Partydaten idddddddd 3" + this.partyData[i].desc);
-        console.log("Partydaten idddddddd 4" + this.partyData[i].isDone);
-  
-      })
-    }
-  */
   signOut() {
     this.afAuth.signOut().then(() => {
       location.reload();
@@ -120,57 +75,6 @@ export class HomePage {
 
 
 
-
-  /*
-  let userID = (await this.afAuth.currentUser.then((user) => { return user.uid; }));
-
-  this.alertCtrl.create({
-    message: "Party erstellen",
-    inputs: [
-      { type: 'text', name: 'title' },
-      { type: 'textarea', name: 'desc' }
-    ],
-    buttons: [
-      {
-        text: 'Add',
-        handler: (res) => {
-          console.log(res);
-          this.afFirestore.collection("Partys").add({
-
-            title: res.title,
-            desc: res.desc,
-            createdAt: Date.now(),
-            isDone: false,
-            //Sammlung Einkaufsliste, ...
-
-          }).then((r) => {
-            this.afFirestore.collection("Partys").doc(r.id).update({
-              id: r.id
-            });
-
-            this.getAllUserData();
-            console.log(this.allIDs);
-            if (this.pruefeUserVorhanden(userID)) {
-              this.afFirestore.collection("User").doc(userID).update({
-
-                Partys: firebase.firestore.FieldValue.arrayUnion(r.id)
-              });
-            }else{
-              this.afFirestore.collection("User").doc(userID).set({
-                Partys: firebase.firestore.FieldValue.arrayUnion(r.id)
-              })
-
-            }
-
-          })
-        }
-      }, {
-        text: 'Cancel'
-      }
-
-    ]
-  }).then(a => a.present());*/
-
   ionViewDidEnter() { //this.fetch();
     console.log("ION VIEW DID ENTER")
   }
@@ -188,20 +92,6 @@ export class HomePage {
 
   async fetch() {
     this.partyData = await this.speicherService.loadAllData();
-
-    /*
-        this.afAuth.currentUser.then((user) => {
-          let userID = user.uid;
-          this.getDocuments(userID);
-    
-          this.partyArrObsrv.pipe(take(1)).subscribe( (partyArr)=>{
-            for (let i = 0; i < partyArr.length; i++) {
-              console.log("Hiiiiiier IDs" + partyArr[i])
-              this.getPartyDocuments(partyArr[i], i);
-            }
-          });
-    
-        });*/
   }
 
   update(id, status) {

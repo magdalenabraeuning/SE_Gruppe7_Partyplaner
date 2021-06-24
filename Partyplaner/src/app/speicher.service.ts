@@ -75,8 +75,6 @@ export class SpeicherService {
 
     this.getPartyData(id).subscribe(res => {
 
-      //console.log("Partydaten alle an Stelle" + i + " = " + res.createdAt)
-
       this.partyData[i] = { createdAt: res.createdAt, title: res.title, desc: res.desc, isDone: res.isDone, id: res.id };
       console.log("Partydaten idddddddd 1" + this.partyData[i].createdAt);
       console.log("Partydaten idddddddd 2" + this.partyData[i].title);
@@ -104,49 +102,39 @@ export class SpeicherService {
       }).then((r) => {
         this.afFirestore.collection("Partys").doc(r.id).update({
           id: r.id
-        }).then(()=>{
-           this.getAllUserData().then(()=>{
-             this.userIDArrObsrv.pipe(take(1)).subscribe(() => {
+        }).then(() => {
+          this.getAllUserData().then(() => {
+            this.userIDArrObsrv.pipe(take(1)).subscribe(() => {
 
+              let userVorhanden = false;
+              for (let i = 0; i < this.allIDs.length; i++) {
+                console.log("Hiiiiiier IDs" + this.allIDs[i]);
+                if (this.pruefeUserVorhanden(this.allIDs[i].id, userID)) {
+                  userVorhanden = true;
+                }
+              }
 
-            for (let i = 0; i < this.allIDs.length; i++) {
-              console.log("Hiiiiiier IDs" + this.allIDs[i])
-
-              if (this.pruefeUserVorhanden(this.allIDs[i].id, userID)) {
+              if (userVorhanden) {
                 console.log("USER SCHON VORHANDEN")
                 this.afFirestore.collection("User").doc(userID).update({
                   Partys: firebase.firestore.FieldValue.arrayUnion(r.id)
                 });
-                return;
               } else {
                 console.log("USER NICHT VORHANDEN")
                 this.afFirestore.collection("User").doc(userID).set({
                   Partys: firebase.firestore.FieldValue.arrayUnion(r.id)
                 })
               }
-
-
-              //this.getPartyDocuments(partyArr[i], i);
-            }
-          });
-           })});
-           
-           
-
-
-
-
-           
-            
-          });
-        }).then(()=>{
-          console.log("das hier?"+this.allIDs);
+            });
+          })
         });
-        
-       
-        
-      }
-        
+
+      });
+    })
+
+
+  }
+
 
 
   getUsers() {
@@ -155,9 +143,9 @@ export class SpeicherService {
   async getAllUserData() {
 
     await this.getUsers().subscribe(res => {
-      
+
       console.log("speicherService UserIDs alle" + res);
-      
+
       this.allIDs = res.map(e => {
         return {
           id: e.payload.doc.id
@@ -169,12 +157,11 @@ export class SpeicherService {
     })
   }
 
-
-  pruefeUserVorhanden(pruefeID ,userID) {
+  pruefeUserVorhanden(pruefeID, userID) {
     let userVorhanden = false;
-      if (pruefeID == userID) {
-        userVorhanden = true;
-      }
+    if (pruefeID == userID) {
+      userVorhanden = true;
+    }
     console.log("DAS IST MEIN USER?: " + userVorhanden)
     return userVorhanden;
   }
