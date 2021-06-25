@@ -2,7 +2,7 @@
 
 /// JSON fixture file can be loaded directly using
 // the built-in JavaScript bundler
-// @ts-ignore
+// @ts-ignore "is not allowed without comment" - weil linter es so wollte 
 const requiredExample = require('../../fixtures/example')
 
 context('Files', () => {

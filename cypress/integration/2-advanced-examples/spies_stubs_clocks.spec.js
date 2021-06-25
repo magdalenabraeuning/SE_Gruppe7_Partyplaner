@@ -115,12 +115,12 @@ context('Spies, Stubs, and Clock', () => {
       .withArgs(Cypress.sinon.match.number).throws(new Error('Invalid name'))
 
     expect(greeter.greet('World')).to.equal('Hi')
-    // @ts-ignore
+    // @ts-ignore "is not allowed without comment" - weil linter es so wollte 
     expect(() => greeter.greet(42)).to.throw('Invalid name')
     expect(greeter.greet).to.have.been.calledTwice
 
     // non-matched calls goes the actual method
-    // @ts-ignore
+    // @ts-ignore "is not allowed without comment" - weil linter es so wollte 
     expect(greeter.greet()).to.equal('Hello, undefined!')
   })
 
