@@ -65,7 +65,10 @@
               <ion-card-title> {{cocktail.strDrink}} </ion-card-title>
             </ion-card-header>
           </ion-item>
+          
+  
           <details>
+            
             <summary>Zutaten & Zubereitung</summary>
             <p>Zubereitung: {{cocktail.strInstructionsDE}}</p>
             <p>Zutaten:</p>
@@ -84,8 +87,10 @@
             <p *ngIf="cocktail.strIngredient13!=null&&cocktail.strIngredient13!=''">{{cocktail.strMeasure13}} {{cocktail.strIngredient13}}</p>
             <p *ngIf="cocktail.strIngredient14!=null&&cocktail.strIngredient14!=''">{{cocktail.strMeasure14}} {{cocktail.strIngredient14}}</p>
             <p *ngIf="cocktail.strIngredient15!=null&&cocktail.strIngredient15!=''">{{cocktail.strMeasure15}} {{cocktail.strIngredient15}}</p>
-            
+          
           </details>
+
+        
         </ion-card>
     </ion-list>
     </div>
