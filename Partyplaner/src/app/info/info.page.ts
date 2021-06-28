@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import {ActivatedRoute} from '@angular/router';
+import { AlertController } from '@ionic/angular';
+import { SpeicherService } from '../speicher.service';
 
 @Component({
   selector: 'app-info',
@@ -13,9 +15,12 @@ export class InfoPage implements OnInit {
   private address: string;
   private date: string;
   private time: string;
+  private id: string;
 
   constructor(
     private activatedRoute: ActivatedRoute,
+    private alertCtrl: AlertController,
+    private speicherService: SpeicherService,
   ) { 
     /*this.title = activatedRoute.snapshot.queryParamMap.get("title");
     this.description = activatedRoute.snapshot.queryParamMap.get("description");
@@ -34,5 +39,28 @@ export class InfoPage implements OnInit {
     this.address = this.activatedRoute.snapshot.queryParamMap.get("address");
     this.date = this.activatedRoute.snapshot.queryParamMap.get("date");
     this.time = this.activatedRoute.snapshot.queryParamMap.get("time");
+    this.id = this.activatedRoute.snapshot.queryParamMap.get("id");
+  }
+
+
+  addTeilnehmer(partyID){
+    this.alertCtrl.create({
+      message: "Party erstellen",
+      inputs: [
+        { type: 'textarea', name: 'userMail', placeholder: "E-Mail des Users eingeben" },
+      ],
+      buttons: [
+        {
+          text: 'Add',
+          handler: (res) => {
+            console.log(res);
+            this.speicherService.addTeilnehmer(this.id, res.userMail);
+          }
+        }, {
+          text: 'Cancel'
+        }
+      ]
+    }).then(a => a.present());
+  
   }
 }

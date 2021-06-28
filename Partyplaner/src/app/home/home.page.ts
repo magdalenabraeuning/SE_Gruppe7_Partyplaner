@@ -115,7 +115,7 @@ export class HomePage {
 
   openParty(party) {
     let navigationTarget =
-      `/tabbar/info?title=${party.title}&description=${party.description}&address=${party.address}&date=${party.date}&time=${party.time}`;
+      `/tabbar/info?title=${party.title}&description=${party.description}&address=${party.address}&date=${party.date}&time=${party.time}&id=${party.id}`;
     this.navCtrl.navigateForward(navigationTarget);
 
   }
