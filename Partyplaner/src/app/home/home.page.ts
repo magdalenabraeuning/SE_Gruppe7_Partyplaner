@@ -42,7 +42,7 @@ export class HomePage {
     public afFirestore: AngularFirestore,
     private alertCtrl: AlertController,
     private speicherService: SpeicherService,
-    private navCtrl : NavController,
+    private navCtrl: NavController,
   ) { }
 
   signOut() {
@@ -57,8 +57,15 @@ export class HomePage {
     this.alertCtrl.create({
       message: "Party erstellen",
       inputs: [
-        { type: 'text', name: 'title' },
-        { type: 'textarea', name: 'desc' }
+        { type: 'text', name: 'title', placeholder: "Titel" },
+        { type: 'textarea', name: 'description', placeholder: "Beschreibung" },
+        { type: 'textarea', name: 'address', placeholder: "Adresse" },
+        {
+          name: 'date',
+          type: 'date',
+          min: Date.now(),
+        },
+        { type: 'time', name: 'time' }
       ],
       buttons: [
         {
@@ -108,8 +115,9 @@ export class HomePage {
 
   openParty(party) {
     let navigationTarget =
-    `/ergebnis?inputMenge`;
+      `/tabbar/info?title=${party.title}&description=${party.description}&address=${party.address}&date=${party.date}&time=${party.time}`;
     this.navCtrl.navigateForward(navigationTarget);
+
   }
 
 

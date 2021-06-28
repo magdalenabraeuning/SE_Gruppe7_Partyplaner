@@ -10,11 +10,27 @@ export interface PartyForUser {
 }
 
 export interface AllPartyData {
-  createdAt: number;
-  desc: string;
-  isDone: boolean;
   title: string;
+  description: string;
+  address: string;
+  date: string;
+  time: string;
+
+  isDone: boolean;
+  createdAt: number;
   id: string;
+
+  /**
+   * Titel
+   * Beschreibung
+   * Adresse
+   * Datum
+   * Uhrzeit
+   * 
+   * Status
+   * createdAt
+   * id
+   */
 }
 
 
@@ -75,10 +91,10 @@ export class SpeicherService {
 
     this.getPartyData(id).subscribe(res => {
 
-      this.partyData[i] = { createdAt: res.createdAt, title: res.title, desc: res.desc, isDone: res.isDone, id: res.id };
+      this.partyData[i] = { title: res.title, description: res.description, address: res.address, date: res.date, time: res.time, createdAt: res.createdAt, isDone: res.isDone, id: res.id };
       console.log("Partydaten idddddddd 1" + this.partyData[i].createdAt);
       console.log("Partydaten idddddddd 2" + this.partyData[i].title);
-      console.log("Partydaten idddddddd 3" + this.partyData[i].desc);
+      console.log("Partydaten idddddddd 3" + this.partyData[i].description);
       console.log("Partydaten idddddddd 4" + this.partyData[i].isDone);
 
     })
@@ -94,7 +110,11 @@ export class SpeicherService {
       this.afFirestore.collection("Partys").add({
 
         title: res.title,
-        desc: res.desc,
+        description: res.description,
+        address: res.address,
+        date: res.date,
+        time: res.time,
+
         createdAt: Date.now(),
         isDone: false,
         //Sammlung Einkaufsliste, ...

@@ -20,12 +20,16 @@
     <ion-button (click)="fetch()">fetch</ion-button>
 
     <ion-list *ngIf="partyData.length !=0">
-      <ion-item *ngFor="let item of partyData" (click)="openParty(item)">
-        <ion-label>
-          <h3>{{item.title}}</h3>
-          <h3>{{item.desc}}</h3>
-          <h3>{{item.isDone}}</h3>
-          <h3>{{item.createdAt}}</h3>
+      <ion-item *ngFor="let item of partyData" >
+        <ion-label (click)="openParty(item)">
+          
+          <h3>Titel :{{item.title}}</h3>
+          <h3>Beschreibung: {{item.description}}</h3>
+          <h3>Adresse: {{item.address}}</h3>
+          <h3>Datum: {{item.date}}</h3>
+          <h3>Uhrzeit: {{item.time}}</h3>
+          <h3>Party abgeschlossen? {{item.isDone}}</h3>
+          <h3>Erstellt am: {{item.createdAt}}</h3>
           <h3>ID: {{item.id}}</h3>
 
 
