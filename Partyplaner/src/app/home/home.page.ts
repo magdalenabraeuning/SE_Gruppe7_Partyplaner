@@ -5,7 +5,7 @@ import { AngularFirestore } from '@angular/fire/firestore';
 import { AlertController } from '@ionic/angular';
 import { SpeicherService } from '../speicher.service';
 import firebase from 'firebase/app';
-import { ChangeDetectorRef } from '@angular/core'
+import { NavController } from '@ionic/angular';
 
 export interface PartyForUser {
   Partys: [];
@@ -40,9 +40,9 @@ export class HomePage {
     public afFirestore: AngularFirestore,
     private alertCtrl: AlertController,
     private speicherService: SpeicherService,
-    private changeRef: ChangeDetectorRef
+    private navCtrl : NavController,
   ) { }
-  
+
   signOut() {
     this.afAuth.signOut().then(() => {
       location.reload();
@@ -74,7 +74,7 @@ export class HomePage {
 
 
 
-  ionViewDidEnter() {     
+  ionViewDidEnter() {
     //this.fetch();
     console.log("ION VIEW DID ENTER")
 
@@ -92,9 +92,7 @@ export class HomePage {
   }
 
   async fetch() {
-    this.changeRef.detectChanges();
     this.partyData = await this.speicherService.loadAllData();
-    this.changeRef.detectChanges();
   }
 
   updateButton(id, status) {
@@ -102,8 +100,22 @@ export class HomePage {
   }
 
   async deleteButton(id) {
-    console.log("ID ID ID ID ID ID "+id);
+    console.log("ID ID ID ID ID ID " + id);
     let test = await this.speicherService.delete(id);
-}
+  }
+
+  openParty(party) {
+    let navigationTarget =
+    `/ergebnis?inputMenge`;
+    this.navCtrl.navigateForward(navigationTarget);
+  }
+
+
+
+
+
+
+
+
 }
 
