@@ -47,7 +47,7 @@
     <ion-list *ngIf="!showList&&!APIError" lines="none">
       <ion-card>
         <ion-item class="ion-activated">
-          <!--<ion-img id="image" src={{fische.image_url}} slot="start"></ion-img>-->
+          <ion-img id="image" src={{cocktail.strDrinkThumb}} slot="start"></ion-img>
           <ion-card-header>
             <ion-card-title> {{cocktails.strDrink}}</ion-card-title>
           </ion-card-header>
@@ -60,7 +60,7 @@
       <ion-list *ngFor="let cocktail of cocktails" lines="none">
          <ion-card>
           <ion-item class="ion-activated">
-            <!--<ion-img id="image" src={{fisch.image_url}} slot="start"></ion-img>-->
+            <ion-img id="image" src={{cocktail.strDrinkThumb}} slot="start"></ion-img>
             <ion-card-header>
               <ion-card-title> {{cocktail.strDrink}} </ion-card-title>
             </ion-card-header>
