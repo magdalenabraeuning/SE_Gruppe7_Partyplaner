@@ -1,0 +1,94 @@
+# This workflow uses actions that are not certified by GitHub.
+# They are provided by a third-party and are governed by
+# separate terms of service, privacy policy, and support
+# documentation.
+
+# This workflow will install Deno and run tests across stable and canary builds on Windows, Ubuntu and macOS.
+# For more information see: https://github.com/denoland/setup-deno
+
+name: Deno
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  build:
+    name: Buildet unsere Dev-Umgebung
+    runs-on: ${{ matrix.os }} # runs a test on Ubuntu, Windows and macOS
+
+    strategy:
+      matrix:
+        deno: ['v1.x', 'canary']
+        os: [ubuntu-latest]
+
+    steps:
+      - name: Setup repo
+        uses: actions/checkout@v1
+      - name: Set up JDK
+        uses: actions/setup-java@v1
+        with:
+          java-version: 1.8
+      - name: Setup Node.js
+        uses: actions/setup-node@v1
+        with:
+          node-version: 14.17
+      - name: Install Cordova
+        run: npm install -g cordova
+      - name: Install Ionic
+        run: npm install -g @ionic/cli
+      - name: Install app dependencies
+        run: npm install
+      - name: Use coturiv/setup-ionic
+        # hat nichts gebracht aber hatte funktioniert also drin lassen ;)
+        uses: coturiv/setup-ionic@v1
+        with:
+          cordova-version: 8
+      - name: Ionic init
+        run: ionic init SE_Gruppe7_Partyplaner --type=angular
+      - name: Add Android platform
+        run: ionic cordova platform add android@latest
+      - name: Build Android Dev APK
+        run: ionic cordova build android
+      - name: Build Android Release APK
+        run: ionic cordova build android --release --prod
+      # Braucht man vielleicht nicht? Schauen ob test trotzdem läuft
+      #- name: Generate the Android App Bundle
+      #  working-directory: ./platforms/android/
+      #  run: ./gradlew bundle
+
+  #----------------------------------------------------
+  test:
+    needs: build
+    name: Testet unsere Dev-Umgebung
+    runs-on: ${{ matrix.os }} # runs a test on Ubuntu
+
+    strategy:
+      matrix:
+        deno: ['v1.x', 'canary']
+        os: [ubuntu-latest]
+
+    steps:
+      - name: Setup repo
+        uses: actions/checkout@v2
+      - name: Setup Deno
+        # uses: denoland/setup-deno@v1
+        uses: denoland/setup-deno@4a4e59637fa62bd6c086a216c7e4c5b457ea9e79
+        with:
+          deno-version: ${{ matrix.deno }} # tests across multiple Deno versions
+
+      # Uncomment this step to verify the use of 'deno fmt' on each commit.
+      # - name: Verify formatting
+      #   run: deno fmt --check
+
+      - name: Run linter
+        run: deno lint
+
+      #- name: Cache dependencies
+      #  run: deno cache DENO_DIR
+      # run: deno cache deps.ts
+
+      - name: Run tests
+        run: deno test -A --unstable

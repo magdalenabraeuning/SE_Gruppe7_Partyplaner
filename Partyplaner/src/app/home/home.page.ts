@@ -19,6 +19,8 @@ export interface AllPartyData {
   id: string;
 }
 
+// auskommentiert für CI 
+//import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-home',
