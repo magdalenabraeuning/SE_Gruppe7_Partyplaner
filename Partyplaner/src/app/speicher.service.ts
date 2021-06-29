@@ -11,8 +11,8 @@ export interface PartyForUser {
 
 export class AllPartyData {
 
-  constructor(public Teilnehmer: []){
-
+  constructor(public einTeilnehmer){
+    this.Teilnehmer = einTeilnehmer;
   }
   title: string;
   description: string;
@@ -22,7 +22,7 @@ export class AllPartyData {
 
   Essen: [];
 
-  //Teilnehmer: [];
+  Teilnehmer: [];
 
   isDone: boolean;
   createdAt: number;
