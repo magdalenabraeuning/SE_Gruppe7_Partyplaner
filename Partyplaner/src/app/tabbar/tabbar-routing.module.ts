@@ -29,7 +29,7 @@ const routes: Routes = [
 },    ]
 },{
   path: '',
-  redirectTo: 'museum-tab1',
+  redirectTo: 'home',
   pathMatch:'full'
 }
 ];
