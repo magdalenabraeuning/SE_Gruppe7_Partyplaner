@@ -1,9 +1,100 @@
 <ion-header>
   <ion-toolbar>
-    <ion-title>cocktail</ion-title>
+    <ion-title>Cocktail-Rezepte</ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content>
+
+  <ion-searchbar showCancelButton="never" [(ngModel)]="searchTerm" (search)="loadData()"></ion-searchbar>
+  <div *ngIf=RandomC>
+    <h1>Random: </h1>
+  </div>
+ 
+  <ion-refresher slot="fixed" (ionRefresh)="doRefresh($event)">
+    <ion-refresher-content pullingIcon="chevron-down-circle-outline" pullingText="Pull to refresh"
+      refreshingSpinner="circles" refreshingText="Refreshing...">
+    </ion-refresher-content>
+  </ion-refresher>
+ 
+  <ion-list *ngIf="showSkeleton">
+    <ion-item *ngFor="let number of [0,1,2,3,4,5,6,7,8]">
+      <ion-thumbnail slot="start">
+        <ion-skeleton-text animated></ion-skeleton-text>
+      </ion-thumbnail>
+      <ion-label>
+        <h3>
+          <ion-skeleton-text animated style="width: 50%"></ion-skeleton-text>
+        </h3>
+        <p>
+          <ion-skeleton-text animated style="width: 80%"></ion-skeleton-text>
+        </p>
+        <p>
+          <ion-skeleton-text animated style="width: 60%"></ion-skeleton-text>
+        </p>
+      </ion-label>
+    </ion-item>
+  </ion-list>
+ 
+  <ion-card *ngIf="APIError">
+    <ion-item lines="none">
+      <p>An error has occurred.<br>
+        Please check your internet connection or your spelling.</p>
+    </ion-item>
+  </ion-card>
+ 
+  <div *ngIf="!showSkeleton">
+    <ion-list *ngIf="!showList&&!APIError" lines="none">
+      <ion-card>
+        <ion-item class="ion-activated">
+          <ion-img id="image" src={{cocktail.strDrinkThumb}} slot="start"></ion-img>
+          <ion-card-header>
+            <ion-card-title> {{cocktails.strDrink}}</ion-card-title>
+          </ion-card-header>
+        </ion-item>
+      </ion-card>
+    </ion-list>
+ 
+
+    <div *ngIf="showList&&!APIError">
+      <ion-list *ngFor="let cocktail of cocktails" lines="none">
+         <ion-card>
+          <ion-item class="ion-activated">
+            <ion-img id="image" src={{cocktail.strDrinkThumb}} slot="start"></ion-img>
+            <ion-card-header>
+              <ion-card-title> {{cocktail.strDrink}} </ion-card-title>
+            </ion-card-header>
+          </ion-item>
+          
+  
+          <details>
+            
+            <summary>Zutaten & Zubereitung</summary>
+            <p>Zubereitung: {{cocktail.strInstructionsDE}}</p>
+            <p>Zutaten:</p>
+            <p *ngIf="cocktail.strIngredient1!=null&&cocktail.strIngredient1!=''">{{cocktail.strMeasure1}} {{cocktail.strIngredient1}}</p>
+            <p *ngIf="cocktail.strIngredient2!=null&&cocktail.strIngredient2!=''">{{cocktail.strMeasure2}} {{cocktail.strIngredient2}}</p>
+            <p *ngIf="cocktail.strIngredient3!=null&&cocktail.strIngredient3!=''">{{cocktail.strMeasure3}} {{cocktail.strIngredient3}}</p>
+            <p *ngIf="cocktail.strIngredient4!=null&&cocktail.strIngredient4!=''">{{cocktail.strMeasure4}} {{cocktail.strIngredient4}}</p>
+            <p *ngIf="cocktail.strIngredient5!=null&&cocktail.strIngredient5!=''">{{cocktail.strMeasure5}} {{cocktail.strIngredient5}}</p>
+            <p *ngIf="cocktail.strIngredient6!=null&&cocktail.strIngredient6!=''">{{cocktail.strMeasure6}} {{cocktail.strIngredient6}}</p>
+            <p *ngIf="cocktail.strIngredient7!=null&&cocktail.strIngredient7!=''">{{cocktail.strMeasure7}} {{cocktail.strIngredient7}}</p>
+            <p *ngIf="cocktail.strIngredient8!=null&&cocktail.strIngredient8!=''">{{cocktail.strMeasure8}} {{cocktail.strIngredient8}}</p>
+            <p *ngIf="cocktail.strIngredient9!=null&&cocktail.strIngredient9!=''">{{cocktail.strMeasure9}} {{cocktail.strIngredient9}}</p>
+            <p *ngIf="cocktail.strIngredient10!=null&&cocktail.strIngredient10!=''">{{cocktail.strMeasure10}} {{cocktail.strIngredient10}}</p>
+            <p *ngIf="cocktail.strIngredient11!=null&&cocktail.strIngredient11!=''">{{cocktail.strMeasure11}} {{cocktail.strIngredient11}}</p>
+            <p *ngIf="cocktail.strIngredient12!=null&&cocktail.strIngredient12!=''">{{cocktail.strMeasure12}} {{cocktail.strIngredient12}}</p>
+            <p *ngIf="cocktail.strIngredient13!=null&&cocktail.strIngredient13!=''">{{cocktail.strMeasure13}} {{cocktail.strIngredient13}}</p>
+            <p *ngIf="cocktail.strIngredient14!=null&&cocktail.strIngredient14!=''">{{cocktail.strMeasure14}} {{cocktail.strIngredient14}}</p>
+            <p *ngIf="cocktail.strIngredient15!=null&&cocktail.strIngredient15!=''">{{cocktail.strMeasure15}} {{cocktail.strIngredient15}}</p>
+          
+          </details>
+
+        
+        </ion-card>
+    </ion-list>
+    </div>
+  </div>
+  
 
 </ion-content>
