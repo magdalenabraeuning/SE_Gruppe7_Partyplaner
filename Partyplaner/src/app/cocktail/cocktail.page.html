@@ -6,7 +6,7 @@
 
 <ion-content>
 
-  <ion-searchbar showCancelButton="never" [(ngModel)]="searchTerm" (search)="loadData()"></ion-searchbar>
+  <ion-searchbar showCancelButton="never" [(ngModel)]="searchTerm" (search)="loadData()" (ionClear)="onClear($event)"></ion-searchbar>
   <div *ngIf=RandomC>
     <h1>Random: </h1>
   </div>

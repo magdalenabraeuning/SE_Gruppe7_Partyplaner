@@ -81,5 +81,9 @@ export class CocktailPage implements OnInit {
     }, 2000);
   }
 
+  onClear(ev) { 
+    this.searchTerm='';
+    this.loadData();
+  }
 
 }
