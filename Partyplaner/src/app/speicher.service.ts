@@ -9,7 +9,11 @@ export interface PartyForUser {
   Partys: [];
 }
 
-export interface AllPartyData {
+export class AllPartyData {
+
+  constructor(public Teilnehmer: []){
+
+  }
   title: string;
   description: string;
   address: string;
@@ -18,7 +22,7 @@ export interface AllPartyData {
 
   Essen: [];
 
-  Teilnehmer:[];
+  //Teilnehmer: [];
 
   isDone: boolean;
   createdAt: number;
@@ -220,15 +224,40 @@ export class SpeicherService {
     });
   }
 
-  partymodusStarten(partyID, status){
+  partymodusStarten(partyID, status) {
     this.afFirestore.collection("Partys").doc(partyID).update({
       partymodus: !status
     });
   }
 
+/*
+  async getTeilnehmer(partyID):Promise<AllPartyData[]> {
+    const teilnehmerPromise = new Promise<AllPartyData[]>((resolveCallback, rejectCallback) => {
+      const ergebnisArray: AllPartyData[]=[];
+      this.getPartyData(partyID).forEach((party)=> {
+        console.log("Teilnehmer: "+party.Teilnehmer);
+        let partyTeilnehmer = new AllPartyData(party.Teilnehmer);
+        ergebnisArray.push(partyTeilnehmer);
+      }).then(()=>{
+        resolveCallback(ergebnisArray);
+      });
+    });
 
-  sucheTeilnehmer(partyID) {
+     //console.log("Teilnehmer: "+(await teilnehmerPromise));
+    return teilnehmerPromise;
+  }*/
 
+
+  async getTeilnehmer(partyID):Promise<AllPartyData[]> {
+      const ergebnisArray: AllPartyData[]=[];
+      this.getPartyData(partyID).forEach(async (party)=> {
+        console.log("Teilnehmer: "+party.Teilnehmer);
+        let partyTeilnehmer = new AllPartyData(party.Teilnehmer);
+        ergebnisArray.push(partyTeilnehmer);
+    });
+
+     //console.log("Teilnehmer: "+(await teilnehmerPromise));
+    return ergebnisArray;
   }
 
   addTeilnehmer(partyID, userMail) {
@@ -243,8 +272,8 @@ export class SpeicherService {
     });
   }
 
-  getAllEmails(){
-    let allEMails:any[];
+  getAllEmails() {
+    let allEMails: any[];
     this.getUsers().subscribe(res => {
 
       console.log("speicherService UserIDs alle" + res);
@@ -261,17 +290,19 @@ export class SpeicherService {
     return allEMails;
   }
 
-  removeTeilnehmer(partyID) {
-
+  removeTeilnehmer(partyID, userMail) {
+    this.afFirestore.collection("Partys").doc(partyID).update({
+      Teilnehmer: firebase.firestore.FieldValue.arrayRemove(userMail)
+    });
   }
 
-  addEssen(partyID, essenArray){
+  addEssen(partyID, essenArray) {
     this.afFirestore.collection("Partys").doc(partyID).update({
       Essen: firebase.firestore.FieldValue.arrayUnion(essenArray)
     });
   }
 
-  removeEssen(partyID, essenArray){
+  removeEssen(partyID, essenArray) {
     this.afFirestore.collection("Partys").doc(partyID).update({
       Essen: firebase.firestore.FieldValue.arrayRemove(essenArray)
     });

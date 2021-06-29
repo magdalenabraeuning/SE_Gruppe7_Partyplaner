@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import {ActivatedRoute} from '@angular/router';
 import { AlertController } from '@ionic/angular';
-import { SpeicherService } from '../speicher.service';
+import { AllPartyData, SpeicherService } from '../speicher.service';
 
 @Component({
   selector: 'app-info',
@@ -16,6 +16,8 @@ export class InfoPage implements OnInit {
   private date: string;
   private time: string;
   private id: string;
+
+  private teilnehmerPromise: Promise<AllPartyData[]>;
 
   constructor(
     private activatedRoute: ActivatedRoute,
@@ -40,12 +42,13 @@ export class InfoPage implements OnInit {
     this.date = this.activatedRoute.snapshot.queryParamMap.get("date");
     this.time = this.activatedRoute.snapshot.queryParamMap.get("time");
     this.id = this.activatedRoute.snapshot.queryParamMap.get("id");
+    this.showTeilnehmer(this.id);
   }
 
 
-  addTeilnehmer(partyID){
+  async addTeilnehmer(partyID){
     this.alertCtrl.create({
-      message: "Party erstellen",
+      message: "Teilnehmer hinzufügen",
       inputs: [
         { type: 'textarea', name: 'userMail', placeholder: "E-Mail des Users eingeben" },
       ],
@@ -55,12 +58,46 @@ export class InfoPage implements OnInit {
           handler: (res) => {
             console.log(res);
             this.speicherService.addTeilnehmer(this.id, res.userMail);
+            this.showTeilnehmer(this.id);
           }
         }, {
           text: 'Cancel'
         }
       ]
     }).then(a => a.present());
-  
   }
+
+async showTeilnehmer(partyID){
+  this.teilnehmerPromise = this.speicherService.getTeilnehmer(partyID);
+  console.log(await this.teilnehmerPromise);
+}
+
+removeTeilnehmer(partyID){
+  this.alertCtrl.create({
+    message: "Teilnehmer entfernen",
+    inputs: [
+      { type: 'textarea', name: 'userMail', placeholder: "E-Mail des Users eingeben" },
+    ],
+    buttons: [
+      {
+        text: 'Remove',
+        handler: (res) => {
+          console.log(res);
+          this.speicherService.removeTeilnehmer(partyID, res.userMail);
+          this.showTeilnehmer(this.id);
+        }
+      }, {
+        text: 'Cancel'
+      }
+    ]
+  }).then(a => a.present());
+
+
+
+}
+
+
+
+
+
 }
