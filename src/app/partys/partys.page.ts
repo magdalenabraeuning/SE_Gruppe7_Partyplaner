@@ -1,5 +1,5 @@
 import { Subject } from 'rxjs';
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { AngularFireAuth } from '@angular/fire/auth';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { AlertController, LoadingController } from '@ionic/angular';
@@ -26,7 +26,7 @@ export interface AllPartyData {
   templateUrl: './partys.page.html',
   styleUrls: ['./partys.page.scss'],
 })
-export class PartysPage {
+export class PartysPage implements OnInit {
 
   tasks: any = [];
   userProfileCollection;
@@ -87,14 +87,17 @@ export class PartysPage {
     }).then(a => { a.present() });
   }
 
-
-  ionViewDidEnter() {
+  ngOnInit() {
     this.presentLoading();
     try {
       setTimeout(() => this.fetch(), 4000);
     } catch (e) {
       console.log("Fehler beim Laden");
     }
+  }
+
+  ionViewDidEnter() {
+    this.fetch();
   }
 
   pruefeUserVorhanden(userID) {
