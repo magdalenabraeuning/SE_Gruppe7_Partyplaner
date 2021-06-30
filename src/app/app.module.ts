@@ -8,15 +8,13 @@ import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
 
 import {firebase, firebaseui, FirebaseUIModule} from 'firebaseui-angular';
-import {AngularFirestoreModule} from '@angular/fire/firestore';
-import {AngularFireDatabaseModule} from '@angular/fire/database';
+
 
 import {AngularFireModule} from '@angular/fire';
 //auskommentiert für CI 
 // import {AngularFireAuthModule, USE_EMULATOR as USE_AUTH_EMULATOR} from '@angular/fire/auth';
 import {AngularFireAuthModule} from '@angular/fire/auth';
 import { environment } from 'src/environments/environment';
-import { HttpClientModule } from '@angular/common/http';
 
 
 const firebaseUiAuthConfig: firebaseui.auth.Config = {
@@ -56,10 +54,7 @@ const firebaseUiAuthConfig: firebaseui.auth.Config = {
   imports: [
     AngularFireModule.initializeApp(environment.firebase),
     AngularFireAuthModule,
-    AngularFireDatabaseModule,
-    AngularFirestoreModule,
-    FirebaseUIModule.forRoot(firebaseUiAuthConfig),BrowserModule, IonicModule.forRoot(), AppRoutingModule, FirebaseUIModule, HttpClientModule],
-
+    FirebaseUIModule.forRoot(firebaseUiAuthConfig),BrowserModule, IonicModule.forRoot(), AppRoutingModule, FirebaseUIModule],
   providers: [{ provide: RouteReuseStrategy, useClass: IonicRouteStrategy }],
   bootstrap: [AppComponent],
 })
