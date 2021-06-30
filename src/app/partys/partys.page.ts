@@ -7,6 +7,7 @@ import { SpeicherService } from '../speicher.service';
 import firebase from 'firebase/app';
 import { NavController } from '@ionic/angular';
 
+
 export interface PartyForUser {
   Partys: [];
 }
@@ -19,15 +20,13 @@ export interface AllPartyData {
   id: string;
 }
 
-// auskommentiert für CI 
-//import { Observable } from 'rxjs';
 
 @Component({
-  selector: 'app-home',
-  templateUrl: 'home.page.html',
-  styleUrls: ['home.page.scss'],
+  selector: 'app-partys',
+  templateUrl: './partys.page.html',
+  styleUrls: ['./partys.page.scss'],
 })
-export class HomePage {
+export class PartysPage {
 
   tasks: any = [];
   userProfileCollection;
@@ -49,7 +48,10 @@ export class HomePage {
 
   signOut() {
     this.afAuth.signOut().then(() => {
-      location.reload();
+      
+      let navigationTarget =`/home`;
+    this.navCtrl.navigateForward(navigationTarget);
+    //location.reload();
     });
   }
   myEventList: any;
@@ -89,7 +91,7 @@ export class HomePage {
   ionViewDidEnter() {
     this.presentLoading();
     try {
-      setTimeout(() => this.fetch(), 400);
+      setTimeout(() => this.fetch(), 4000);
     } catch (e) {
       console.log("Fehler beim Laden");
     }
@@ -138,7 +140,7 @@ export class HomePage {
     const loading = await this.loadingController.create({
       cssClass: 'my-custom-class',
       message: 'Please wait...',
-      duration: 400
+      duration: 4000
     });
     await loading.present();
 

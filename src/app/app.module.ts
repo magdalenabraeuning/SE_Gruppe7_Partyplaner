@@ -20,6 +20,22 @@ import { HttpClientModule } from '@angular/common/http';
 
 
 const firebaseUiAuthConfig: firebaseui.auth.Config = {
+  /*
+  callbacks: {
+    signInSuccessWithAuthResult: function(authResult, redirectUrl) {
+      redirectUrl="/terms" ;
+      // User successfully signed in.
+      // Return type determines whether we continue the redirect automatically
+      // or whether we leave that to developer to handle.
+      return true;
+    },
+    uiShown: function() {
+      // The widget is rendered.
+      // Hide the loader.
+      //document.getElementById('loader').style.display = 'none';
+    }
+  },*/
+  signInSuccessUrl:'/partys',
   signInFlow: 'popup',
   signInOptions: [
     firebase.auth.EmailAuthProvider.PROVIDER_ID,
