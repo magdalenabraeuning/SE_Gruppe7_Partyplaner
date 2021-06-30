@@ -1,9 +1,43 @@
-<ion-header>
-  <ion-toolbar>
-    <ion-title>listen</ion-title>
-  </ion-toolbar>
-</ion-header>
 
-<ion-content>
+
+<ion-content [fullscreen]="true">
+
+
+  <br>
+  <ion-title>Essen</ion-title>
+  <ion-card *ngFor="let item of toDoList">
+    <ion-card-header>
+      <ion-card-subtitle> 
+        {{item.itemCategory}}
+      </ion-card-subtitle>
+      <ion-item>
+        <ion-label>{{item.itemMenge}} {{item.itemName}}</ion-label>
+      </ion-item>
+    </ion-card-header>
+    <ion-row>
+      <ion-item>
+        <ion-icon name="trash-outline"></ion-icon>
+        <p>Löschen</p>
+      </ion-item>
+    </ion-row>
+  </ion-card>
+
+  <ion-title>Trinken</ion-title>
+  <ion-card *ngFor="let item of toDoList">
+    <ion-card-header>
+      <ion-card-subtitle> 
+        {{item.itemCategory}}
+      </ion-card-subtitle>
+      <ion-item>
+        <ion-label>{{item.itemMenge}} {{item.itemName}}</ion-label>
+      </ion-item>
+    </ion-card-header>
+  </ion-card>
+
+  <ion-fab vertical="bottom" horizontal="end" slot="fixed">
+    <ion-fab-button (click)="addItem()">
+      <ion-icon name="add"></ion-icon>
+    </ion-fab-button>
+  </ion-fab>
 
 </ion-content>
