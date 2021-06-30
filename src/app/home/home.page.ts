@@ -2,7 +2,7 @@ import { Subject } from 'rxjs';
 import { Component } from '@angular/core';
 import { AngularFireAuth } from '@angular/fire/auth';
 import { AngularFirestore } from '@angular/fire/firestore';
-import { AlertController } from '@ionic/angular';
+import { AlertController, LoadingController } from '@ionic/angular';
 import { SpeicherService } from '../speicher.service';
 import firebase from 'firebase/app';
 import { NavController } from '@ionic/angular';
@@ -43,6 +43,7 @@ export class HomePage {
     private alertCtrl: AlertController,
     private speicherService: SpeicherService,
     private navCtrl: NavController,
+    public loadingController: LoadingController
   ) { }
 
   signOut() {
@@ -52,8 +53,7 @@ export class HomePage {
   }
   myEventList: any;
 
-  async addParty() {
-
+  async addParty():Promise<any> {
     this.alertCtrl.create({
       message: "Party erstellen",
       inputs: [
@@ -70,23 +70,28 @@ export class HomePage {
       buttons: [
         {
           text: 'Add',
-          handler: (res) => {
+          handler: async (res) => {
             console.log(res);
-            this.speicherService.addParty(res);
+            await this.speicherService.addParty(res).then(()=> {
+              setTimeout(()=>this.fetch(), 1000);
+              setTimeout(()=>this.fetch(), 1000);
+            });
           }
         }, {
           text: 'Cancel'
         }
       ]
-    }).then(a => a.present());
+    }).then(a => { a.present() }); 
   }
 
 
-
   ionViewDidEnter() {
-    //this.fetch();
-    console.log("ION VIEW DID ENTER")
-
+    this.presentLoading();
+    try{
+    setTimeout(()=>this.fetch(), 4000);
+    }catch(e){
+      console.log("Fehler beim Laden");
+    }
   }
 
   pruefeUserVorhanden(userID) {
@@ -101,7 +106,13 @@ export class HomePage {
   }
 
   async fetch() {
-    this.partyData = await this.speicherService.loadAllData();
+    this.partyData = [];
+    try{
+      this.partyData = await this.speicherService.loadAllData();
+    }catch(e){
+console.log(e);
+throw new Error();
+    }
   }
 
   updateButton(id, status) {
@@ -109,8 +120,9 @@ export class HomePage {
   }
 
   async deleteButton(id) {
-    console.log("ID ID ID ID ID ID " + id);
-    let test = await this.speicherService.delete(id);
+    this.partyData = [];
+    await this.speicherService.delete(id);
+    this.fetch();
   }
 
   openParty(party) {
@@ -121,11 +133,20 @@ export class HomePage {
   }
 
 
+  async presentLoading() {
+    const loading = await this.loadingController.create({
+      cssClass: 'my-custom-class',
+      message: 'Please wait...',
+      duration: 4000
+    });
+    await loading.present();
 
+    const { role, data } = await loading.onDidDismiss();
+    console.log('Loading dismissed!');
+  }
 
 
 
 
 
 }
-

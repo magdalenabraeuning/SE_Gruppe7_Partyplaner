@@ -5,13 +5,14 @@ import { Subject } from 'rxjs';
 import { take } from 'rxjs/operators';
 import firebase from 'firebase/app';
 
+
 export interface PartyForUser {
   Partys: [];
 }
 
 export class AllPartyData {
 
-  constructor(public einTeilnehmer){
+  constructor(public einTeilnehmer) {
     this.Teilnehmer = einTeilnehmer;
   }
   title: string;
@@ -63,19 +64,27 @@ export class SpeicherService {
 
 
   async loadAllData(): Promise<any[]> {
+    this.partyData = [];
+    let userID = "0";
+
     this.afAuth.currentUser.then((user) => {
-      let userID = user.uid;
-      this.getDocuments(userID);
+      try {
+        userID = user.uid;
+        this.getDocuments(userID);
 
-      this.partyArrObsrv.pipe(take(1)).subscribe((partyArr) => {
-        for (let i = 0; i < partyArr.length; i++) {
-          console.log("Hiiiiiier IDs" + partyArr[i])
-          this.getPartyDocuments(partyArr[i], i);
-        }
-      });
-
+        this.partyArrObsrv.pipe(take(1)).subscribe((partyArr) => {
+          for (let i = 0; i < partyArr.length; i++) {
+            console.log("Hiiiiiier IDs" + partyArr[i])
+            this.getPartyDocuments(partyArr[i], i);
+          }
+        });
+      } catch (e) {
+        console.log("Fehler UID SpeicherService: " + e);
+      }
     });
     return this.partyData;
+
+
   }
 
 
@@ -112,59 +121,69 @@ export class SpeicherService {
 
 
   async addParty(res) {
-    console.log("START speicherService addParty");
-    this.afAuth.currentUser.then((user) => {
-      let userID = user.uid;
+    try {
+      console.log("START speicherService addParty");
+      this.afAuth.currentUser.then((user) => {
+        let userID = "0";
+        try {
+          userID = user.uid;
+        } catch (e) {
+          console.log(e);
+          return;
+        }
 
-      console.log("speicherService res: " + res);
-      this.afFirestore.collection("Partys").add({
+        console.log("speicherService res: " + res);
+        this.afFirestore.collection("Partys").add({
 
-        title: res.title,
-        description: res.description,
-        address: res.address,
-        date: res.date,
-        time: res.time,
+          title: res.title,
+          description: res.description,
+          address: res.address,
+          date: res.date,
+          time: res.time,
 
-        Teilnehmer: [],
+          Teilnehmer: [],
 
-        createdAt: Date.now(),
-        isDone: false,
-        partymodus: false
-        //Sammlung Einkaufsliste, ...
+          createdAt: Date.now(),
+          isDone: false,
+          partymodus: false
+          //Sammlung Einkaufsliste, ...
 
-      }).then((r) => {
-        this.afFirestore.collection("Partys").doc(r.id).update({
-          id: r.id
-        }).then(() => {
-          this.getAllUserData().then(() => {
-            this.userIDArrObsrv.pipe(take(1)).subscribe(() => {
+        }).then((r) => {
+          this.afFirestore.collection("Partys").doc(r.id).update({
+            id: r.id
+          }).then(() => {
+            this.getAllUserData().then(() => {
+              this.userIDArrObsrv.pipe(take(1)).subscribe(() => {
 
-              let userVorhanden = false;
-              for (let i = 0; i < this.allIDs.length; i++) {
-                console.log("Hiiiiiier IDs" + this.allIDs[i]);
-                if (this.pruefeUserVorhanden(this.allIDs[i].id, userID)) {
-                  userVorhanden = true;
+                let userVorhanden = false;
+                for (let i = 0; i < this.allIDs.length; i++) {
+                  console.log("Hiiiiiier IDs" + this.allIDs[i]);
+                  if (this.pruefeUserVorhanden(this.allIDs[i].id, userID)) {
+                    userVorhanden = true;
+                  }
                 }
-              }
 
-              if (userVorhanden) {
-                console.log("USER SCHON VORHANDEN")
-                this.afFirestore.collection("User").doc(userID).update({
-                  Partys: firebase.firestore.FieldValue.arrayUnion(r.id)
-                });
-              } else {
-                console.log("USER NICHT VORHANDEN")
-                this.afFirestore.collection("User").doc(userID).set({
-                  Partys: firebase.firestore.FieldValue.arrayUnion(r.id)
-                })
-              }
-            });
-          })
+                if (userVorhanden) {
+                  console.log("USER SCHON VORHANDEN")
+                  this.afFirestore.collection("User").doc(userID).update({
+                    Partys: firebase.firestore.FieldValue.arrayUnion(r.id)
+                  });
+                } else {
+                  console.log("USER NICHT VORHANDEN")
+                  this.afFirestore.collection("User").doc(userID).set({
+                    Partys: firebase.firestore.FieldValue.arrayUnion(r.id)
+                  })
+                }
+              });
+            })
+          });
+
         });
-
       });
-    })
 
+    } catch (e) {
+      console.log("Fehler beim Laden (SpeicherService): " + e);
+    }
 
   }
 
@@ -209,8 +228,7 @@ export class SpeicherService {
       this.afFirestore.collection("User").doc(userID).update({
         Partys: firebase.firestore.FieldValue.arrayRemove(id)
       });
-      this.afFirestore.collection("Partys").doc(id).delete();
-
+      //this.afFirestore.collection("Partys").doc(id).delete();
     });
 
 
@@ -230,33 +248,33 @@ export class SpeicherService {
     });
   }
 
-/*
-  async getTeilnehmer(partyID):Promise<AllPartyData[]> {
-    const teilnehmerPromise = new Promise<AllPartyData[]>((resolveCallback, rejectCallback) => {
-      const ergebnisArray: AllPartyData[]=[];
-      this.getPartyData(partyID).forEach((party)=> {
-        console.log("Teilnehmer: "+party.Teilnehmer);
-        let partyTeilnehmer = new AllPartyData(party.Teilnehmer);
-        ergebnisArray.push(partyTeilnehmer);
-      }).then(()=>{
-        resolveCallback(ergebnisArray);
+  /*
+    async getTeilnehmer(partyID):Promise<AllPartyData[]> {
+      const teilnehmerPromise = new Promise<AllPartyData[]>((resolveCallback, rejectCallback) => {
+        const ergebnisArray: AllPartyData[]=[];
+        this.getPartyData(partyID).forEach((party)=> {
+          console.log("Teilnehmer: "+party.Teilnehmer);
+          let partyTeilnehmer = new AllPartyData(party.Teilnehmer);
+          ergebnisArray.push(partyTeilnehmer);
+        }).then(()=>{
+          resolveCallback(ergebnisArray);
+        });
       });
+  
+       //console.log("Teilnehmer: "+(await teilnehmerPromise));
+      return teilnehmerPromise;
+    }*/
+
+
+  async getTeilnehmer(partyID): Promise<AllPartyData[]> {
+    const ergebnisArray: AllPartyData[] = [];
+    this.getPartyData(partyID).forEach(async (party) => {
+      console.log("Teilnehmer: " + party.Teilnehmer);
+      let partyTeilnehmer = new AllPartyData(party.Teilnehmer);
+      ergebnisArray.push(partyTeilnehmer);
     });
 
-     //console.log("Teilnehmer: "+(await teilnehmerPromise));
-    return teilnehmerPromise;
-  }*/
-
-
-  async getTeilnehmer(partyID):Promise<AllPartyData[]> {
-      const ergebnisArray: AllPartyData[]=[];
-      this.getPartyData(partyID).forEach(async (party)=> {
-        console.log("Teilnehmer: "+party.Teilnehmer);
-        let partyTeilnehmer = new AllPartyData(party.Teilnehmer);
-        ergebnisArray.push(partyTeilnehmer);
-    });
-
-     //console.log("Teilnehmer: "+(await teilnehmerPromise));
+    //console.log("Teilnehmer: "+(await teilnehmerPromise));
     return ergebnisArray;
   }
 
