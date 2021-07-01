@@ -236,9 +236,19 @@ export class SpeicherService {
   }
 
 
-  update(id, status) {
+  updateStatus(id, status) {
     this.afFirestore.collection("Partys").doc(id).update({
       isDone: !status
+    });
+  }
+
+  updateParty(res, id) {
+    this.afFirestore.collection("Partys").doc(id).update({
+      title: res.title,
+      description: res.description,
+      address: res.address,
+      date: res.date,
+      time: res.time
     });
   }
 

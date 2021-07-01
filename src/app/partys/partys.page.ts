@@ -122,8 +122,40 @@ export class PartysPage implements OnInit {
   }
 
   updateButton(id, status) {
-    this.speicherService.update(id, status);
+    this.speicherService.updateStatus(id, status);
   }
+
+  bearbeitenButton(id, oldTitle, oldDescription, oldAddress, oldDate, oldTime) {
+    let date:Date = oldDate;
+    this.alertCtrl.create({
+      message: "Party bearbeiten",
+      inputs: [
+        { type: 'text', name: 'title', placeholder:`${oldTitle}`, value: `${oldTitle}` },
+        { type: 'textarea', name: 'description', placeholder:`${oldDescription}`, value: `${oldDescription}` },
+        { type: 'textarea', name: 'address', placeholder:`${oldAddress}`, value: `${oldAddress}` },
+        {
+          name: 'date',
+          type: 'date',
+          min: Date.now(),
+          placeholder: `${date}`,
+          value: `${date}`
+        },
+        { type: 'time', name: 'time', placeholder:`${oldTime}`, value: `${oldTime}` }
+      ],
+      buttons: [
+        {
+          text: 'Speichern',
+          handler: async (res) => {
+            console.log(res);
+            await this.speicherService.updateParty(res, id);
+          }
+        }, {
+          text: 'Cancel'
+        }
+      ]
+    }).then(a => { a.present() });
+  }
+  
 
   async deleteButton(id) {
     this.partyData = [];
