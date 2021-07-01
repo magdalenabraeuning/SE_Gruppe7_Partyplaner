@@ -18,11 +18,11 @@
   <ion-card>
     <p>Teilnehmer</p>
     <ion-button (click)="addTeilnehmer(id)">+</ion-button>
-    <ion-button (click)="removeTeilnehmer(id)">-</ion-button>
     
-    <ion-label *ngFor="let tn of teilnehmerPromise|async">
-      <p>{{tn.Teilnehmer}}</p>
-
+    <ion-label *ngFor="let tnArray of teilnehmerPromise|async | slice:0:1; let i=index">
+      <ion-list *ngFor="let tn of tnArray.Teilnehmer" >
+        <p>{{tn}}<ion-button (click)="removeTeilnehmer(id, tn)" slot="end"><ion-icon name="trash"></ion-icon></ion-button></p>
+      </ion-list>
 
     </ion-label>
   </ion-card>

@@ -279,12 +279,13 @@ export class SpeicherService {
   async getTeilnehmer(partyID): Promise<AllPartyData[]> {
     const ergebnisArray: AllPartyData[] = [];
     this.getPartyData(partyID).forEach(async (party) => {
+      //ergebnisArray = party.Teilnehmer;
       console.log("Teilnehmer: " + party.Teilnehmer);
       let partyTeilnehmer = new AllPartyData(party.Teilnehmer);
       ergebnisArray.push(partyTeilnehmer);
     });
 
-    //console.log("Teilnehmer: "+(await teilnehmerPromise));
+    console.log("Teilnehmer unten: "+(await ergebnisArray));
     return ergebnisArray;
   }
 

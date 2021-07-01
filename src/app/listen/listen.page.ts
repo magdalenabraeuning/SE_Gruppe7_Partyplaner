@@ -33,13 +33,42 @@ export class ListenPage implements OnInit {
       inputs: [
         { type: 'text', name: 'itemName', placeholder: "Name" },
         { type: 'textarea', name: 'itemMenge', placeholder: "Menge" },
-        { type: 'textarea', name: 'itemCategory', placeholder: "Kategorie" },
+        //{ type: 'textarea', name: 'itemCategory', placeholder: "Kategorie" },
         { type: 'textarea', name: 'itemUser', placeholder: "User" }
       ],
       buttons: [
         {
-          text: 'Add',
+          text: 'Weiter',
           handler: (res) => {
+            this.alertCtrl.create({
+              message: "Kategorie wählen",
+              inputs: [
+                {
+                  name : 'itemCategory',
+                  type: 'radio',
+                  label: 'Essen',
+                  value: 'value1',
+                  checked: true
+                },
+                {
+                  name: 'itemCategory',
+                  type: 'radio',
+                  label: 'Trinken',
+                  value: 'value2'
+                },
+                ],
+              buttons: [
+                {
+                  text: 'Add',
+                  handler: (res) => {
+                    
+                  }
+                }, {
+                  text: 'Cancel'
+                }
+              ]
+            }).then(a => a.present());
+          
             console.log(res);
             this.toDoList.push(res);
           }
