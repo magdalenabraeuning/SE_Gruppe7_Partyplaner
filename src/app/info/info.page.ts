@@ -15,7 +15,7 @@ export class InfoPage implements OnInit {
   private address: string;
   private date: string;
   private time: string;
-  private id: string;
+  public id: string;
 
   private teilnehmerPromise: Promise<AllPartyData[]>;
 

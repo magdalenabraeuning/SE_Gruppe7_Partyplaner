@@ -12,8 +12,8 @@ export interface PartyForUser {
 
 export class AllPartyData {
 
-  constructor(public einTeilnehmer) {
-    this.Teilnehmer = einTeilnehmer;
+  constructor(public ausgabe) {
+    this.AusgabeArray = ausgabe;
   }
   title: string;
   description: string;
@@ -21,8 +21,10 @@ export class AllPartyData {
   date: string;
   time: string;
 
+  AusgabeArray: [];
   Essen: [];
-
+  Trinken: [];
+  Sonstiges: [];
   Teilnehmer: [];
 
   isDone: boolean;
@@ -30,17 +32,6 @@ export class AllPartyData {
   id: string;
   partymodus: boolean;
 
-  /**
-   * Titel
-   * Beschreibung
-   * Adresse
-   * Datum
-   * Uhrzeit
-   * 
-   * Status
-   * createdAt
-   * id
-   */
 }
 
 
@@ -279,28 +270,22 @@ export class SpeicherService {
   async getTeilnehmer(partyID): Promise<AllPartyData[]> {
     const ergebnisArray: AllPartyData[] = [];
     this.getPartyData(partyID).forEach(async (party) => {
-      //ergebnisArray = party.Teilnehmer;
       console.log("Teilnehmer: " + party.Teilnehmer);
       let partyTeilnehmer = new AllPartyData(party.Teilnehmer);
       ergebnisArray.push(partyTeilnehmer);
     });
 
-    console.log("Teilnehmer unten: "+(await ergebnisArray));
+    console.log("Teilnehmer unten: " + (await ergebnisArray));
     return ergebnisArray;
   }
 
   addTeilnehmer(partyID, userMail) {
 
-    //let emails = this.getAllEmails();
-    //this.afAuth.user.forEach((user) => console.log("EMAIL: "+user.displayName))
-
-
-
     this.afFirestore.collection("Partys").doc(partyID).update({
       Teilnehmer: firebase.firestore.FieldValue.arrayUnion(userMail)
     });
   }
-
+/*
   getAllEmails() {
     let allEMails: any[];
     this.getUsers().subscribe(res => {
@@ -317,7 +302,7 @@ export class SpeicherService {
 
     })
     return allEMails;
-  }
+  }*/
 
   removeTeilnehmer(partyID, userMail) {
     this.afFirestore.collection("Partys").doc(partyID).update({
@@ -337,5 +322,76 @@ export class SpeicherService {
     });
   }
 
+  async getEssen(partyID): Promise<AllPartyData[]> {
+    const ergebnisArray: AllPartyData[] = [];
+    this.getPartyData(partyID).forEach(async (party) => {
+      console.log("Essen: " + party.Essen);
+      let partyEssen = new AllPartyData(party.Essen);
+      ergebnisArray.push(partyEssen);
+    });
 
+    console.log("Teilnehmer unten: " + (await ergebnisArray));
+    return ergebnisArray;
+  }
+
+  addTrinken(partyID, trinkenArray) {
+    this.afFirestore.collection("Partys").doc(partyID).update({
+      Trinken: firebase.firestore.FieldValue.arrayUnion(trinkenArray)
+    });
+  }
+
+  removeTrinken(partyID, trinkenArray) {
+    this.afFirestore.collection("Partys").doc(partyID).update({
+      Trinken: firebase.firestore.FieldValue.arrayRemove(trinkenArray)
+    });
+  }
+
+  async getTrinken(partyID): Promise<AllPartyData[]> {
+    const ergebnisArray: AllPartyData[] = [];
+    this.getPartyData(partyID).forEach(async (party) => {
+      console.log("Trinken: " + party.Trinken);
+      let partyTrinken = new AllPartyData(party.Trinken);
+      ergebnisArray.push(partyTrinken);
+    });
+
+    console.log("Teilnehmer unten: " + (await ergebnisArray));
+    return ergebnisArray;
+  }
+
+  addSonstiges(partyID, sonstigesArray) {
+    this.afFirestore.collection("Partys").doc(partyID).update({
+      Sonstiges: firebase.firestore.FieldValue.arrayUnion(sonstigesArray)
+    });
+  }
+
+  removeSonstiges(partyID, sonstigesArray) {
+    this.afFirestore.collection("Partys").doc(partyID).update({
+      Sonstiges: firebase.firestore.FieldValue.arrayRemove(sonstigesArray)
+    });
+  }
+
+  async getSonstiges(partyID): Promise<AllPartyData[]> {
+    const ergebnisArray: AllPartyData[] = [];
+    this.getPartyData(partyID).forEach(async (party) => {
+      console.log("Sonstiges: " + party.Sonstiges);
+      let partySonstiges = new AllPartyData(party.Sonstiges);
+      ergebnisArray.push(partySonstiges);
+    });
+
+    console.log("Teilnehmer unten: " + (await ergebnisArray));
+    return ergebnisArray;
+  }
+
+  /*
+  getUserID() {
+    let userID;
+    this.afAuth.currentUser.then((user) => {
+      try {
+        userID = user.uid;
+      } catch (e) {
+        console.log(e);
+      }
+    });
+    return userID;
+  }*/
 }

@@ -7,7 +7,7 @@ import { SpeicherService } from '../speicher.service';
 import firebase from 'firebase/app';
 import { NavController } from '@ionic/angular';
 
-
+/*
 export interface PartyForUser {
   Partys: [];
 }
@@ -18,7 +18,7 @@ export interface AllPartyData {
   isDone: boolean;
   title: string;
   id: string;
-}
+}*/
 
 
 @Component({
