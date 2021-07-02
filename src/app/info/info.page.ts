@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { AlertController } from '@ionic/angular';
 import { AllPartyData, SpeicherService } from '../speicher.service';
+import { IdService } from '../id.service';
 
 @Component({
   selector: 'app-info',
@@ -23,6 +24,7 @@ export class InfoPage implements OnInit {
     private activatedRoute: ActivatedRoute,
     private alertCtrl: AlertController,
     private speicherService: SpeicherService,
+    private idService: IdService
   ) {
     /*this.title = activatedRoute.snapshot.queryParamMap.get("title");
     this.description = activatedRoute.snapshot.queryParamMap.get("description");
@@ -35,7 +37,6 @@ export class InfoPage implements OnInit {
   }
 
   ionViewWillEnter() {
-    console.log("WILL ENTER")
     this.title = this.activatedRoute.snapshot.queryParamMap.get("title");
     this.description = this.activatedRoute.snapshot.queryParamMap.get("description");
     this.address = this.activatedRoute.snapshot.queryParamMap.get("address");
@@ -43,6 +44,7 @@ export class InfoPage implements OnInit {
     this.time = this.activatedRoute.snapshot.queryParamMap.get("time");
     this.id = this.activatedRoute.snapshot.queryParamMap.get("id");
     this.showTeilnehmer(this.id);
+    this.idService.setPartyID(this.id);
   }
 
 
@@ -56,7 +58,6 @@ export class InfoPage implements OnInit {
         {
           text: 'Add',
           handler: (res) => {
-            console.log(res);
             this.speicherService.addTeilnehmer(this.id, res.userMail);
             this.showTeilnehmer(this.id);
           }
@@ -69,7 +70,6 @@ export class InfoPage implements OnInit {
 
   async showTeilnehmer(partyID) {
     this.teilnehmerPromise = this.speicherService.getTeilnehmer(partyID);
-    console.log("HAAAAAAAALLOOOO" + await this.teilnehmerPromise);
   }
 
   removeTeilnehmer(partyID, user) {

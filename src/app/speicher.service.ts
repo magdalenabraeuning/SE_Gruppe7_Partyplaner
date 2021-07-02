@@ -26,6 +26,7 @@ export class AllPartyData {
   Trinken: [];
   Sonstiges: [];
   Teilnehmer: [];
+  Cocktails: [];
 
   isDone: boolean;
   createdAt: number;
@@ -65,7 +66,6 @@ export class SpeicherService {
 
         this.partyArrObsrv.pipe(take(1)).subscribe((partyArr) => {
           for (let i = 0; i < partyArr.length; i++) {
-            console.log("Hiiiiiier IDs" + partyArr[i])
             this.getPartyDocuments(partyArr[i], i);
           }
         });
@@ -85,12 +85,8 @@ export class SpeicherService {
   async getDocuments(id) {
 
     this.getPartys(id).subscribe(res => {
-
-      console.log("getDocuments PartyIDs" + res.Partys)
       this.partyArr = res.Partys;
       this.partyArrObsrv.next(res.Partys);
-      console.log("Eine PartyID" + this.partyArr[0]);
-
     });
   }
 
@@ -102,18 +98,12 @@ export class SpeicherService {
     this.getPartyData(id).subscribe(res => {
 
       this.partyData[i] = { title: res.title, description: res.description, address: res.address, date: res.date, time: res.time, createdAt: res.createdAt, isDone: res.isDone, id: res.id, partymodus: res.partymodus };
-      console.log("Partydaten idddddddd 1" + this.partyData[i].createdAt);
-      console.log("Partydaten idddddddd 2" + this.partyData[i].title);
-      console.log("Partydaten idddddddd 3" + this.partyData[i].description);
-      console.log("Partydaten idddddddd 4" + this.partyData[i].isDone);
-
     })
   }
 
 
   async addParty(res) {
     try {
-      console.log("START speicherService addParty");
       this.afAuth.currentUser.then((user) => {
         let userID = "0";
         try {
@@ -123,7 +113,6 @@ export class SpeicherService {
           return;
         }
 
-        console.log("speicherService res: " + res);
         this.afFirestore.collection("Partys").add({
 
           title: res.title,
@@ -137,7 +126,6 @@ export class SpeicherService {
           createdAt: Date.now(),
           isDone: false,
           partymodus: false
-          //Sammlung Einkaufsliste, ...
 
         }).then((r) => {
           this.afFirestore.collection("Partys").doc(r.id).update({
@@ -148,7 +136,6 @@ export class SpeicherService {
 
                 let userVorhanden = false;
                 for (let i = 0; i < this.allIDs.length; i++) {
-                  console.log("Hiiiiiier IDs" + this.allIDs[i]);
                   if (this.pruefeUserVorhanden(this.allIDs[i].id, userID)) {
                     userVorhanden = true;
                   }
@@ -186,17 +173,12 @@ export class SpeicherService {
   async getAllUserData() {
 
     await this.getUsers().subscribe(res => {
-
-      console.log("speicherService UserIDs alle" + res);
-
       this.allIDs = res.map(e => {
         return {
           id: e.payload.doc.id
         };
       });
       this.userIDArrObsrv.next(res);
-      console.log("Eine UserID" + this.allIDs[0].id);
-
     })
   }
 
@@ -205,13 +187,10 @@ export class SpeicherService {
     if (pruefeID == userID) {
       userVorhanden = true;
     }
-    console.log("DAS IST MEIN USER?: " + userVorhanden)
     return userVorhanden;
   }
 
   async delete(id): Promise<any> {
-    console.log("DELETE START")
-
 
     this.afAuth.currentUser.then((x) => {
       let userID = x.uid;
@@ -221,9 +200,6 @@ export class SpeicherService {
       });
       //this.afFirestore.collection("Partys").doc(id).delete();
     });
-
-
-
   }
 
 
@@ -270,12 +246,9 @@ export class SpeicherService {
   async getTeilnehmer(partyID): Promise<AllPartyData[]> {
     const ergebnisArray: AllPartyData[] = [];
     this.getPartyData(partyID).forEach(async (party) => {
-      console.log("Teilnehmer: " + party.Teilnehmer);
       let partyTeilnehmer = new AllPartyData(party.Teilnehmer);
       ergebnisArray.push(partyTeilnehmer);
     });
-
-    console.log("Teilnehmer unten: " + (await ergebnisArray));
     return ergebnisArray;
   }
 
@@ -325,12 +298,9 @@ export class SpeicherService {
   async getEssen(partyID): Promise<AllPartyData[]> {
     const ergebnisArray: AllPartyData[] = [];
     this.getPartyData(partyID).forEach(async (party) => {
-      console.log("Essen: " + party.Essen);
       let partyEssen = new AllPartyData(party.Essen);
       ergebnisArray.push(partyEssen);
     });
-
-    console.log("Teilnehmer unten: " + (await ergebnisArray));
     return ergebnisArray;
   }
 
@@ -349,12 +319,9 @@ export class SpeicherService {
   async getTrinken(partyID): Promise<AllPartyData[]> {
     const ergebnisArray: AllPartyData[] = [];
     this.getPartyData(partyID).forEach(async (party) => {
-      console.log("Trinken: " + party.Trinken);
       let partyTrinken = new AllPartyData(party.Trinken);
       ergebnisArray.push(partyTrinken);
     });
-
-    console.log("Teilnehmer unten: " + (await ergebnisArray));
     return ergebnisArray;
   }
 
@@ -373,12 +340,9 @@ export class SpeicherService {
   async getSonstiges(partyID): Promise<AllPartyData[]> {
     const ergebnisArray: AllPartyData[] = [];
     this.getPartyData(partyID).forEach(async (party) => {
-      console.log("Sonstiges: " + party.Sonstiges);
       let partySonstiges = new AllPartyData(party.Sonstiges);
       ergebnisArray.push(partySonstiges);
     });
-
-    console.log("Teilnehmer unten: " + (await ergebnisArray));
     return ergebnisArray;
   }
 
@@ -394,4 +358,26 @@ export class SpeicherService {
     });
     return userID;
   }*/
+
+
+  addCocktail(partyID, cocktailID) {
+    this.afFirestore.collection("Partys").doc(partyID).update({
+      Cocktails: firebase.firestore.FieldValue.arrayUnion(cocktailID)
+    });
+  }
+
+  removeCocktail(partyID, cocktailID) {
+    this.afFirestore.collection("Partys").doc(partyID).update({
+      Cocktails: firebase.firestore.FieldValue.arrayRemove(cocktailID)
+    });
+  }
+
+  async getCocktails(partyID): Promise<AllPartyData[]> {
+    const ergebnisArray: AllPartyData[] = [];
+    this.getPartyData(partyID).forEach(async (party) => {
+      let partyCocktails = new AllPartyData(party.Cocktails);
+      ergebnisArray.push(partyCocktails);
+    });
+    return ergebnisArray;
+  }
 }

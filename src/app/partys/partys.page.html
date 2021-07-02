@@ -9,17 +9,6 @@
 </ion-content>
 -->
 
-<!--
-<ion-header>
-  <ion-toolbar>
-    <ion-title>terms</ion-title>
-  </ion-toolbar>
-</ion-header>
-
-<ion-content>
-
-</ion-content>
--->
 <ion-header [translucent]="true">
   <ion-toolbar>
     <ion-title>
@@ -32,23 +21,23 @@
 <ion-content [fullscreen]="true">
 
 
-    <ion-fab vertical="bottom" horizontal="end" slot="fixed" (click)="addParty()">
-    <ion-fab-button >+</ion-fab-button>
-    </ion-fab>
-
+  
   <ion-refresher slot="fixed" (ionRefresh)="doRefresh($event)">
     <ion-refresher-content pullingIcon="chevron-down-circle-outline" pullingText="Pull to refresh"
-      refreshingSpinner="circles" refreshingText="Refreshing...">
-    </ion-refresher-content>
-  </ion-refresher>
+    refreshingSpinner="circles" refreshingText="Refreshing...">
+  </ion-refresher-content>
+</ion-refresher>
 
+<ion-fab vertical="bottom" horizontal="end" slot="fixed" (click)="addParty()">
+<ion-fab-button >+</ion-fab-button>
+</ion-fab>
  
   
   
 
   <div *ngIf="afAuth.user | async as user">
-    <h1>Hello {{ user.displayName }}!</h1>
-
+    <h1>Hallo {{ user.displayName }}!</h1>
+  </div>
     
    
 
@@ -57,26 +46,28 @@
          <ion-item lines="none">
        
         <ion-label (click)="openParty(item)">
-          
-          <h3>Titel :{{item.title}}</h3>
+          <ion-card-header>
+            <ion-card-title> 
+              {{item.title}}
+            </ion-card-title>
+          </ion-card-header>
           <h3>Beschreibung: {{item.description}}</h3>
           <h3>Adresse: {{item.address}}</h3>
           <h3>Datum: {{item.date}}</h3>
           <h3>Uhrzeit: {{item.time}}</h3>
-          <h3>Party abgeschlossen? {{item.isDone}}</h3>
           <h3>Erstellt am: {{item.createdAt}}</h3>
           <h3>ID: {{item.id}}</h3>
-
-
         </ion-label>
-        <ion-button (click)="updateButton(item.id, item.isDone)" color="{{item.isDone ? 'success' : 'dark'}}">{{item.isDone ? 'In Planung' : 'Planung Abgeschlossen'}}
-          <ion-icon color="{{item.isDone ? 'dark' : 'success'}}" name="checkbox-outline"></ion-icon>
-        </ion-button>
+
+        
         <ion-button (click)="deleteButton(item.id)">
           <ion-icon name="trash"></ion-icon>
         </ion-button>
         <ion-button (click)="bearbeitenButton(item.id, item.title, item.description, item.address, item.date, item.time )">
           <ion-icon name="pencil"></ion-icon>
+        </ion-button>
+        <ion-button (click)="updateButton(item.id, item.isDone)" color="{{item.isDone ? 'success' : 'dark'}}">{{item.isDone ? 'In Planung' : 'Planung abgeschlossen'}}
+          <ion-icon color="{{item.isDone ? 'dark' : 'success'}}" name="checkbox-outline"></ion-icon>
         </ion-button>
       </ion-item>
     </ion-card>
@@ -86,5 +77,5 @@
 
 
     
-  </div>
+  
 </ion-content>

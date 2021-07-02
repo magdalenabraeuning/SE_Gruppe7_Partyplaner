@@ -2,7 +2,7 @@ import { isNgTemplate } from '@angular/compiler';
 import { Component, OnInit } from '@angular/core';
 import { AlertController } from '@ionic/angular';
 import { AllPartyData, SpeicherService } from '../speicher.service';
-
+import { IdService } from '../id.service';
 
 
 @Component({
@@ -30,11 +30,12 @@ export class ListenPage implements OnInit {
   private essenPromise: Promise<AllPartyData[]>;
   private trinkenPromise: Promise<AllPartyData[]>;
   private sonstigesPromise: Promise<AllPartyData[]>;
-  private id = "BF21CpYBDNHhrUZOVhie";
+  private id;
 
   constructor(
     private alertCtrl: AlertController,
     private speicherService: SpeicherService,
+    private idService: IdService
   ) {
   }
 
@@ -74,8 +75,6 @@ export class ListenPage implements OnInit {
                 {
                   text: 'Add',
                   handler: (res) => {
-                    console.log(res.itemName + res.itemMenge + res.itemUser + kategorie);
-                    console.log(res);
                     let helpArray = { itemName: res.itemName, itemMenge: res.itemMenge, itemCategory: kategorie, itemUser: res.itemUser };
                     this.toDoList.push(helpArray);
 
@@ -128,6 +127,7 @@ export class ListenPage implements OnInit {
   }
 
   ionViewWillEnter() {
+    this.id = this.idService.getPartyID();
     this.showLists(this.id);
   }
 }

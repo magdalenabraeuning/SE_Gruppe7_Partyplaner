@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { HttpHeaders } from '@angular/common/http';
 import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
+import { SpeicherService } from '../speicher.service';
+import { IdService } from '../id.service';
 
 @Component({
   selector: 'app-cocktail',
@@ -12,10 +14,13 @@ export class CocktailPage implements OnInit {
 
   searchTerm = "";
   IngArr : any [];
+  private id;
 
 
   constructor(
-    private httpClient: HttpClient
+    private httpClient: HttpClient,
+    private speicherService: SpeicherService,
+    private idService: IdService
   ) { }
 
   ngOnInit() {
@@ -84,6 +89,15 @@ export class CocktailPage implements OnInit {
   onClear(ev) { 
     this.searchTerm='';
     this.loadData();
+  }
+
+  addCocktail(cocktailID){
+    console.log(cocktailID)
+    this.speicherService.addCocktail(this.id, cocktailID);
+  }
+
+  ionViewWillEnter(){
+    this.id = this.idService.getPartyID();
   }
 
 }
