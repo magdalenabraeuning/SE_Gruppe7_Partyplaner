@@ -20,7 +20,6 @@ describe('The Login Page', () => {
   
       cy.get('input#ui-sign-in-password-input.mdl-textfield__input.firebaseui-input.firebaseui-id-password')
         .clear()
-        .type('{downarrow}')
         .type(password)
         .wait(1000)
         .should("have.value", password)
