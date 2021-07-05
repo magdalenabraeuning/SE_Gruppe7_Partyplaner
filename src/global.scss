@@ -26,3 +26,37 @@
 @import "~@ionic/angular/css/flex-utils.css";
 
 @import '~firebaseui/dist/firebaseui.css';
+
+
+ion-content{
+    --ion-background-color:linear-gradient(#FFE793,#FF9593 );
+}
+
+ion-toolbar{
+    --ion-background-color: #FFE793;
+    color: black;
+  }
+
+  ion-tab-bar{
+    --ion-background-color: #FF9593;
+  }
+
+  ion-icon{
+      color: black;
+
+  }
+
+  ion-list{
+    --ion-background-color: transparent;
+    color:black;
+  }
+
+  ion-card{
+    --ion-background-color: #FFE793;
+    color: black;
+    text-align: center;
+  }
+
+  ion-button{
+      background-color: #FF9593;
+  }

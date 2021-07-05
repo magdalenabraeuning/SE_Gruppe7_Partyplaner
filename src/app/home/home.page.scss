@@ -25,3 +25,19 @@
 #container a {
   text-decoration: none;
 }
+
+.wrapper{
+  width: 100%;
+  display:block;
+  position:relative;
+  margin-top: 250px;
+  text-align: center;
+  height: auto;
+
+}
+
+
+ion-content{
+  --ion-background-color:linear-gradient(#FFE793,#FF9593 );
+}
+
