@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { AngularFireAuth } from '@angular/fire/auth';
 import { NavController } from '@ionic/angular';
 
 @Component({
@@ -10,6 +11,7 @@ export class HomePage {
 
   constructor(
     private navCtrl: NavController,
+    public afAuth: AngularFireAuth,
   ) { }
 
   navigateToHome(){

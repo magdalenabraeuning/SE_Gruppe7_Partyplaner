@@ -1,63 +1,133 @@
 <ion-header>
   <ion-toolbar>
-    <ion-title>partymodus</ion-title>
+    <ion-title>Partymodus</ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content>
 
-  <ion-item>
-    <ion-label>Partymodus</ion-label>
-<ion-button (click)="togglePartymodus($event)" color="{{partymodusStatus ? 'dark' : 'success'}}">{{partymodusStatus ? 'true' : 'false'}}</ion-button>
+  <ion-item id="partymodusButton" lines="none">
+    <h4>Partymodus</h4>
+    <ion-button (click)="togglePartymodus($event)" color="{{partymodusStatus ? 'dark' : 'success'}}" slot="end">
+      {{partymodusStatus
+      ? 'deaktivieren' : 'aktivieren'}}</ion-button>
   </ion-item>
-  
+
 
   <div *ngIf="partymodusStatus">
-  <ion-title>Cockails</ion-title>
-      <ion-list *ngFor="let array of cocktailPromise|async | slice:0:1; let i=index">
+    <h2>Cockails</h2>
+    <ion-list *ngFor="let array of cocktailPromise|async | slice:0:1; let i=index" lines="none">
       <ion-item *ngFor="let cocktail of array.AusgabeArray">
-          <ion-icon name="trash-outline" (click)="removeCocktail(cocktail)" slot="end"></ion-icon>
 
-          <ion-card>
-            <ion-item class="ion-activated">
-              <ion-img id="image" src={{cocktail.strDrinkThumb}} slot="start"></ion-img>
-              <ion-card-header>
-                <ion-card-title> {{cocktail.strDrink}} </ion-card-title>
-              </ion-card-header>
-            </ion-item>
+
+        <ion-card>
+          <ion-item class="ion-activated">
+            <ion-img id="image" src={{cocktail.strDrinkThumb}} slot="start"></ion-img>
+            <ion-card-header>
+              <ion-card-title> {{cocktail.strDrink}} </ion-card-title>
+            </ion-card-header>
+            <ion-icon name="trash-outline" (click)="removeCocktail(cocktail)" slot="end"></ion-icon>
+          </ion-item>
+
+
+          <details>
+
+            <summary>Zutaten & Zubereitung</summary>
             
-    
-            <details>
-              
-              <summary>Zutaten & Zubereitung</summary>
-              <p *ngIf="cocktail.strInstructionsDE!=null&&cocktail.strInstructionsDE!=''">Zubereitung: {{cocktail.strInstructionsDE}}</p>
-              <p>Zutaten:</p>
-              <p *ngIf="cocktail.strIngredient1!=null&&cocktail.strIngredient1!=''">{{cocktail.strMeasure1}} {{cocktail.strIngredient1}}</p>
-              <p *ngIf="cocktail.strIngredient2!=null&&cocktail.strIngredient2!=''">{{cocktail.strMeasure2}} {{cocktail.strIngredient2}}</p>
-              <p *ngIf="cocktail.strIngredient3!=null&&cocktail.strIngredient3!=''">{{cocktail.strMeasure3}} {{cocktail.strIngredient3}}</p>
-              <p *ngIf="cocktail.strIngredient4!=null&&cocktail.strIngredient4!=''">{{cocktail.strMeasure4}} {{cocktail.strIngredient4}}</p>
-              <p *ngIf="cocktail.strIngredient5!=null&&cocktail.strIngredient5!=''">{{cocktail.strMeasure5}} {{cocktail.strIngredient5}}</p>
-              <p *ngIf="cocktail.strIngredient6!=null&&cocktail.strIngredient6!=''">{{cocktail.strMeasure6}} {{cocktail.strIngredient6}}</p>
-              <p *ngIf="cocktail.strIngredient7!=null&&cocktail.strIngredient7!=''">{{cocktail.strMeasure7}} {{cocktail.strIngredient7}}</p>
-              <p *ngIf="cocktail.strIngredient8!=null&&cocktail.strIngredient8!=''">{{cocktail.strMeasure8}} {{cocktail.strIngredient8}}</p>
-              <p *ngIf="cocktail.strIngredient9!=null&&cocktail.strIngredient9!=''">{{cocktail.strMeasure9}} {{cocktail.strIngredient9}}</p>
-              <p *ngIf="cocktail.strIngredient10!=null&&cocktail.strIngredient10!=''">{{cocktail.strMeasure10}} {{cocktail.strIngredient10}}</p>
-              <p *ngIf="cocktail.strIngredient11!=null&&cocktail.strIngredient11!=''">{{cocktail.strMeasure11}} {{cocktail.strIngredient11}}</p>
-              <p *ngIf="cocktail.strIngredient12!=null&&cocktail.strIngredient12!=''">{{cocktail.strMeasure12}} {{cocktail.strIngredient12}}</p>
-              <p *ngIf="cocktail.strIngredient13!=null&&cocktail.strIngredient13!=''">{{cocktail.strMeasure13}} {{cocktail.strIngredient13}}</p>
-              <p *ngIf="cocktail.strIngredient14!=null&&cocktail.strIngredient14!=''">{{cocktail.strMeasure14}} {{cocktail.strIngredient14}}</p>
-              <p *ngIf="cocktail.strIngredient15!=null&&cocktail.strIngredient15!=''">{{cocktail.strMeasure15}} {{cocktail.strIngredient15}}</p>
-            
-            </details>
-  
-          
-          </ion-card>
-          
+            <p *ngIf="cocktail.strInstructionsDE!=null&&cocktail.strInstructionsDE!=''">Zubereitung:<br>
+              {{cocktail.strInstructionsDE}}</p>
+            <p>Zutaten:</p>
+            <ul>
+            <p *ngIf="cocktail.strIngredient1!=null&&cocktail.strIngredient1!=''"><li>{{cocktail.strMeasure1}}
+              {{cocktail.strIngredient1}}</li></p>
+            <p *ngIf="cocktail.strIngredient2!=null&&cocktail.strIngredient2!=''"><li>{{cocktail.strMeasure2}}
+              {{cocktail.strIngredient2}}</li></p>
+            <p *ngIf="cocktail.strIngredient3!=null&&cocktail.strIngredient3!=''"><li>{{cocktail.strMeasure3}}
+              {{cocktail.strIngredient3}}</li></p>
+            <p *ngIf="cocktail.strIngredient4!=null&&cocktail.strIngredient4!=''"><li>{{cocktail.strMeasure4}}
+              {{cocktail.strIngredient4}}</li></p>
+            <p *ngIf="cocktail.strIngredient5!=null&&cocktail.strIngredient5!=''"><li>{{cocktail.strMeasure5}}
+              {{cocktail.strIngredient5}}</li></p>
+            <p *ngIf="cocktail.strIngredient6!=null&&cocktail.strIngredient6!=''"><li>{{cocktail.strMeasure6}}
+              {{cocktail.strIngredient6}}</li></p>
+            <p *ngIf="cocktail.strIngredient7!=null&&cocktail.strIngredient7!=''"><li>{{cocktail.strMeasure7}}
+              {{cocktail.strIngredient7}}</li></p>
+            <p *ngIf="cocktail.strIngredient8!=null&&cocktail.strIngredient8!=''"><li>{{cocktail.strMeasure8}}
+              {{cocktail.strIngredient8}}</li></p>
+            <p *ngIf="cocktail.strIngredient9!=null&&cocktail.strIngredient9!=''"><li>{{cocktail.strMeasure9}}
+              {{cocktail.strIngredient9}}</li></p>
+            <p *ngIf="cocktail.strIngredient10!=null&&cocktail.strIngredient10!=''"><li>{{cocktail.strMeasure10}}
+              {{cocktail.strIngredient10}}</li></p>
+            <p *ngIf="cocktail.strIngredient11!=null&&cocktail.strIngredient11!=''"><li>{{cocktail.strMeasure11}}
+              {{cocktail.strIngredient11}}</li></p>
+            <p *ngIf="cocktail.strIngredient12!=null&&cocktail.strIngredient12!=''"><li>{{cocktail.strMeasure12}}
+              {{cocktail.strIngredient12}}</li></p>
+            <p *ngIf="cocktail.strIngredient13!=null&&cocktail.strIngredient13!=''"><li>{{cocktail.strMeasure13}}
+              {{cocktail.strIngredient13}}</li></p>
+            <p *ngIf="cocktail.strIngredient14!=null&&cocktail.strIngredient14!=''"><li>{{cocktail.strMeasure14}}
+              {{cocktail.strIngredient14}}</li></p>
+            <p *ngIf="cocktail.strIngredient15!=null&&cocktail.strIngredient15!=''"><li>{{cocktail.strMeasure15}}
+              {{cocktail.strIngredient15}}</li></p>
+            </ul>
+          </details>
+
+
+        </ion-card>
+
       </ion-item>
-      </ion-list>
-  
-    </div>
+    </ion-list>
 
- 
+
+
+    <h2>Spiele</h2>
+    <ion-card>
+      <ion-card-header>
+        <ion-card-title>Schock</ion-card-title>
+      </ion-card-header>
+      <details>
+        <summary>Material & Anleitung</summary>
+        <ul>
+          <li>Würfelbecher</li>
+          <li>3 Würfel</li>
+        </ul>
+        <p>
+          Ein Spiel Schocken besteht aus 2 Spielhälften und wenn nicht der gleiche Spieler in beiden Spielhälften
+          verliert, einem Stechen – dem Finale. In jeder Spielhälfte und dem Finale wird reihum gewürfelt. Der Verlierer
+          jedes Spiels gibt seinen Mitspielern eine Runde aus. Fallen die Würfel einem Spieler auf den Boden, so muss er
+          ebenfalls eine Runde ausgeben.
+        </p>
+      </details>
+    </ion-card>
+
+    <ion-card>
+      <ion-card-header>
+        <ion-card-title>Mäxle</ion-card-title>
+      </ion-card-header>
+      <details>
+        <summary>Material & Anleitung</summary>
+        <ul>
+          <li>Würfelbecher</li>
+          <li>2 Würfel</li>
+        </ul>
+        <p>
+          Die Spieler sitzen im Kreis und würfeln reihum mit dem Würfelbecher auf der Unterlage, wobei der jüngste
+          Spieler beginnt. Er schaut unter den Würfelbecher und sagt jetzt regelgemäß den Wert an. Dabei darf er aber
+          auch lügen, was das Zeug hält!
+          <br>
+          <br>
+          Jetzt reicht er den Würfelbecher an den nächsten Spieler weiter. Glaubt dieser ihm, muss er nun einen höheren
+          Wert erwürfeln oder diesen dem nächsten Spieler vorlügen. Hat ein Spieler Zweifel daran, dass sein Vorgänger
+          die Wahrheit sagt, kann er verlangen nachzuschauen und den Würfelbecher heben.
+          <br>
+          <br>
+          Hat der vorige Spieler tatsächlich gelogen, bekommt er einen Strafpunkt, hat der andere ihn fälschlicherweise
+          bezichtigt, geht der Strafpunkt an ihn. In jedem Fall ist der Spieler, der aufgedeckt hat jetzt an der Reihe
+          zu Würfeln und muss dabei jetzt auch nicht mehr über einen vorherigen Wert kommen.
+        </p>
+      </details>
+    </ion-card>
+  </div>
+
+
 
 </ion-content>

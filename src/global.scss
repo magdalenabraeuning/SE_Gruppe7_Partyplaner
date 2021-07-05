@@ -52,11 +52,47 @@ ion-toolbar{
   }
 
   ion-card{
-    --ion-background-color: #FFE793;
-    color: black;
-    text-align: center;
+    //--ion-background-color: #ffffff;//#FFE793;
+    //color: black;
+    //text-align: center;
+
+    --ion-background-color:#F8EDD6;
+  margin-left: 3%;
+  margin-right: 3%; 
+  margin-top: 1%;
+  margin-bottom: 0%; 
+  padding: 1%;
   }
 
   ion-button{
-      background-color: #FF9593;
+    --background: #FF9593;
+  }
+
+  ion-searchbar{
+    --ion-background-color:#F8EDD6;
+  }
+
+  h1{
+    text-align: center;
+    color:#000000;
+  }
+  h2{
+    text-align: center;
+    padding-left: 1em;
+    padding-right: 1em;
+  }
+  p{
+    margin-left:3%;
+    margin-right:3%;
+  }
+  ion-label{
+    margin-left:3%;
+    margin-right:3%;
+  }
+  ion-title{
+    margin-top: 3%;
+    margin-bottom: 2%; 
+  }
+  ion-fab-button{
+    --background: #FF9593;
   }

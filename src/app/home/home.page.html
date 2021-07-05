@@ -1,9 +1,10 @@
 <ion-content [fullscreen]="true">
 
-  <firebase-ui></firebase-ui>
-    <div class="wrapper">
-  <ion-button color="dark" (click)="navigateToHome()">Starte meine Partys!</ion-button>
-</div>
+  
+<firebase-ui></firebase-ui>
+  <div class="wrapper" *ngIf="afAuth.user | async as user">
+    <ion-button color="dark" (click)="navigateToHome()">Starte meine Partys!</ion-button>
+  </div>
 
 
 </ion-content>

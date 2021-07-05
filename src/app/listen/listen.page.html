@@ -47,13 +47,10 @@
 
   <ion-title>Essen</ion-title>
   <ion-card>
-    <ion-card-header>
-      <ion-card-subtitle> 
-        Essen
-      </ion-card-subtitle>
-    </ion-card-header>
+    
       <ion-list *ngFor="let tnArray of essenPromise|async | slice:0:1; let i=index">
-      <ion-item *ngFor="let tn of tnArray.AusgabeArray">
+        <p id="liste" *ngIf="tnArray.AusgabeArray==undefined||tnArray.AusgabeArray.length==0">Einkaufsliste ist leer</p>
+        <ion-item *ngFor="let tn of tnArray.AusgabeArray">
         <p>{{tn.menge}} {{tn.name}}</p>
           <ion-icon name="trash-outline" (click)="removeEssen(tn)" slot="end"></ion-icon>
       </ion-item>
@@ -62,13 +59,9 @@
 
   <ion-title>Trinken</ion-title>
   <ion-card>
-    <ion-card-header>
-      <ion-card-subtitle> 
-        Trinken
-      </ion-card-subtitle>
-    </ion-card-header>
       <ion-list *ngFor="let tnArray of trinkenPromise|async | slice:0:1; let i=index">
-      <ion-item *ngFor="let tn of tnArray.AusgabeArray">
+        <p id="liste" *ngIf="tnArray.AusgabeArray==undefined||tnArray.AusgabeArray.length==0">Einkaufsliste ist leer</p>
+        <ion-item *ngFor="let tn of tnArray.AusgabeArray">
         <p>{{tn.menge}} {{tn.name}}</p>
           <ion-icon name="trash-outline" (click)="removeTrinken(tn)" slot="end"></ion-icon>
       </ion-item>
@@ -78,13 +71,9 @@
 
   <ion-title>Sonstiges</ion-title>
   <ion-card>
-    <ion-card-header>
-      <ion-card-subtitle> 
-        Sonstiges
-      </ion-card-subtitle>
-    </ion-card-header>
       <ion-list *ngFor="let tnArray of sonstigesPromise|async | slice:0:1; let i=index">
-      <ion-item *ngFor="let tn of tnArray.AusgabeArray">
+        <p id="liste" *ngIf="tnArray.AusgabeArray==undefined||tnArray.AusgabeArray.length==0">Einkaufsliste ist leer</p>
+        <ion-item *ngFor="let tn of tnArray.AusgabeArray">
         <p>{{tn.menge}} {{tn.name}}</p>
           <ion-icon name="trash-outline" (click)="removeSonstiges(tn)" slot="end"></ion-icon>
       </ion-item>

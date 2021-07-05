@@ -15,16 +15,35 @@ ion-toolbar{
     --ion-background-color: transparent;
   }
 
-  ion-card{
-    --ion-background-color: #FFE793;
-  }
-
   h3{
       color:black;
   }
 
-.signoutbttn{
+#signoutbttn{
     background-color: #FF9593;
-    color: #FFE793;
+    margin: 2%;
 }
 
+ion-fab-button{
+  --background: #FF9593;
+}
+ion-grid{
+  display: flex;
+  flex-wrap: wrap;
+  font-size: 0.9em;
+}
+#aussen{
+  margin: 10px 0 0 10px;
+  width:100%;
+  float: left;
+}
+#oben{
+  float: both;
+  margin-left: 0px;
+  margin-top: 0px;
+}
+#unten{
+  float: both;
+  margin-left: 0px;
+  margin-top: 0px;
+}
