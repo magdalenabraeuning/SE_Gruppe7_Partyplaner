@@ -59,9 +59,7 @@ export class CocktailPage implements OnInit {
   private verarbeiteHttpResponse = (httpResponse: any) => {
  
     if (httpResponse.status === 200) { // HTTP Status Code 200 = Ok
- 
       this.cocktails = httpResponse.body.drinks;
- 
     } else {
       this.APIErrorMessage = `Fehler bei Zugriff auf Web-API: ${httpResponse.statusText} (${httpResponse.status})`;
       this.APIError = true;
@@ -91,9 +89,79 @@ export class CocktailPage implements OnInit {
     this.loadData();
   }
 
-  addCocktail(cocktailID){
-    console.log(cocktailID)
-    this.speicherService.addCocktail(this.id, cocktailID);
+  addCocktail(
+              idDrink,
+              strDrinkThumb,
+              strDrink,
+              strInstructionsDE,
+              strMeasure1,
+              strMeasure2,
+              strMeasure3,
+              strMeasure4,
+              strMeasure5,
+              strMeasure6,
+              strMeasure7,
+              strMeasure8,
+              strMeasure9,
+              strMeasure10,
+              strMeasure11,
+              strMeasure12,
+              strMeasure13,
+              strMeasure14,
+              strMeasure15,
+              strIngredient1,
+              strIngredient2,
+              strIngredient3,
+              strIngredient4,
+              strIngredient5,
+              strIngredient6,
+              strIngredient7,
+              strIngredient8,
+              strIngredient9,
+              strIngredient10,
+              strIngredient11,
+              strIngredient12,
+              strIngredient13,
+              strIngredient14,
+              strIngredient15
+    ){
+    this.speicherService.addCocktail(
+              this.id, 
+              idDrink,
+              strDrinkThumb,
+              strDrink,
+              strInstructionsDE,
+              strMeasure1,
+              strMeasure2,
+              strMeasure3,
+              strMeasure4,
+              strMeasure5,
+              strMeasure6,
+              strMeasure7,
+              strMeasure8,
+              strMeasure9,
+              strMeasure10,
+              strMeasure11,
+              strMeasure12,
+              strMeasure13,
+              strMeasure14,
+              strMeasure15,
+              strIngredient1,
+              strIngredient2,
+              strIngredient3,
+              strIngredient4,
+              strIngredient5,
+              strIngredient6,
+              strIngredient7,
+              strIngredient8,
+              strIngredient9,
+              strIngredient10,
+              strIngredient11,
+              strIngredient12,
+              strIngredient13,
+              strIngredient14,
+              strIngredient15
+      );
   }
 
   ionViewWillEnter(){

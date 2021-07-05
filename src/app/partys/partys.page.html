@@ -66,8 +66,8 @@
         <ion-button (click)="bearbeitenButton(item.id, item.title, item.description, item.address, item.date, item.time )">
           <ion-icon name="pencil"></ion-icon>
         </ion-button>
-        <ion-button (click)="updateButton(item.id, item.isDone)" color="{{item.isDone ? 'success' : 'dark'}}">{{item.isDone ? 'In Planung' : 'Planung abgeschlossen'}}
-          <ion-icon color="{{item.isDone ? 'dark' : 'success'}}" name="checkbox-outline"></ion-icon>
+        <ion-button (click)="updateButton(item.id, item.isDone)" color="{{item.isDone ? 'dark' : 'success'}}">{{item.isDone ? 'Planung abgeschlossen' : 'In Planung'}}
+          <ion-icon color="{{item.isDone ? 'success' : 'dark'}}" name="checkbox-outline"></ion-icon>
         </ion-button>
       </ion-item>
     </ion-card>

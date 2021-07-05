@@ -6,4 +6,57 @@
 
 <ion-content>
 
+  <ion-item>
+    <ion-label>Partymodus</ion-label>
+    <ion-toggle [(ngModel)]="partymodusStatus" (ionChange)="togglePartymodus()"></ion-toggle>
+  </ion-item>
+
+  <div *ngIf="partymodusStatus">
+  <ion-title>Cockails</ion-title>
+      <ion-list *ngFor="let array of cocktailPromise|async | slice:0:1; let i=index">
+      <ion-item *ngFor="let cocktail of array.AusgabeArray">
+          <ion-icon name="trash-outline" (click)="removeCocktail(cocktail)" slot="end"></ion-icon>
+
+          <ion-card>
+            <ion-item class="ion-activated">
+              <ion-img id="image" src={{cocktail.strDrinkThumb}} slot="start"></ion-img>
+              <ion-card-header>
+                <ion-card-title> {{cocktail.strDrink}} </ion-card-title>
+              </ion-card-header>
+            </ion-item>
+            
+    
+            <details>
+              
+              <summary>Zutaten & Zubereitung</summary>
+              <p *ngIf="cocktail.strInstructionsDE!=null&&cocktail.strInstructionsDE!=''">Zubereitung: {{cocktail.strInstructionsDE}}</p>
+              <p>Zutaten:</p>
+              <p *ngIf="cocktail.strIngredient1!=null&&cocktail.strIngredient1!=''">{{cocktail.strMeasure1}} {{cocktail.strIngredient1}}</p>
+              <p *ngIf="cocktail.strIngredient2!=null&&cocktail.strIngredient2!=''">{{cocktail.strMeasure2}} {{cocktail.strIngredient2}}</p>
+              <p *ngIf="cocktail.strIngredient3!=null&&cocktail.strIngredient3!=''">{{cocktail.strMeasure3}} {{cocktail.strIngredient3}}</p>
+              <p *ngIf="cocktail.strIngredient4!=null&&cocktail.strIngredient4!=''">{{cocktail.strMeasure4}} {{cocktail.strIngredient4}}</p>
+              <p *ngIf="cocktail.strIngredient5!=null&&cocktail.strIngredient5!=''">{{cocktail.strMeasure5}} {{cocktail.strIngredient5}}</p>
+              <p *ngIf="cocktail.strIngredient6!=null&&cocktail.strIngredient6!=''">{{cocktail.strMeasure6}} {{cocktail.strIngredient6}}</p>
+              <p *ngIf="cocktail.strIngredient7!=null&&cocktail.strIngredient7!=''">{{cocktail.strMeasure7}} {{cocktail.strIngredient7}}</p>
+              <p *ngIf="cocktail.strIngredient8!=null&&cocktail.strIngredient8!=''">{{cocktail.strMeasure8}} {{cocktail.strIngredient8}}</p>
+              <p *ngIf="cocktail.strIngredient9!=null&&cocktail.strIngredient9!=''">{{cocktail.strMeasure9}} {{cocktail.strIngredient9}}</p>
+              <p *ngIf="cocktail.strIngredient10!=null&&cocktail.strIngredient10!=''">{{cocktail.strMeasure10}} {{cocktail.strIngredient10}}</p>
+              <p *ngIf="cocktail.strIngredient11!=null&&cocktail.strIngredient11!=''">{{cocktail.strMeasure11}} {{cocktail.strIngredient11}}</p>
+              <p *ngIf="cocktail.strIngredient12!=null&&cocktail.strIngredient12!=''">{{cocktail.strMeasure12}} {{cocktail.strIngredient12}}</p>
+              <p *ngIf="cocktail.strIngredient13!=null&&cocktail.strIngredient13!=''">{{cocktail.strMeasure13}} {{cocktail.strIngredient13}}</p>
+              <p *ngIf="cocktail.strIngredient14!=null&&cocktail.strIngredient14!=''">{{cocktail.strMeasure14}} {{cocktail.strIngredient14}}</p>
+              <p *ngIf="cocktail.strIngredient15!=null&&cocktail.strIngredient15!=''">{{cocktail.strMeasure15}} {{cocktail.strIngredient15}}</p>
+            
+            </details>
+  
+          
+          </ion-card>
+          
+      </ion-item>
+      </ion-list>
+  
+    </div>
+
+ 
+
 </ion-content>

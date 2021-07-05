@@ -94,9 +94,7 @@ export class SpeicherService {
     return this.afFirestore.collection("Partys").doc<AllPartyData>(id).valueChanges();
   }
   getPartyDocuments(id, i) {
-
     this.getPartyData(id).subscribe(res => {
-
       this.partyData[i] = { title: res.title, description: res.description, address: res.address, date: res.date, time: res.time, createdAt: res.createdAt, isDone: res.isDone, id: res.id, partymodus: res.partymodus };
     })
   }
@@ -216,12 +214,6 @@ export class SpeicherService {
       address: res.address,
       date: res.date,
       time: res.time
-    });
-  }
-
-  partymodusStarten(partyID, status) {
-    this.afFirestore.collection("Partys").doc(partyID).update({
-      partymodus: !status
     });
   }
 
@@ -360,9 +352,78 @@ export class SpeicherService {
   }*/
 
 
-  addCocktail(partyID, cocktailID) {
+  addCocktail(partyID,
+    idDrink,
+              strDrinkThumb,
+              strDrink,
+              strInstructionsDE,
+              strMeasure1,
+              strMeasure2,
+              strMeasure3,
+              strMeasure4,
+              strMeasure5,
+              strMeasure6,
+              strMeasure7,
+              strMeasure8,
+              strMeasure9,
+              strMeasure10,
+              strMeasure11,
+              strMeasure12,
+              strMeasure13,
+              strMeasure14,
+              strMeasure15,
+              strIngredient1,
+              strIngredient2,
+              strIngredient3,
+              strIngredient4,
+              strIngredient5,
+              strIngredient6,
+              strIngredient7,
+              strIngredient8,
+              strIngredient9,
+              strIngredient10,
+              strIngredient11,
+              strIngredient12,
+              strIngredient13,
+              strIngredient14,
+              strIngredient15) {
     this.afFirestore.collection("Partys").doc(partyID).update({
-      Cocktails: firebase.firestore.FieldValue.arrayUnion(cocktailID)
+      Cocktails: firebase.firestore.FieldValue.arrayUnion({
+        idDrink: idDrink, 
+        strDrinkThumb: strDrinkThumb,
+        strDrink: strDrink,
+        strInstructionsDE: strInstructionsDE,
+        strMeasure1: strMeasure1,
+        strMeasure2: strMeasure2,
+        strMeasure3: strMeasure3,
+        strMeasure4: strMeasure4,
+        strMeasure5: strMeasure5,
+        strMeasure6: strMeasure6,
+        strMeasure7: strMeasure7,
+        strMeasure8: strMeasure8,
+        strMeasure9: strMeasure9,
+        strMeasure10: strMeasure10,
+        strMeasure11: strMeasure11,
+        strMeasure12: strMeasure12,
+        strMeasure13: strMeasure13,
+        strMeasure14: strMeasure14,
+        strMeasure15: strMeasure15,
+        strIngredient1: strIngredient1,
+        strIngredient2: strIngredient2,
+        strIngredient3: strIngredient3,
+        strIngredient4: strIngredient4,
+        strIngredient5: strIngredient5,
+        strIngredient6: strIngredient6,
+        strIngredient7: strIngredient7,
+        strIngredient8: strIngredient8,
+        strIngredient9: strIngredient9,
+        strIngredient10: strIngredient10,
+        strIngredient11: strIngredient11,
+        strIngredient12: strIngredient12,
+        strIngredient13: strIngredient13,
+        strIngredient14: strIngredient14,
+        strIngredient15: strIngredient15
+      })
     });
   }
 
@@ -379,5 +440,19 @@ export class SpeicherService {
       ergebnisArray.push(partyCocktails);
     });
     return ergebnisArray;
+  }
+
+  getPartymodusStatus(partyID){
+    let partymodusStatus = false;
+    this.getPartyData(partyID).forEach(async (party) => {
+      partymodusStatus = party.partymodus;
+    });
+    return partymodusStatus;
+  }
+
+  partymodusStarten(partyID, status) {
+    this.afFirestore.collection("Partys").doc(partyID).update({
+      partymodus: !status
+    });
   }
 }

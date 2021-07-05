@@ -110,16 +110,16 @@ export class ListenPage implements OnInit {
     this.sonstigesPromise = this.speicherService.getSonstiges(partyID);
   }
 
-  removeEssen(partyID, essen) {
-    this.speicherService.removeEssen(partyID, essen);
+  removeEssen(essen) {
+    this.speicherService.removeEssen(this.id, essen);
     this.showLists(this.id);
   }
-  removeTrinken(partyID, trinken) {
-    this.speicherService.removeTrinken(partyID, trinken);
+  removeTrinken(trinken) {
+    this.speicherService.removeTrinken(this.id, trinken);
     this.showLists(this.id);
   }
-  removeSonstiges(partyID, sonstiges) {
-    this.speicherService.removeSonstiges(partyID, sonstiges);
+  removeSonstiges(sonstiges) {
+    this.speicherService.removeSonstiges(this.id, sonstiges);
     this.showLists(this.id);
   }
 
@@ -129,5 +129,6 @@ export class ListenPage implements OnInit {
   ionViewWillEnter() {
     this.id = this.idService.getPartyID();
     this.showLists(this.id);
+    console.log("ID: "+this.id)
   }
 }

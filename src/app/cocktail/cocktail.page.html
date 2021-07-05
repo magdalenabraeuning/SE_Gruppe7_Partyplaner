@@ -64,14 +64,49 @@
             <ion-card-header>
               <ion-card-title> {{cocktail.strDrink}} </ion-card-title>
             </ion-card-header>
-            <ion-button (click)="addCocktail(cocktail.idDrink)">+</ion-button>
+            <ion-button (click)="addCocktail(
+              cocktail.idDrink,
+              cocktail.strDrinkThumb,
+              cocktail.strDrink,
+              cocktail.strInstructionsDE,
+              cocktail.strMeasure1,
+              cocktail.strMeasure2,
+              cocktail.strMeasure3,
+              cocktail.strMeasure4,
+              cocktail.strMeasure5,
+              cocktail.strMeasure6,
+              cocktail.strMeasure7,
+              cocktail.strMeasure8,
+              cocktail.strMeasure9,
+              cocktail.strMeasure10,
+              cocktail.strMeasure11,
+              cocktail.strMeasure12,
+              cocktail.strMeasure13,
+              cocktail.strMeasure14,
+              cocktail.strMeasure15,
+              cocktail.strIngredient1,
+              cocktail.strIngredient2,
+              cocktail.strIngredient3,
+              cocktail.strIngredient4,
+              cocktail.strIngredient5,
+              cocktail.strIngredient6,
+              cocktail.strIngredient7,
+              cocktail.strIngredient8,
+              cocktail.strIngredient9,
+              cocktail.strIngredient10,
+              cocktail.strIngredient11,
+              cocktail.strIngredient12,
+              cocktail.strIngredient13,
+              cocktail.strIngredient14,
+              cocktail.strIngredient15
+              )">+</ion-button>
           </ion-item>
           
   
           <details>
             
             <summary>Zutaten & Zubereitung</summary>
-            <p>Zubereitung: {{cocktail.strInstructionsDE}}</p>
+            <p *ngIf="cocktail.strInstructionsDE!=null&&cocktail.strInstructionsDE!=''">Zubereitung: {{cocktail.strInstructionsDE}}</p>
             <p>Zutaten:</p>
             <p *ngIf="cocktail.strIngredient1!=null&&cocktail.strIngredient1!=''">{{cocktail.strMeasure1}} {{cocktail.strIngredient1}}</p>
             <p *ngIf="cocktail.strIngredient2!=null&&cocktail.strIngredient2!=''">{{cocktail.strMeasure2}} {{cocktail.strIngredient2}}</p>
