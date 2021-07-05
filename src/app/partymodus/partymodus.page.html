@@ -8,8 +8,9 @@
 
   <ion-item>
     <ion-label>Partymodus</ion-label>
-    <ion-toggle [(ngModel)]="partymodusStatus" (ionChange)="togglePartymodus()"></ion-toggle>
+<ion-button (click)="togglePartymodus($event)" color="{{partymodusStatus ? 'dark' : 'success'}}">{{partymodusStatus ? 'true' : 'false'}}</ion-button>
   </ion-item>
+  
 
   <div *ngIf="partymodusStatus">
   <ion-title>Cockails</ion-title>

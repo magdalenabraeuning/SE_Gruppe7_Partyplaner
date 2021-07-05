@@ -19,13 +19,19 @@ export class PartymodusPage implements OnInit {
     private idService: IdService,
   ) { }
 
-  ngOnInit() {
+  async ngOnInit() {
+    this.id = this.idService.getPartyID();
+    this.partymodusStatus = await this.speicherService.getPartymodusStatus(this.id);
   }
 
-  ionViewWillEnter() {
-    this.id = this.idService.getPartyID();
-    this.partymodusStatus = this.speicherService.getPartymodusStatus(this.id);
-    this.showCocktails(this.id);
+  async ionViewWillEnter() {
+    console.log("id: "+this.id)
+    await this.showCocktails(this.id);
+      console.log("Status1: "+this.partymodusStatus)
+      this.partymodusStatus = await this.speicherService.getPartymodusStatus(this.id);
+      console.log("Status2: "+ this.partymodusStatus)
+    
+    
   }
 
   async showCocktails(partyID){
@@ -37,7 +43,11 @@ export class PartymodusPage implements OnInit {
     this.showCocktails(this.id);
   }
 
-  togglePartymodus(){
+  async togglePartymodus($event){
+    
     this.speicherService.partymodusStarten(this.id, this.partymodusStatus);
+    this.partymodusStatus = !this.partymodusStatus;
+    //this.partymodusStatus = await this.speicherService.getPartymodusStatus(this.id);
+    console.log("TOGGLE")
   }
 }

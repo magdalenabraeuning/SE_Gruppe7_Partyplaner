@@ -353,7 +353,7 @@ export class SpeicherService {
 
 
   addCocktail(partyID,
-    idDrink,
+              idDrink,
               strDrinkThumb,
               strDrink,
               strInstructionsDE,
@@ -442,15 +442,18 @@ export class SpeicherService {
     return ergebnisArray;
   }
 
-  getPartymodusStatus(partyID){
-    let partymodusStatus = false;
-    this.getPartyData(partyID).forEach(async (party) => {
+  async getPartymodusStatus(partyID){
+    let partymodusStatus:Boolean;
+    this.getPartyData(partyID).forEach((party) => {
+      console.log("Speicher 1:"+party.partymodus)
       partymodusStatus = party.partymodus;
     });
+    
+    console.log("Speicher Modus:"+partymodusStatus)
     return partymodusStatus;
   }
 
-  partymodusStarten(partyID, status) {
+  async partymodusStarten(partyID, status) {
     this.afFirestore.collection("Partys").doc(partyID).update({
       partymodus: !status
     });
