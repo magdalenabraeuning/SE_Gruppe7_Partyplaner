@@ -14,13 +14,11 @@
     <ion-title>
       Partyplaner
     </ion-title>
-    <ion-button slot="end" (click)="signOut()"><ion-icon name="log-out-outline"></ion-icon></ion-button>
+    <ion-button color="#FF9593" slot="end" (click)="signOut()"><ion-icon name="log-out-outline"></ion-icon></ion-button>
   </ion-toolbar>
 </ion-header>
 
 <ion-content [fullscreen]="true">
-
-
   
   <ion-refresher slot="fixed" (ionRefresh)="doRefresh($event)">
     <ion-refresher-content pullingIcon="chevron-down-circle-outline" pullingText="Pull to refresh"
@@ -38,11 +36,9 @@
   <div *ngIf="afAuth.user | async as user">
     <h1>Hallo {{ user.displayName }}!</h1>
   </div>
-    
-   
-
+     
     <ion-list *ngIf="partyData.length !=0">
-       <ion-card *ngFor="let item of partyData">
+       <ion-card class="card" *ngFor="let item of partyData">
          <ion-item lines="none">
        
         <ion-label (click)="openParty(item)">
@@ -56,10 +52,8 @@
           <h3>Datum: {{item.date}}</h3>
           <h3>Uhrzeit: {{item.time}}</h3>
           <h3>Erstellt am: {{item.createdAt}}</h3>
-          <h3>ID: {{item.id}}</h3>
         </ion-label>
 
-        
         <ion-button (click)="deleteButton(item.id)">
           <ion-icon name="trash"></ion-icon>
         </ion-button>
