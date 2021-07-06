@@ -52,7 +52,7 @@ export class InfoPage implements OnInit {
     this.alertCtrl.create({
       message: "Teilnehmer hinzufügen",
       inputs: [
-        { type: 'textarea', name: 'userMail', placeholder: "E-Mail des Users eingeben" },
+        { type: 'textarea', name: 'userMail', placeholder: "Name des Users eingeben" },
       ],
       buttons: [
         {
