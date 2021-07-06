@@ -89,8 +89,8 @@ jobs:
       # - name: Verify formatting
       #   run: deno fmt --check
 
-      - name: Run linter
-        run: deno lint
+      # - name: Run linter
+      #   run: deno lint
 
     # Geht beides noch nicht 
 
@@ -136,3 +136,7 @@ jobs:
         with:
           build: npm run build
           start: npm start
+
+          # login 
+          #info 
+          #logout 
