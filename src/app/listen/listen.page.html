@@ -1,8 +1,12 @@
-
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Einkaufslisten</ion-title>
+  </ion-toolbar>
+</ion-header>
 
 <ion-content [fullscreen]="true">
 
-
+<!--
   <br>
   <ion-title>Essen</ion-title>
   <ion-card *ngFor="let item of toDoList">
@@ -33,11 +37,47 @@
       </ion-item>
     </ion-card-header>
   </ion-card>
-
+-->
   <ion-fab vertical="bottom" horizontal="end" slot="fixed">
     <ion-fab-button (click)="addItem()">
       <ion-icon name="add"></ion-icon>
     </ion-fab-button>
   </ion-fab>
+
+
+  <ion-title>Essen</ion-title>
+  <ion-card>
+    
+      <ion-list *ngFor="let tnArray of essenPromise|async | slice:0:1; let i=index">
+        <p id="liste" *ngIf="tnArray.AusgabeArray==undefined||tnArray.AusgabeArray.length==0">Einkaufsliste ist leer</p>
+        <ion-item *ngFor="let tn of tnArray.AusgabeArray">
+        <p>{{tn.menge}} {{tn.name}}</p>
+          <ion-icon name="trash-outline" (click)="removeEssen(tn)" slot="end"></ion-icon>
+      </ion-item>
+      </ion-list>
+  </ion-card>
+
+  <ion-title>Trinken</ion-title>
+  <ion-card>
+      <ion-list *ngFor="let tnArray of trinkenPromise|async | slice:0:1; let i=index">
+        <p id="liste" *ngIf="tnArray.AusgabeArray==undefined||tnArray.AusgabeArray.length==0">Einkaufsliste ist leer</p>
+        <ion-item *ngFor="let tn of tnArray.AusgabeArray">
+        <p>{{tn.menge}} {{tn.name}}</p>
+          <ion-icon name="trash-outline" (click)="removeTrinken(tn)" slot="end"></ion-icon>
+      </ion-item>
+      </ion-list>
+  </ion-card>
+  
+
+  <ion-title>Sonstiges</ion-title>
+  <ion-card>
+      <ion-list *ngFor="let tnArray of sonstigesPromise|async | slice:0:1; let i=index">
+        <p id="liste" *ngIf="tnArray.AusgabeArray==undefined||tnArray.AusgabeArray.length==0">Einkaufsliste ist leer</p>
+        <ion-item *ngFor="let tn of tnArray.AusgabeArray">
+        <p>{{tn.menge}} {{tn.name}}</p>
+          <ion-icon name="trash-outline" (click)="removeSonstiges(tn)" slot="end"></ion-icon>
+      </ion-item>
+      </ion-list>
+  </ion-card>
 
 </ion-content>

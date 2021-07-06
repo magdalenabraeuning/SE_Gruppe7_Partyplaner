@@ -1,29 +1,46 @@
 <ion-header>
   <ion-toolbar>
-    <ion-title>info</ion-title>
+    <ion-title>{{title}}</ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content>
   <ion-card>
-    <h3>{{title}}</h3>
-    <p>Beschreibung: {{description}}</p>
-    <p>Adresse: {{address}}</p>
-    <p>Datum: {{date}}</p>
-    <p>Uhrzeit: {{time}}</p>
-    <p>ID: {{id}}</p>
-
+    <ion-card-header>
+      <ion-card-subtitle>
+        Details
+      </ion-card-subtitle>
+    </ion-card-header>
+    <ion-row>
+      <ion-col>Beschreibung:</ion-col>
+      <ion-col>{{description}}</ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col>Adresse:</ion-col>
+      <ion-col>{{address}}</ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col>Datum:</ion-col>
+      <ion-col>{{date}}</ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col>Uhrzeit:</ion-col>
+      <ion-col>{{time}} Uhr</ion-col>
+    </ion-row>
   </ion-card>
 
   <ion-card>
-    <p>Teilnehmer</p>
-    <ion-button (click)="addTeilnehmer(id)">+</ion-button>
-    <ion-button (click)="removeTeilnehmer(id)">-</ion-button>
-    
-    <ion-label *ngFor="let tn of teilnehmerPromise|async">
-      <p>{{tn.Teilnehmer}}</p>
-
-
-    </ion-label>
+    <ion-card-header>
+      <ion-card-subtitle>
+        Teilnehmer
+      </ion-card-subtitle>
+      <ion-button id="addTeilnehmer" (click)="addTeilnehmer(id)">+</ion-button>
+    </ion-card-header>
+    <ion-list *ngFor="let tnArray of teilnehmerPromise|async | slice:0:1; let i=index">
+      <ion-item *ngFor="let tn of tnArray.AusgabeArray">
+        <p>{{tn}}</p>
+        <ion-icon name="trash" (click)="removeTeilnehmer(id, tn)" slot="end"></ion-icon>
+      </ion-item>
+    </ion-list>
   </ion-card>
 </ion-content>
