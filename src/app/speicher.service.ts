@@ -12,8 +12,8 @@ export interface PartyForUser {
 
 export class AllPartyData {
 
-  constructor(public einTeilnehmer) {
-    this.Teilnehmer = einTeilnehmer;
+  constructor(public ausgabe) {
+    this.AusgabeArray = ausgabe;
   }
   title: string;
   description: string;
@@ -21,26 +21,18 @@ export class AllPartyData {
   date: string;
   time: string;
 
+  AusgabeArray: [];
   Essen: [];
-
+  Trinken: [];
+  Sonstiges: [];
   Teilnehmer: [];
+  Cocktails: [];
 
   isDone: boolean;
   createdAt: number;
   id: string;
   partymodus: boolean;
 
-  /**
-   * Titel
-   * Beschreibung
-   * Adresse
-   * Datum
-   * Uhrzeit
-   * 
-   * Status
-   * createdAt
-   * id
-   */
 }
 
 
@@ -74,7 +66,6 @@ export class SpeicherService {
 
         this.partyArrObsrv.pipe(take(1)).subscribe((partyArr) => {
           for (let i = 0; i < partyArr.length; i++) {
-            console.log("Hiiiiiier IDs" + partyArr[i])
             this.getPartyDocuments(partyArr[i], i);
           }
         });
@@ -94,12 +85,8 @@ export class SpeicherService {
   async getDocuments(id) {
 
     this.getPartys(id).subscribe(res => {
-
-      console.log("getDocuments PartyIDs" + res.Partys)
       this.partyArr = res.Partys;
       this.partyArrObsrv.next(res.Partys);
-      console.log("Eine PartyID" + this.partyArr[0]);
-
     });
   }
 
@@ -107,22 +94,14 @@ export class SpeicherService {
     return this.afFirestore.collection("Partys").doc<AllPartyData>(id).valueChanges();
   }
   getPartyDocuments(id, i) {
-
     this.getPartyData(id).subscribe(res => {
-
       this.partyData[i] = { title: res.title, description: res.description, address: res.address, date: res.date, time: res.time, createdAt: res.createdAt, isDone: res.isDone, id: res.id, partymodus: res.partymodus };
-      console.log("Partydaten idddddddd 1" + this.partyData[i].createdAt);
-      console.log("Partydaten idddddddd 2" + this.partyData[i].title);
-      console.log("Partydaten idddddddd 3" + this.partyData[i].description);
-      console.log("Partydaten idddddddd 4" + this.partyData[i].isDone);
-
     })
   }
 
 
   async addParty(res) {
     try {
-      console.log("START speicherService addParty");
       this.afAuth.currentUser.then((user) => {
         let userID = "0";
         try {
@@ -132,7 +111,6 @@ export class SpeicherService {
           return;
         }
 
-        console.log("speicherService res: " + res);
         this.afFirestore.collection("Partys").add({
 
           title: res.title,
@@ -146,7 +124,6 @@ export class SpeicherService {
           createdAt: Date.now(),
           isDone: false,
           partymodus: false
-          //Sammlung Einkaufsliste, ...
 
         }).then((r) => {
           this.afFirestore.collection("Partys").doc(r.id).update({
@@ -157,7 +134,6 @@ export class SpeicherService {
 
                 let userVorhanden = false;
                 for (let i = 0; i < this.allIDs.length; i++) {
-                  console.log("Hiiiiiier IDs" + this.allIDs[i]);
                   if (this.pruefeUserVorhanden(this.allIDs[i].id, userID)) {
                     userVorhanden = true;
                   }
@@ -195,17 +171,12 @@ export class SpeicherService {
   async getAllUserData() {
 
     await this.getUsers().subscribe(res => {
-
-      console.log("speicherService UserIDs alle" + res);
-
       this.allIDs = res.map(e => {
         return {
           id: e.payload.doc.id
         };
       });
       this.userIDArrObsrv.next(res);
-      console.log("Eine UserID" + this.allIDs[0].id);
-
     })
   }
 
@@ -214,13 +185,10 @@ export class SpeicherService {
     if (pruefeID == userID) {
       userVorhanden = true;
     }
-    console.log("DAS IST MEIN USER?: " + userVorhanden)
     return userVorhanden;
   }
 
   async delete(id): Promise<any> {
-    console.log("DELETE START")
-
 
     this.afAuth.currentUser.then((x) => {
       let userID = x.uid;
@@ -230,21 +198,22 @@ export class SpeicherService {
       });
       //this.afFirestore.collection("Partys").doc(id).delete();
     });
-
-
-
   }
 
 
-  update(id, status) {
+  updateStatus(id, status) {
     this.afFirestore.collection("Partys").doc(id).update({
       isDone: !status
     });
   }
 
-  partymodusStarten(partyID, status) {
-    this.afFirestore.collection("Partys").doc(partyID).update({
-      partymodus: !status
+  updateParty(res, id) {
+    this.afFirestore.collection("Partys").doc(id).update({
+      title: res.title,
+      description: res.description,
+      address: res.address,
+      date: res.date,
+      time: res.time
     });
   }
 
@@ -269,27 +238,19 @@ export class SpeicherService {
   async getTeilnehmer(partyID): Promise<AllPartyData[]> {
     const ergebnisArray: AllPartyData[] = [];
     this.getPartyData(partyID).forEach(async (party) => {
-      console.log("Teilnehmer: " + party.Teilnehmer);
       let partyTeilnehmer = new AllPartyData(party.Teilnehmer);
       ergebnisArray.push(partyTeilnehmer);
     });
-
-    //console.log("Teilnehmer: "+(await teilnehmerPromise));
     return ergebnisArray;
   }
 
   addTeilnehmer(partyID, userMail) {
 
-    //let emails = this.getAllEmails();
-    //this.afAuth.user.forEach((user) => console.log("EMAIL: "+user.displayName))
-
-
-
     this.afFirestore.collection("Partys").doc(partyID).update({
       Teilnehmer: firebase.firestore.FieldValue.arrayUnion(userMail)
     });
   }
-
+/*
   getAllEmails() {
     let allEMails: any[];
     this.getUsers().subscribe(res => {
@@ -306,7 +267,7 @@ export class SpeicherService {
 
     })
     return allEMails;
-  }
+  }*/
 
   removeTeilnehmer(partyID, userMail) {
     this.afFirestore.collection("Partys").doc(partyID).update({
@@ -326,5 +287,175 @@ export class SpeicherService {
     });
   }
 
+  async getEssen(partyID): Promise<AllPartyData[]> {
+    const ergebnisArray: AllPartyData[] = [];
+    this.getPartyData(partyID).forEach(async (party) => {
+      let partyEssen = new AllPartyData(party.Essen);
+      ergebnisArray.push(partyEssen);
+    });
+    return ergebnisArray;
+  }
 
+  addTrinken(partyID, trinkenArray) {
+    this.afFirestore.collection("Partys").doc(partyID).update({
+      Trinken: firebase.firestore.FieldValue.arrayUnion(trinkenArray)
+    });
+  }
+
+  removeTrinken(partyID, trinkenArray) {
+    this.afFirestore.collection("Partys").doc(partyID).update({
+      Trinken: firebase.firestore.FieldValue.arrayRemove(trinkenArray)
+    });
+  }
+
+  async getTrinken(partyID): Promise<AllPartyData[]> {
+    const ergebnisArray: AllPartyData[] = [];
+    this.getPartyData(partyID).forEach(async (party) => {
+      let partyTrinken = new AllPartyData(party.Trinken);
+      ergebnisArray.push(partyTrinken);
+    });
+    return ergebnisArray;
+  }
+
+  addSonstiges(partyID, sonstigesArray) {
+    this.afFirestore.collection("Partys").doc(partyID).update({
+      Sonstiges: firebase.firestore.FieldValue.arrayUnion(sonstigesArray)
+    });
+  }
+
+  removeSonstiges(partyID, sonstigesArray) {
+    this.afFirestore.collection("Partys").doc(partyID).update({
+      Sonstiges: firebase.firestore.FieldValue.arrayRemove(sonstigesArray)
+    });
+  }
+
+  async getSonstiges(partyID): Promise<AllPartyData[]> {
+    const ergebnisArray: AllPartyData[] = [];
+    this.getPartyData(partyID).forEach(async (party) => {
+      let partySonstiges = new AllPartyData(party.Sonstiges);
+      ergebnisArray.push(partySonstiges);
+    });
+    return ergebnisArray;
+  }
+
+  /*
+  getUserID() {
+    let userID;
+    this.afAuth.currentUser.then((user) => {
+      try {
+        userID = user.uid;
+      } catch (e) {
+        console.log(e);
+      }
+    });
+    return userID;
+  }*/
+
+
+  addCocktail(partyID,
+              idDrink,
+              strDrinkThumb,
+              strDrink,
+              strInstructionsDE,
+              strMeasure1,
+              strMeasure2,
+              strMeasure3,
+              strMeasure4,
+              strMeasure5,
+              strMeasure6,
+              strMeasure7,
+              strMeasure8,
+              strMeasure9,
+              strMeasure10,
+              strMeasure11,
+              strMeasure12,
+              strMeasure13,
+              strMeasure14,
+              strMeasure15,
+              strIngredient1,
+              strIngredient2,
+              strIngredient3,
+              strIngredient4,
+              strIngredient5,
+              strIngredient6,
+              strIngredient7,
+              strIngredient8,
+              strIngredient9,
+              strIngredient10,
+              strIngredient11,
+              strIngredient12,
+              strIngredient13,
+              strIngredient14,
+              strIngredient15) {
+    this.afFirestore.collection("Partys").doc(partyID).update({
+      Cocktails: firebase.firestore.FieldValue.arrayUnion({
+        idDrink: idDrink, 
+        strDrinkThumb: strDrinkThumb,
+        strDrink: strDrink,
+        strInstructionsDE: strInstructionsDE,
+        strMeasure1: strMeasure1,
+        strMeasure2: strMeasure2,
+        strMeasure3: strMeasure3,
+        strMeasure4: strMeasure4,
+        strMeasure5: strMeasure5,
+        strMeasure6: strMeasure6,
+        strMeasure7: strMeasure7,
+        strMeasure8: strMeasure8,
+        strMeasure9: strMeasure9,
+        strMeasure10: strMeasure10,
+        strMeasure11: strMeasure11,
+        strMeasure12: strMeasure12,
+        strMeasure13: strMeasure13,
+        strMeasure14: strMeasure14,
+        strMeasure15: strMeasure15,
+        strIngredient1: strIngredient1,
+        strIngredient2: strIngredient2,
+        strIngredient3: strIngredient3,
+        strIngredient4: strIngredient4,
+        strIngredient5: strIngredient5,
+        strIngredient6: strIngredient6,
+        strIngredient7: strIngredient7,
+        strIngredient8: strIngredient8,
+        strIngredient9: strIngredient9,
+        strIngredient10: strIngredient10,
+        strIngredient11: strIngredient11,
+        strIngredient12: strIngredient12,
+        strIngredient13: strIngredient13,
+        strIngredient14: strIngredient14,
+        strIngredient15: strIngredient15
+      })
+    });
+  }
+
+  removeCocktail(partyID, cocktailID) {
+    this.afFirestore.collection("Partys").doc(partyID).update({
+      Cocktails: firebase.firestore.FieldValue.arrayRemove(cocktailID)
+    });
+  }
+
+  async getCocktails(partyID): Promise<AllPartyData[]> {
+    const ergebnisArray: AllPartyData[] = [];
+    this.getPartyData(partyID).forEach(async (party) => {
+      let partyCocktails = new AllPartyData(party.Cocktails);
+      ergebnisArray.push(partyCocktails);
+    });
+    return ergebnisArray;
+  }
+
+  async getPartymodusStatus(partyID){
+    let partymodusStatus:Boolean;
+    this.getPartyData(partyID).forEach((party) => {
+      console.log("Speicher 1:"+party.partymodus)
+      partymodusStatus = party.partymodus;
+    });
+    
+    console.log("Speicher Modus:"+partymodusStatus)
+    return partymodusStatus;
+  }
+
+  async partymodusStarten(partyID, status) {
+    this.afFirestore.collection("Partys").doc(partyID).update({
+      partymodus: !status
+    });
+  }
 }

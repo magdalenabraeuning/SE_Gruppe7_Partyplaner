@@ -1,0 +1,108 @@
+<!--<ion-header>
+  <ion-toolbar>
+    <ion-title>partys</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+
+</ion-content>
+-->
+
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-title>
+      Partyplaner
+    </ion-title>
+    <ion-button id="signoutbttn" color="#FF9593" slot="end" (click)="signOut()"><ion-icon name="log-out-outline"></ion-icon></ion-button>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  
+  <ion-refresher slot="fixed" (ionRefresh)="doRefresh($event)">
+    <ion-refresher-content pullingIcon="chevron-down-circle-outline" pullingText="Pull to refresh"
+    refreshingSpinner="circles" refreshingText="Refreshing...">
+  </ion-refresher-content>
+</ion-refresher>
+
+<ion-fab vertical="bottom" horizontal="end" slot="fixed" (click)="addParty()">
+<ion-fab-button >+</ion-fab-button>
+</ion-fab>
+ 
+  
+  
+
+  <div *ngIf="afAuth.user | async as user">
+    <h1>Hallo {{ user.displayName }}!</h1>
+  </div>
+     
+    <ion-list *ngIf="partyData.length !=0">
+       <ion-card class="card" *ngFor="let item of partyData">
+         <ion-item lines="none">
+       <div id="aussen">
+         <div id="oben">
+        <ion-label (click)="openParty(item)">
+          <ion-card-header>
+            <ion-card-title> 
+              {{item.title}}
+            </ion-card-title>
+          </ion-card-header>
+          <ion-grid>
+          <ion-row>
+            <ion-col>Beschreibung:</ion-col>
+            <ion-col>{{item.description}}</ion-col>
+          </ion-row>
+          <ion-row>
+            <ion-col>Adresse:</ion-col>
+            <ion-col>{{item.address}}</ion-col>
+          </ion-row>
+          <ion-row>
+            <ion-col>Datum:</ion-col>
+            <ion-col>{{item.date}}</ion-col>
+          </ion-row>
+          <ion-row>
+            <ion-col>Uhrzeit:</ion-col>
+            <ion-col>{{item.time}}</ion-col>
+          </ion-row>
+        </ion-grid>
+        </ion-label>
+      </div>
+      <div id="unten">
+        <ion-grid>
+          <ion-row>
+            <ion-button (click)="deleteButton(item.id)">
+            <ion-icon name="trash"></ion-icon>
+          </ion-button>
+        
+            <ion-button (click)="bearbeitenButton(item.id, item.title, item.description, item.address, item.date, item.time )">
+              <ion-icon name="pencil"></ion-icon>
+            </ion-button>
+          </ion-row>
+          <ion-row>
+            <ion-button (click)="updateButton(item.id, item.isDone)" color="{{item.isDone ? 'dark' : 'success'}}">{{item.isDone ? 'Planung abgeschlossen' : 'In Planung'}}
+          <ion-icon color="{{item.isDone ? 'success' : 'dark'}}" name="checkbox-outline"></ion-icon>
+        </ion-button>
+          </ion-row>
+        </ion-grid>
+      </div>
+    </div>
+      
+        
+      
+          
+        
+
+        
+        
+        
+      </ion-item>
+    </ion-card>
+    </ion-list>
+
+
+
+
+    
+  
+</ion-content>

@@ -22,7 +22,11 @@ const routes: Routes = [
   {
     path: 'tabbar',
     loadChildren: () => import('./tabbar/tabbar.module').then( m => m.TabbarPageModule)
+  },  {
+    path: 'partys',
+    loadChildren: () => import('./partys/partys.module').then( m => m.PartysPageModule)
   },
+
 
 
 ];

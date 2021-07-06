@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { HttpHeaders } from '@angular/common/http';
 import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
+import { SpeicherService } from '../speicher.service';
+import { IdService } from '../id.service';
 
 @Component({
   selector: 'app-cocktail',
@@ -12,10 +14,13 @@ export class CocktailPage implements OnInit {
 
   searchTerm = "";
   IngArr : any [];
+  private id;
 
 
   constructor(
-    private httpClient: HttpClient
+    private httpClient: HttpClient,
+    private speicherService: SpeicherService,
+    private idService: IdService
   ) { }
 
   ngOnInit() {
@@ -54,9 +59,7 @@ export class CocktailPage implements OnInit {
   private verarbeiteHttpResponse = (httpResponse: any) => {
  
     if (httpResponse.status === 200) { // HTTP Status Code 200 = Ok
- 
       this.cocktails = httpResponse.body.drinks;
- 
     } else {
       this.APIErrorMessage = `Fehler bei Zugriff auf Web-API: ${httpResponse.statusText} (${httpResponse.status})`;
       this.APIError = true;
@@ -84,6 +87,85 @@ export class CocktailPage implements OnInit {
   onClear(ev) { 
     this.searchTerm='';
     this.loadData();
+  }
+
+  addCocktail(
+              idDrink,
+              strDrinkThumb,
+              strDrink,
+              strInstructionsDE,
+              strMeasure1,
+              strMeasure2,
+              strMeasure3,
+              strMeasure4,
+              strMeasure5,
+              strMeasure6,
+              strMeasure7,
+              strMeasure8,
+              strMeasure9,
+              strMeasure10,
+              strMeasure11,
+              strMeasure12,
+              strMeasure13,
+              strMeasure14,
+              strMeasure15,
+              strIngredient1,
+              strIngredient2,
+              strIngredient3,
+              strIngredient4,
+              strIngredient5,
+              strIngredient6,
+              strIngredient7,
+              strIngredient8,
+              strIngredient9,
+              strIngredient10,
+              strIngredient11,
+              strIngredient12,
+              strIngredient13,
+              strIngredient14,
+              strIngredient15
+    ){
+    this.speicherService.addCocktail(
+              this.id, 
+              idDrink,
+              strDrinkThumb,
+              strDrink,
+              strInstructionsDE,
+              strMeasure1,
+              strMeasure2,
+              strMeasure3,
+              strMeasure4,
+              strMeasure5,
+              strMeasure6,
+              strMeasure7,
+              strMeasure8,
+              strMeasure9,
+              strMeasure10,
+              strMeasure11,
+              strMeasure12,
+              strMeasure13,
+              strMeasure14,
+              strMeasure15,
+              strIngredient1,
+              strIngredient2,
+              strIngredient3,
+              strIngredient4,
+              strIngredient5,
+              strIngredient6,
+              strIngredient7,
+              strIngredient8,
+              strIngredient9,
+              strIngredient10,
+              strIngredient11,
+              strIngredient12,
+              strIngredient13,
+              strIngredient14,
+              strIngredient15
+      );
+  }
+
+  ionViewWillEnter(){
+    this.id = this.idService.getPartyID();
   }
 
 }
