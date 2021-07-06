@@ -1,3 +1,12 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-title>
+      Partyplaner
+    </ion-title>
+    <ion-button *ngIf="afAuth.user | async as user" id="signoutbttn" color="#FF9593" slot="end" (click)="signOut()"><ion-icon name="log-out-outline"></ion-icon></ion-button>
+  </ion-toolbar>
+</ion-header>
+
 <ion-content [fullscreen]="true">
 
   

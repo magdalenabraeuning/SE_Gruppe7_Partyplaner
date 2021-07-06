@@ -18,5 +18,7 @@ export class HomePage {
     let navigationTarget = `/partys`;
       this.navCtrl.navigateForward(navigationTarget);
   }
-
+  signOut() {
+    this.afAuth.signOut();
+  }
 }
