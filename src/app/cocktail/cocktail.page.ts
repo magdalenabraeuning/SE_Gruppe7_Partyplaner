@@ -27,16 +27,16 @@ export class CocktailPage implements OnInit {
     this.loadData();
   }
 
-  private readonly basicURL = "https://www.thecocktaildb.com/api/json/v1/1/random.php";
+  public readonly basicURL = "https://www.thecocktaildb.com/api/json/v1/1/random.php";
   private readonly searchURL = "https://www.thecocktaildb.com/api/json/v1/1/search.php?s=";
   private URL = "";
   private showList = true;
   readonly OPTIONS_OBJECT: object = { observe : "response"};
   private APIErrorMessage = "";
-  private APIError = false;
+  public APIError = false;
   private cocktails: Promise<any[]>;
   private showSkeleton = true;
-  private RandomC = true;
+  public RandomC = true;
 
   private async loadData(){
     
