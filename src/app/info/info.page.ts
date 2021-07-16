@@ -9,7 +9,7 @@ import { IdService } from '../id.service';
   templateUrl: './info.page.html',
   styleUrls: ['./info.page.scss'],
 })
-export class InfoPage implements OnInit {
+export class InfoPage {
 
   private title: string;
   private description: string;
@@ -17,24 +17,14 @@ export class InfoPage implements OnInit {
   private date: string;
   private time: string;
   public id: string;
-
   private teilnehmerPromise: Promise<AllPartyData[]>;
 
   constructor(
     private activatedRoute: ActivatedRoute,
     private alertCtrl: AlertController,
     private speicherService: SpeicherService,
-    private idService: IdService
-  ) {
-    /*this.title = activatedRoute.snapshot.queryParamMap.get("title");
-    this.description = activatedRoute.snapshot.queryParamMap.get("description");
-    this.address = activatedRoute.snapshot.queryParamMap.get("address");
-    this.date = activatedRoute.snapshot.queryParamMap.get("date");
-    this.time = activatedRoute.snapshot.queryParamMap.get("time");
-  */}
-
-  ngOnInit() {
-  }
+    private idService: IdService,
+  ) {}
 
   ionViewWillEnter() {
     this.title = this.activatedRoute.snapshot.queryParamMap.get("title");
@@ -47,18 +37,17 @@ export class InfoPage implements OnInit {
     this.idService.setPartyID(this.id);
   }
 
-
   async addTeilnehmer(partyID) {
     this.alertCtrl.create({
       message: "Teilnehmer hinzufügen",
       inputs: [
-        { type: 'textarea', name: 'userMail', placeholder: "Name des Users eingeben" },
+        { type: 'textarea', name: 'user', placeholder: "Name des Teilnehmers eingeben" },
       ],
       buttons: [
         {
           text: 'Add',
           handler: (res) => {
-            this.speicherService.addTeilnehmer(this.id, res.userMail);
+            this.speicherService.addTeilnehmer(this.id, res.user);
             this.showTeilnehmer(this.id);
           }
         }, {
@@ -73,14 +62,7 @@ export class InfoPage implements OnInit {
   }
 
   removeTeilnehmer(partyID, user) {
-
     this.speicherService.removeTeilnehmer(partyID, user);
     this.showTeilnehmer(this.id);
-
   }
-
-
-
-
-
 }

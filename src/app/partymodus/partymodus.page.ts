@@ -1,7 +1,7 @@
-import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { IdService } from '../id.service';
 import { AllPartyData, SpeicherService } from '../speicher.service';
+import { ToastService } from '../toast.service';
 
 @Component({
   selector: 'app-partymodus',
@@ -17,6 +17,7 @@ export class PartymodusPage implements OnInit {
   constructor(
     private speicherService: SpeicherService,
     private idService: IdService,
+    private toastService: ToastService
   ) { }
 
   async ngOnInit() {
@@ -25,29 +26,28 @@ export class PartymodusPage implements OnInit {
   }
 
   async ionViewWillEnter() {
-    console.log("id: "+this.id)
+    console.log("id: " + this.id)
     await this.showCocktails(this.id);
-      console.log("Status1: "+this.partymodusStatus)
-      this.partymodusStatus = await this.speicherService.getPartymodusStatus(this.id);
-      console.log("Status2: "+ this.partymodusStatus)
-    
-    
+    this.partymodusStatus = await this.speicherService.getPartymodusStatus(this.id);
   }
 
-  async showCocktails(partyID){
+  async showCocktails(partyID) {
     this.cocktailPromise = this.speicherService.getCocktails(partyID);
   }
 
   removeCocktail(cocktail) {
     this.speicherService.removeCocktail(this.id, cocktail);
     this.showCocktails(this.id);
+    this.toastService.presentToast("Cocktail wurde gelöscht.");
   }
 
-  async togglePartymodus($event){
-    
+  async togglePartymodus($event) {
     this.speicherService.partymodusStarten(this.id, this.partymodusStatus);
     this.partymodusStatus = !this.partymodusStatus;
-    //this.partymodusStatus = await this.speicherService.getPartymodusStatus(this.id);
-    console.log("TOGGLE")
+    if (this.partymodusStatus == true){
+      this.toastService.presentToast("Partymodus wurde gestartet.");
+    } else{
+      this.toastService.presentToast("Partymodus wurde beendet.");
+    }
   }
 }
