@@ -6,7 +6,7 @@ describe('Info Page', () => {
 
       const {partyCard} = {partyCard: "Details"}
 
-      // Click on a Party 
+      // Click on a Party and checking if there is a Party
       cy.get('ion-label')
         .click()
         .wait(2000)

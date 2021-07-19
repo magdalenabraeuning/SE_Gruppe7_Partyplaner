@@ -137,6 +137,10 @@ jobs:
           build: npm run build
           start: npm start
 
-          # login 
+    # run selfwritten tests
+    - name: "party-tests"
+        run: npm test
+        
+          #login 
           #info 
           #logout 
