@@ -137,10 +137,10 @@ jobs:
           build: npm run build
           start: npm start
 
-      #run selfwritten tests
     - name: "party-tests"
         uses: cypress-io/github-action@v2
-        run: npm test
+        working-directory: /cypress/integration
+        run: info_page_spec.js
 
           #login 
           #info 
