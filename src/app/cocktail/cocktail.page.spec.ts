@@ -9,7 +9,7 @@ import { AngularFireModule } from '@angular/fire';
 import { AngularFireDatabaseModule } from '@angular/fire/database';
 import { environment } from 'src/environments/environment';
 
-fdescribe('CocktailPage', () => {
+describe('CocktailPage', () => {
   let component: CocktailPage;
   let fixture: ComponentFixture<CocktailPage>;
 
@@ -34,6 +34,7 @@ fdescribe('CocktailPage', () => {
     expect(component.RandomC).toBe(true);
 
   })
+
 });
 
 
