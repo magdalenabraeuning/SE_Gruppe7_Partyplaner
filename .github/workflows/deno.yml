@@ -104,7 +104,7 @@ jobs:
   #----------------------------------------------------
 
   cypress-run:
-    needs: test
+    needs: Build
     name: Cypress-Tests 
     runs-on: ${{ matrix.os }} # runs a test on Ubuntu
 
