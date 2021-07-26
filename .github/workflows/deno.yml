@@ -6,8 +6,6 @@
 # This workflow will install Deno and run tests across stable and canary builds on Windows, Ubuntu and macOS.
 # For more information see: https://github.com/denoland/setup-deno
 
-#Magdas Kommentar
-
 name: Deno
 
 on:
@@ -49,10 +47,9 @@ jobs:
         uses: coturiv/setup-ionic@v1
         with:
           cordova-version: 8
-          gradle-version: 7.1.1
      # durch veränderte Ordnerstuktur nicht mehr benötigt ?????? 
-      # - name: Ionic init
-      #   run: ionic init SE_Gruppe7_Partyplaner --type=angular
+      - name: Ionic init
+        run: ionic init SE_Gruppe7_Partyplaner --type=angular
       - name: Add Android platform
         run: ionic cordova platform add android@latest
       - name: Build Android APK
