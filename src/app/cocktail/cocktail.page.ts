@@ -11,6 +11,7 @@ import { ToastService } from '../toast.service';
 })
 export class CocktailPage implements OnInit {
 
+  //Variablen
   searchTerm = "";
   IngArr: any[];
   private id;
@@ -25,6 +26,7 @@ export class CocktailPage implements OnInit {
   private showSkeleton = true;
   public RandomC = true;
 
+  //Konstruktor zum Initialisieren der Services
   constructor(
     private httpClient: HttpClient,
     private speicherService: SpeicherService,
@@ -32,19 +34,23 @@ export class CocktailPage implements OnInit {
     private toastService: ToastService
   ) { }
 
+  //beim Initialisieren der Seite Daten laden
   ngOnInit() {
     this.loadData();
   }
 
+  //Methode zum Abrufen der Cocktaildaten von der API
   private async loadData() {
     this.showSkeleton = true;
     this.APIError = false;
+    //wenn keine Benutzereingabe getätigt wurde, wird ein zufälliger Cocktail abgerufen
     if (this.searchTerm == "") {
       this.URL = this.basicURL;
       this.showList = true;
       this.httpClient.get(this.basicURL, this.OPTIONS_OBJECT).subscribe(this.verarbeiteHttpResponse, this.verarbeiteHttpFehler);
       this.RandomC = true;
     }
+    //der gesuchte Cocktail wird abgerufen
     else {
       this.URL = this.searchURL + this.searchTerm;
       this.showList = true;
@@ -53,6 +59,7 @@ export class CocktailPage implements OnInit {
     }
   }
 
+  //Überprüfen der HTTP-Antwort und Verarbeiten der Daten
   private verarbeiteHttpResponse = (httpResponse: any) => {
     if (httpResponse.status === 200) {  // HTTP Status Code 200 = Ok
       this.cocktails = httpResponse.body.drinks;
@@ -64,6 +71,7 @@ export class CocktailPage implements OnInit {
     this.showSkeleton = false;
   }
 
+  //Fehler beim Abrufen der Daten von der API wird behandelt
   private verarbeiteHttpFehler = (fehler: HttpErrorResponse) => {
     this.APIErrorMessage = "Fehler bei Abfrage Web-API von Server: " + fehler.message;
     this.APIError = true;
@@ -71,6 +79,7 @@ export class CocktailPage implements OnInit {
     this.showSkeleton = false;
   }
 
+  //Seite wird neu geladen (Pull-to-Refresh Element)
   doRefresh(event) {
     this.loadData();
     setTimeout(() => {
@@ -78,11 +87,13 @@ export class CocktailPage implements OnInit {
     }, 2000);
   }
 
+  //Suchleiste wird zurückgesetzt
   onClear(ev) {
     this.searchTerm = '';
     this.loadData();
   }
 
+  //Cocktail wird gespeichert
   addCocktail(
     idDrink,
     strDrinkThumb,
@@ -159,6 +170,7 @@ export class CocktailPage implements OnInit {
     this.toastService.presentToast("Cocktail wurde gespeichert.");
   }
 
+  //ID der Party wird beim Betreten der Page von IDService abgerufen
   ionViewWillEnter() {
     this.id = this.idService.getPartyID();
   }
