@@ -6,6 +6,9 @@
 # This workflow will install Deno and run tests across stable and canary builds on Windows, Ubuntu and macOS.
 # For more information see: https://github.com/denoland/setup-deno
 
+#Magdas Kommentar
+#vielleicht gehts ja jetzt gz lena
+
 name: Deno
 
 on:
