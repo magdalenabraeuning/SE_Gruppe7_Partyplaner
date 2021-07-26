@@ -58,7 +58,6 @@ export class PartysPage implements OnInit {
         {
           text: 'Add',
           handler: async (res) => {
-            console.log(res);
             await this.speicherService.addParty(res).then(() => {
               setTimeout(() => this.fetch(), 1000);
               setTimeout(() => this.fetch(), 1000);
@@ -95,7 +94,6 @@ export class PartysPage implements OnInit {
         userVorhanden = true;
       }
     }
-    console.log("DAS IST MEIN USER?: " + userVorhanden)
     return userVorhanden;
   }
 
@@ -133,7 +131,6 @@ export class PartysPage implements OnInit {
         {
           text: 'Speichern',
           handler: async (res) => {
-            console.log(res);
             await this.speicherService.updateParty(res, id);
           }
         }, {
@@ -191,7 +188,7 @@ export class PartysPage implements OnInit {
     });
     await loading.present();
     await loading.onDidDismiss();
-    console.log('Loading dismissed!');
+    console.log('Loading dismissed');
   }
 
   doRefresh(event) {

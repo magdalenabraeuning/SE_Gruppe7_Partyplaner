@@ -26,7 +26,6 @@ export class PartymodusPage implements OnInit {
   }
 
   async ionViewWillEnter() {
-    console.log("id: " + this.id)
     await this.showCocktails(this.id);
     this.partymodusStatus = await this.speicherService.getPartymodusStatus(this.id);
   }

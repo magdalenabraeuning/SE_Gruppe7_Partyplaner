@@ -129,6 +129,5 @@ export class ListenPage implements OnInit {
   ionViewWillEnter() {
     this.id = this.idService.getPartyID();
     this.showLists(this.id);
-    console.log("ID: "+this.id)
   }
 }
