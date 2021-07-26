@@ -12,9 +12,18 @@ import { ToastService } from '../toast.service';
 export class CocktailPage implements OnInit {
 
   searchTerm = "";
-  IngArr : any [];
+  IngArr: any[];
   private id;
-
+  public readonly basicURL = "https://www.thecocktaildb.com/api/json/v1/1/random.php";
+  private readonly searchURL = "https://www.thecocktaildb.com/api/json/v1/1/search.php?s=";
+  private URL = "";
+  private showList = true;
+  readonly OPTIONS_OBJECT: object = { observe: "response" };
+  private APIErrorMessage = "";
+  public APIError = false;
+  private cocktails: Promise<any[]>;
+  private showSkeleton = true;
+  public RandomC = true;
 
   constructor(
     private httpClient: HttpClient,
@@ -27,36 +36,25 @@ export class CocktailPage implements OnInit {
     this.loadData();
   }
 
-  public readonly basicURL = "https://www.thecocktaildb.com/api/json/v1/1/random.php";
-  private readonly searchURL = "https://www.thecocktaildb.com/api/json/v1/1/search.php?s=";
-  private URL = "";
-  private showList = true;
-  readonly OPTIONS_OBJECT: object = { observe : "response"};
-  private APIErrorMessage = "";
-  public APIError = false;
-  private cocktails: Promise<any[]>;
-  private showSkeleton = true;
-  public RandomC = true;
-
-  private async loadData(){
+  private async loadData() {
     this.showSkeleton = true;
     this.APIError = false;
-    if(this.searchTerm == ""){
+    if (this.searchTerm == "") {
       this.URL = this.basicURL;
       this.showList = true;
       this.httpClient.get(this.basicURL, this.OPTIONS_OBJECT).subscribe(this.verarbeiteHttpResponse, this.verarbeiteHttpFehler);
-      this.RandomC=true;
+      this.RandomC = true;
     }
-    else{
+    else {
       this.URL = this.searchURL + this.searchTerm;
       this.showList = true;
       this.httpClient.get(this.URL, this.OPTIONS_OBJECT).subscribe(this.verarbeiteHttpResponse, this.verarbeiteHttpFehler);
-      this.RandomC=false;
+      this.RandomC = false;
     }
   }
 
   private verarbeiteHttpResponse = (httpResponse: any) => {
-    if (httpResponse.status === 200) { // HTTP Status Code 200 = Ok
+    if (httpResponse.status === 200) {  // HTTP Status Code 200 = Ok
       this.cocktails = httpResponse.body.drinks;
     } else {
       this.APIErrorMessage = `Fehler bei Zugriff auf Web-API: ${httpResponse.statusText} (${httpResponse.status})`;
@@ -72,98 +70,96 @@ export class CocktailPage implements OnInit {
     console.log(this.APIErrorMessage);
     this.showSkeleton = false;
   }
- 
+
   doRefresh(event) {
     this.loadData();
- 
     setTimeout(() => {
       event.target.complete();
     }, 2000);
   }
 
-  onClear(ev) { 
-    this.searchTerm='';
+  onClear(ev) {
+    this.searchTerm = '';
     this.loadData();
   }
 
   addCocktail(
-              idDrink,
-              strDrinkThumb,
-              strDrink,
-              strInstructionsDE,
-              strMeasure1,
-              strMeasure2,
-              strMeasure3,
-              strMeasure4,
-              strMeasure5,
-              strMeasure6,
-              strMeasure7,
-              strMeasure8,
-              strMeasure9,
-              strMeasure10,
-              strMeasure11,
-              strMeasure12,
-              strMeasure13,
-              strMeasure14,
-              strMeasure15,
-              strIngredient1,
-              strIngredient2,
-              strIngredient3,
-              strIngredient4,
-              strIngredient5,
-              strIngredient6,
-              strIngredient7,
-              strIngredient8,
-              strIngredient9,
-              strIngredient10,
-              strIngredient11,
-              strIngredient12,
-              strIngredient13,
-              strIngredient14,
-              strIngredient15
-    ){
+    idDrink,
+    strDrinkThumb,
+    strDrink,
+    strInstructionsDE,
+    strMeasure1,
+    strMeasure2,
+    strMeasure3,
+    strMeasure4,
+    strMeasure5,
+    strMeasure6,
+    strMeasure7,
+    strMeasure8,
+    strMeasure9,
+    strMeasure10,
+    strMeasure11,
+    strMeasure12,
+    strMeasure13,
+    strMeasure14,
+    strMeasure15,
+    strIngredient1,
+    strIngredient2,
+    strIngredient3,
+    strIngredient4,
+    strIngredient5,
+    strIngredient6,
+    strIngredient7,
+    strIngredient8,
+    strIngredient9,
+    strIngredient10,
+    strIngredient11,
+    strIngredient12,
+    strIngredient13,
+    strIngredient14,
+    strIngredient15
+  ) {
     this.speicherService.addCocktail(
-              this.id, 
-              idDrink,
-              strDrinkThumb,
-              strDrink,
-              strInstructionsDE,
-              strMeasure1,
-              strMeasure2,
-              strMeasure3,
-              strMeasure4,
-              strMeasure5,
-              strMeasure6,
-              strMeasure7,
-              strMeasure8,
-              strMeasure9,
-              strMeasure10,
-              strMeasure11,
-              strMeasure12,
-              strMeasure13,
-              strMeasure14,
-              strMeasure15,
-              strIngredient1,
-              strIngredient2,
-              strIngredient3,
-              strIngredient4,
-              strIngredient5,
-              strIngredient6,
-              strIngredient7,
-              strIngredient8,
-              strIngredient9,
-              strIngredient10,
-              strIngredient11,
-              strIngredient12,
-              strIngredient13,
-              strIngredient14,
-              strIngredient15
-      );
-      this.toastService.presentToast("Cocktail wurde gespeichert.");
+      this.id,
+      idDrink,
+      strDrinkThumb,
+      strDrink,
+      strInstructionsDE,
+      strMeasure1,
+      strMeasure2,
+      strMeasure3,
+      strMeasure4,
+      strMeasure5,
+      strMeasure6,
+      strMeasure7,
+      strMeasure8,
+      strMeasure9,
+      strMeasure10,
+      strMeasure11,
+      strMeasure12,
+      strMeasure13,
+      strMeasure14,
+      strMeasure15,
+      strIngredient1,
+      strIngredient2,
+      strIngredient3,
+      strIngredient4,
+      strIngredient5,
+      strIngredient6,
+      strIngredient7,
+      strIngredient8,
+      strIngredient9,
+      strIngredient10,
+      strIngredient11,
+      strIngredient12,
+      strIngredient13,
+      strIngredient14,
+      strIngredient15
+    );
+    this.toastService.presentToast("Cocktail wurde gespeichert.");
   }
 
-  ionViewWillEnter(){
+  ionViewWillEnter() {
     this.id = this.idService.getPartyID();
   }
-
 }

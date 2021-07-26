@@ -39,8 +39,14 @@
 
   <ion-card *ngIf="APIError">
     <ion-item lines="none">
-      <p>An error has occurred.<br>
-        Please check your internet connection or your spelling.</p>
+      <p>Ein Fehler ist aufgetreten<br>
+        Bitte prüfe deine Internetverbindung.</p>
+    </ion-item>
+  </ion-card>
+
+  <ion-card *ngIf="cocktails == null&&!APIError">
+    <ion-item lines="none">
+      <p>Dein Cocktail konnte nicht gefunden werden. Bitte suche nach einem anderen Cocktail.</p>
     </ion-item>
   </ion-card>
 
