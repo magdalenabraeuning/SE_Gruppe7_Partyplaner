@@ -54,7 +54,9 @@ jobs:
       - name: Add Android platform
         run: ionic cordova platform add android@latest
       - name: Build Android APK
+        run: gradle build --warning-mode=all
         run: ionic cordova build android --warning-mode=all
+
       #- name: Build Android Release APK
        # run: ionic cordova build android --release --warning-mode=all
         # --prod : raus genommen um fehler zu beheben:
