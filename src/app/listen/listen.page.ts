@@ -1,6 +1,6 @@
 import { isNgTemplate } from '@angular/compiler';
 import { Component, OnInit } from '@angular/core';
-import { AlertController } from '@ionic/angular';
+import { AlertController, ToastController } from '@ionic/angular';
 import { AllPartyData, SpeicherService } from '../speicher.service';
 import { IdService } from '../id.service';
 
@@ -11,21 +11,6 @@ import { IdService } from '../id.service';
   styleUrls: ['./listen.page.scss'],
 })
 export class ListenPage implements OnInit {
-
-  toDoList = [{
-    itemName: "Chips",
-    itemMenge: "1Kg",
-    itemCategory: "Essen",
-    itemUser: "Lena"
-
-  },
-  {
-    itemName: "Nüsse",
-    itemMenge: "1Kg",
-    itemCategory: "Essen",
-    itemUser: "Annika"
-  }
-  ]
 
   private essenPromise: Promise<AllPartyData[]>;
   private trinkenPromise: Promise<AllPartyData[]>;
@@ -75,9 +60,6 @@ export class ListenPage implements OnInit {
                 {
                   text: 'Add',
                   handler: (res) => {
-                    let helpArray = { itemName: res.itemName, itemMenge: res.itemMenge, itemCategory: kategorie, itemUser: res.itemUser };
-                    this.toDoList.push(helpArray);
-
                     if (kategorie === "Essen") {
                       this.speicherService.addEssen(this.id, { name: res.itemName, menge: res.itemMenge, user: res.itemUser });
                     } else if (kategorie === "Trinken") {
@@ -129,5 +111,20 @@ export class ListenPage implements OnInit {
   ionViewWillEnter() {
     this.id = this.idService.getPartyID();
     this.showLists(this.id);
+  }
+
+  async userAnzeigen(user){
+    if (user==''){
+      user="Kein User zugeteilt"
+    }
+    this.alertCtrl.create({
+      header: "Zugeteilter User:",
+      message: user,
+      buttons: [
+        {
+          text: 'Ok',
+        }
+      ]
+    }).then(a => a.present());
   }
 }

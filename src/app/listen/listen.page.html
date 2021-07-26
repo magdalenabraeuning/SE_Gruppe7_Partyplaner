@@ -18,7 +18,7 @@
     <ion-list *ngFor="let tnArray of essenPromise|async | slice:0:1; let i=index">
       <p id="liste" *ngIf="tnArray.AusgabeArray==undefined||tnArray.AusgabeArray.length==0">Einkaufsliste ist leer</p>
       <ion-item *ngFor="let tn of tnArray.AusgabeArray">
-        <p>{{tn.menge}} {{tn.name}}</p>
+        <p (click)="userAnzeigen(tn.user)">{{tn.menge}} {{tn.name}}</p>
         <ion-icon name="trash-outline" (click)="removeEssen(tn)" slot="end"></ion-icon>
       </ion-item>
     </ion-list>
