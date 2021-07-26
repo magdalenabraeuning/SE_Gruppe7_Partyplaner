@@ -51,8 +51,8 @@ jobs:
         with:
           cordova-version: 8
      # durch veränderte Ordnerstuktur nicht mehr benötigt ?????? 
-      - name: Ionic init
-        run: ionic init SE_Gruppe7_Partyplaner --type=angular
+      #- name: Ionic init
+       # run: ionic init SE_Gruppe7_Partyplaner --type=angular
       - name: Add Android platform
         run: ionic cordova platform add android@latest
       - name: Build Android APK
