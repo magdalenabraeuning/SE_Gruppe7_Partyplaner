@@ -53,8 +53,9 @@ jobs:
       #   run: ionic init SE_Gruppe7_Partyplaner --type=angular
       - name: Add Android platform
         run: ionic cordova platform add android@latest
-      - name: Build Android APK
+      - name: gradle Build TEST 
         run: gradle build --warning-mode=all
+      - name: Build Android APK
         run: ionic cordova build android --warning-mode=all
 
       #- name: Build Android Release APK
