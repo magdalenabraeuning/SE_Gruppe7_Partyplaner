@@ -53,8 +53,6 @@ jobs:
       #   run: ionic init SE_Gruppe7_Partyplaner --type=angular
       - name: Add Android platform
         run: ionic cordova platform add android@latest
-      - name: gradle Build TEST 
-        run: gradle build --warning-mode=all
       - name: Build Android APK
         run: ionic cordova build android --warning-mode=all
 
@@ -65,9 +63,9 @@ jobs:
         # AngularFireModule.initializeApp(environment.firebase),
       
       # Braucht man vielleicht nicht? Schauen ob test trotzdem läuft
-      #- name: Generate the Android App Bundle
-      #  working-directory: ./platforms/android/
-      #  run: ./gradlew bundle
+      - name: Generate the Android App Bundle
+        working-directory: ./platforms/android/
+        run: ./gradlew bundle
 
   #----------------------------------------------------
   test:
