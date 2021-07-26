@@ -48,12 +48,12 @@ jobs:
         with:
           cordova-version: 8
      # durch veränderte Ordnerstuktur nicht mehr benötigt ?????? 
-      - name: Ionic init
-        run: ionic init SE_Gruppe7_Partyplaner --type=angular
+      #- name: Ionic init
+       # run: ionic init SE_Gruppe7_Partyplaner --type=angular
       - name: Add Android platform
         run: ionic cordova platform add android@latest
-      - name: Build Android APK
-        run: ionic cordova build android --warning-mode=all
+      #- name: Build Android APK
+      #  run: ionic cordova build android --warning-mode=all
 
       #- name: Build Android Release APK
        # run: ionic cordova build android --release --warning-mode=all
@@ -62,9 +62,9 @@ jobs:
         # AngularFireModule.initializeApp(environment.firebase),
       
       # Braucht man vielleicht nicht? Schauen ob test trotzdem läuft
-      - name: Generate the Android App Bundle
-        working-directory: ./platforms/android/
-        run: ./gradlew bundle
+      #- name: Generate the Android App Bundle
+      #  working-directory: ./platforms/android/
+      #  run: ./gradlew bundle
 
   #----------------------------------------------------
   test:
