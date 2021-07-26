@@ -1,9 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
-import { HttpHeaders } from '@angular/common/http';
-import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
 import { SpeicherService } from '../speicher.service';
 import { IdService } from '../id.service';
+import { ToastService } from '../toast.service';
 
 @Component({
   selector: 'app-cocktail',
@@ -20,7 +19,8 @@ export class CocktailPage implements OnInit {
   constructor(
     private httpClient: HttpClient,
     private speicherService: SpeicherService,
-    private idService: IdService
+    private idService: IdService,
+    private toastService: ToastService
   ) { }
 
   ngOnInit() {
@@ -39,7 +39,6 @@ export class CocktailPage implements OnInit {
   public RandomC = true;
 
   private async loadData(){
-    
     this.showSkeleton = true;
     this.APIError = false;
     if(this.searchTerm == ""){
@@ -57,7 +56,6 @@ export class CocktailPage implements OnInit {
   }
 
   private verarbeiteHttpResponse = (httpResponse: any) => {
- 
     if (httpResponse.status === 200) { // HTTP Status Code 200 = Ok
       this.cocktails = httpResponse.body.drinks;
     } else {
@@ -69,7 +67,6 @@ export class CocktailPage implements OnInit {
   }
 
   private verarbeiteHttpFehler = (fehler: HttpErrorResponse) => {
- 
     this.APIErrorMessage = "Fehler bei Abfrage Web-API von Server: " + fehler.message;
     this.APIError = true;
     console.log(this.APIErrorMessage);
@@ -162,6 +159,7 @@ export class CocktailPage implements OnInit {
               strIngredient14,
               strIngredient15
       );
+      this.toastService.presentToast("Cocktail wurde gespeichert.");
   }
 
   ionViewWillEnter(){

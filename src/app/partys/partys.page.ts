@@ -4,22 +4,8 @@ import { AngularFireAuth } from '@angular/fire/auth';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { AlertController, LoadingController } from '@ionic/angular';
 import { SpeicherService } from '../speicher.service';
-import firebase from 'firebase/app';
 import { NavController } from '@ionic/angular';
-
-/*
-export interface PartyForUser {
-  Partys: [];
-}
-
-export interface AllPartyData {
-  createdAt: number;
-  desc: string;
-  isDone: boolean;
-  title: string;
-  id: string;
-}*/
-
+import { ToastService } from '../toast.service';
 
 @Component({
   selector: 'app-partys',
@@ -34,8 +20,7 @@ export class PartysPage implements OnInit {
   partyData: any = [];
   allIDs: any = [];
   partyArrObsrv: Subject<any> = new Subject<any>();
-
-  
+  myEventList: any;
 
   constructor(
     public afAuth: AngularFireAuth,
@@ -43,18 +28,17 @@ export class PartysPage implements OnInit {
     private alertCtrl: AlertController,
     private speicherService: SpeicherService,
     private navCtrl: NavController,
-    public loadingController: LoadingController
+    public loadingController: LoadingController,
+    private toastService: ToastService
   ) { }
 
   signOut() {
     this.afAuth.signOut().then(() => {
-      
-      let navigationTarget =`/home`;
-    this.navCtrl.navigateForward(navigationTarget);
-    //location.reload();
+      let navigationTarget = `/home`;
+      this.navCtrl.navigateForward(navigationTarget);
     });
   }
-  myEventList: any;
+
 
   async addParty(): Promise<any> {
     this.alertCtrl.create({
@@ -79,9 +63,13 @@ export class PartysPage implements OnInit {
               setTimeout(() => this.fetch(), 1000);
               setTimeout(() => this.fetch(), 1000);
             });
+            this.toastService.presentToast("Party wurde gespeichert.");
           }
         }, {
-          text: 'Cancel'
+          text: 'Cancel',
+          handler: () => {
+            this.toastService.presentToast("Speichern wurde abgebrochen.");
+          }
         }
       ]
     }).then(a => { a.present() });
@@ -117,7 +105,6 @@ export class PartysPage implements OnInit {
       this.partyData = await this.speicherService.loadAllData();
     } catch (e) {
       console.log(e);
-      //throw new Error();
     }
   }
 
@@ -126,13 +113,13 @@ export class PartysPage implements OnInit {
   }
 
   bearbeitenButton(id, oldTitle, oldDescription, oldAddress, oldDate, oldTime) {
-    let date:Date = oldDate;
+    let date: Date = oldDate;
     this.alertCtrl.create({
       message: "Party bearbeiten",
       inputs: [
-        { type: 'text', name: 'title', placeholder:`${oldTitle}`, value: `${oldTitle}` },
-        { type: 'textarea', name: 'description', placeholder:`${oldDescription}`, value: `${oldDescription}` },
-        { type: 'textarea', name: 'address', placeholder:`${oldAddress}`, value: `${oldAddress}` },
+        { type: 'text', name: 'title', placeholder: `${oldTitle}`, value: `${oldTitle}` },
+        { type: 'textarea', name: 'description', placeholder: `${oldDescription}`, value: `${oldDescription}` },
+        { type: 'textarea', name: 'address', placeholder: `${oldAddress}`, value: `${oldAddress}` },
         {
           name: 'date',
           type: 'date',
@@ -140,7 +127,7 @@ export class PartysPage implements OnInit {
           placeholder: `${date}`,
           value: `${date}`
         },
-        { type: 'time', name: 'time', placeholder:`${oldTime}`, value: `${oldTime}` }
+        { type: 'time', name: 'time', placeholder: `${oldTime}`, value: `${oldTime}` }
       ],
       buttons: [
         {
@@ -155,19 +142,44 @@ export class PartysPage implements OnInit {
       ]
     }).then(a => { a.present() });
   }
-  
+
 
   async deleteButton(id) {
-    this.partyData = [];
-    await this.speicherService.delete(id);
-    this.fetch();
+
+    const sicherheitsfrage = `Willst du diese Party wirklich löschen?`;
+
+    const abbrechenButton = {
+      text: "Abbrechen",
+      role: "Cancel",
+      handler: () => {
+        this.toastService.presentToast("Löschen wurde abgebrochen.");
+      }
+    }
+
+    const jaButton = {
+      text: "Weiter",
+      handler: async () => {
+        this.partyData = [];
+        await this.speicherService.delete(id);
+        this.fetch();
+        this.toastService.presentToast("Party wurde gelöscht.");
+      }
+    }
+
+    const meinAlert = await this.alertCtrl.create({
+      cssClass: 'dialoge',
+      header: "Sicherheitsfrage",
+      message: sicherheitsfrage,
+      backdropDismiss: false,
+      buttons: [jaButton, abbrechenButton]
+    });
+    await meinAlert.present();
   }
 
   openParty(party) {
     let navigationTarget =
       `/tabbar/info?title=${party.title}&description=${party.description}&address=${party.address}&date=${party.date}&time=${party.time}&id=${party.id}`;
     this.navCtrl.navigateForward(navigationTarget);
-
   }
 
 
@@ -178,19 +190,14 @@ export class PartysPage implements OnInit {
       duration: 4000
     });
     await loading.present();
-
-    const { role, data } = await loading.onDidDismiss();
+    await loading.onDidDismiss();
     console.log('Loading dismissed!');
   }
 
   doRefresh(event) {
     this.fetch();
-
     setTimeout(() => {
       event.target.complete();
     }, 2000);
   }
-
-
-
 }
