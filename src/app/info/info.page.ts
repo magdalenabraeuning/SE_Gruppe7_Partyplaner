@@ -11,6 +11,7 @@ import { IdService } from '../id.service';
 })
 export class InfoPage {
 
+  //Variablen
   private title: string;
   private description: string;
   private address: string;
@@ -19,6 +20,7 @@ export class InfoPage {
   public id: string;
   private teilnehmerPromise: Promise<AllPartyData[]>;
 
+  //Konstruktor zum Initialisieren der Services
   constructor(
     private activatedRoute: ActivatedRoute,
     private alertCtrl: AlertController,
@@ -26,6 +28,7 @@ export class InfoPage {
     private idService: IdService,
   ) {}
 
+  //Partydaten werden beim Aufruf der Page von der Partys-Page empfangen
   ionViewWillEnter() {
     this.title = this.activatedRoute.snapshot.queryParamMap.get("title");
     this.description = this.activatedRoute.snapshot.queryParamMap.get("description");
@@ -37,6 +40,7 @@ export class InfoPage {
     this.idService.setPartyID(this.id);
   }
 
+  //Ein Teilnehmer wird zur Party mit der ID "partyID" hinzugefügt
   async addTeilnehmer(partyID) {
     this.alertCtrl.create({
       message: "Teilnehmer hinzufügen",
@@ -57,10 +61,12 @@ export class InfoPage {
     }).then(a => a.present());
   }
 
+  //Die Teilnehmer der Party mit der ID "partyID" werden mithilfe des SpeicherServices abgerufen
   async showTeilnehmer(partyID) {
     this.teilnehmerPromise = this.speicherService.getTeilnehmer(partyID);
   }
 
+  //Der Teilnehmer "user" wird von der Party mit der ID "partyID" entfernt
   removeTeilnehmer(partyID, user) {
     this.speicherService.removeTeilnehmer(partyID, user);
     this.showTeilnehmer(this.id);

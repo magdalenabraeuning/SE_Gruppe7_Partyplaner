@@ -1,6 +1,6 @@
 import { isNgTemplate } from '@angular/compiler';
 import { Component, OnInit } from '@angular/core';
-import { AlertController } from '@ionic/angular';
+import { AlertController, ToastController } from '@ionic/angular';
 import { AllPartyData, SpeicherService } from '../speicher.service';
 import { IdService } from '../id.service';
 
@@ -10,35 +10,22 @@ import { IdService } from '../id.service';
   templateUrl: './listen.page.html',
   styleUrls: ['./listen.page.scss'],
 })
-export class ListenPage implements OnInit {
+export class ListenPage {
 
-  toDoList = [{
-    itemName: "Chips",
-    itemMenge: "1Kg",
-    itemCategory: "Essen",
-    itemUser: "Lena"
-
-  },
-  {
-    itemName: "Nüsse",
-    itemMenge: "1Kg",
-    itemCategory: "Essen",
-    itemUser: "Annika"
-  }
-  ]
-
+  //Variablen
   private essenPromise: Promise<AllPartyData[]>;
   private trinkenPromise: Promise<AllPartyData[]>;
   private sonstigesPromise: Promise<AllPartyData[]>;
   private id;
 
+  //Konstruktor zum Initialisieren der benötigten Services
   constructor(
     private alertCtrl: AlertController,
     private speicherService: SpeicherService,
     private idService: IdService
-  ) {
-  }
+  ) { }
 
+  //Hinzufügen (Speichern) eines Items zu den Listen "Essen", "Trinken" oder "Sonstiges"
   addItem() {
     this.alertCtrl.create({
       message: "Kategorie wählen",
@@ -75,9 +62,6 @@ export class ListenPage implements OnInit {
                 {
                   text: 'Add',
                   handler: (res) => {
-                    let helpArray = { itemName: res.itemName, itemMenge: res.itemMenge, itemCategory: kategorie, itemUser: res.itemUser };
-                    this.toDoList.push(helpArray);
-
                     if (kategorie === "Essen") {
                       this.speicherService.addEssen(this.id, { name: res.itemName, menge: res.itemMenge, user: res.itemUser });
                     } else if (kategorie === "Trinken") {
@@ -94,8 +78,6 @@ export class ListenPage implements OnInit {
                 }
               ]
             }).then(a => a.present());
-
-
           }
         }, {
           text: 'Cancel'
@@ -104,31 +86,50 @@ export class ListenPage implements OnInit {
     }).then(a => a.present());
   }
 
+  //Abrufen der Listen "Essen", "Trinken" und "Sonstiges" der Party "partyID" vom SpeicherService
   async showLists(partyID) {
     this.essenPromise = this.speicherService.getEssen(partyID);
     this.trinkenPromise = this.speicherService.getTrinken(partyID);
     this.sonstigesPromise = this.speicherService.getSonstiges(partyID);
   }
 
+  //Löschen des Items "essen" aus der Liste "Essen"
   removeEssen(essen) {
     this.speicherService.removeEssen(this.id, essen);
     this.showLists(this.id);
   }
+
+  //Löschen des Items "trinken" aus der Liste "Trinken"
   removeTrinken(trinken) {
     this.speicherService.removeTrinken(this.id, trinken);
     this.showLists(this.id);
   }
+
+  //Löschen des Items "sonstiges" aus der Liste "Sonstiges"
   removeSonstiges(sonstiges) {
     this.speicherService.removeSonstiges(this.id, sonstiges);
     this.showLists(this.id);
   }
 
-  ngOnInit() {
-  }
-
+  //Beim Aufrufen der Page wird die entsprechende Party-ID vom IDService abgerufen und die Methode showLists() aufgerufen 
   ionViewWillEnter() {
     this.id = this.idService.getPartyID();
     this.showLists(this.id);
-    console.log("ID: "+this.id)
+  }
+
+  //Beim Anklicken eines Eintrags einer Liste wird der zugeteilte User ausgegeben
+  async userAnzeigen(user) {
+    if (user == '') {
+      user = "Kein User zugeteilt"
+    }
+    this.alertCtrl.create({
+      header: "Zugeteilter User:",
+      message: user,
+      buttons: [
+        {
+          text: 'Ok',
+        }
+      ]
+    }).then(a => a.present());
   }
 }

@@ -9,15 +9,19 @@ import { NavController } from '@ionic/angular';
 })
 export class HomePage {
 
+  //Konstruktor zum Initialisieren der Services
   constructor(
     private navCtrl: NavController,
     public afAuth: AngularFireAuth,
   ) { }
 
+  //Weiterleitung zur Partys-Page
   navigateToHome(){
     let navigationTarget = `/partys`;
       this.navCtrl.navigateForward(navigationTarget);
   }
+
+  //User ausloggen
   signOut() {
     this.afAuth.signOut();
   }
