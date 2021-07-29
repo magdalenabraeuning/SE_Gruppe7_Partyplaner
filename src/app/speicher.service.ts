@@ -34,7 +34,6 @@ export class AllPartyData {
   partymodus: boolean;
 }
 
-
 @Injectable({
   providedIn: 'root'
 })
