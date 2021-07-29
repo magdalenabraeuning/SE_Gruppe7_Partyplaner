@@ -19,15 +19,18 @@ Präsentationen: : siehe dieses Repo "Dokumentation.zip"
 # Ausführung & Installation 
 
 In Visual Studio Code & mit Windows: 
-0. Node.js und NPM installieren 
-0. Terminal: npm install -g ionic
-0. Java 1.8 & Adroid sdk installieren (oder Android Studio installieren) 
-0. Umgebungsvariablen JAVA_HOME & ANDROID_HOME setzen 
+Vor dem Start: 
+ - Node.js und NPM installieren 
+ - Terminal: npm install -g ionic
+ - Java 1.8 & Adroid sdk installieren (oder Android Studio installieren) 
+ - Umgebungsvariablen JAVA_HOME & ANDROID_HOME setzen 
+ 
 1. Repository clonen (git clone)
 2. Terminal: npm install 
 3. Terminal: ionic serve 
 4. falls 3 nicht funktioniert (Fehlermeldung angular devkit):
     npm install --save-dev @angular-devkit/build-angular
+    Wiederhole Schritt 3
 5. Enjoy partyplanning
 
 APK ist unter folgenden Pfad zu finden: /SE_Gruppe7_Partyplaner/app-debug.apk
