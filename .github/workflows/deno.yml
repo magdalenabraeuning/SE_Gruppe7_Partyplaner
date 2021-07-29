@@ -6,9 +6,6 @@
 # This workflow will install Deno and run tests across stable and canary builds on Windows, Ubuntu and macOS.
 # For more information see: https://github.com/denoland/setup-deno
 
-#Magdas Kommentar
-#vielleicht gehts ja jetzt gz lena
-
 name: Deno
 
 on:
@@ -46,28 +43,22 @@ jobs:
       - name: Install app dependencies
         run: npm install
       - name: Use coturiv/setup-ionic
-        # hat nichts gebracht aber hatte funktioniert also drin lassen ;)
         uses: coturiv/setup-ionic@v1
         with:
           cordova-version: 8
-     # durch veränderte Ordnerstuktur nicht mehr benötigt ?????? 
-      #- name: Ionic init
-       # run: ionic init SE_Gruppe7_Partyplaner --type=angular
+      - name: Ionic init
+        run: ionic init SE_Gruppe7_Partyplaner --type=angular
       - name: Add Android platform
         run: ionic cordova platform add android@latest
       #- name: Build Android APK
       #  run: ionic cordova build android --warning-mode=all
 
-      #- name: Build Android Release APK
-       # run: ionic cordova build android --release --warning-mode=all
-        # --prod : raus genommen um fehler zu beheben:
-        # Error: src/app/app.module.ts:55:49 - error TS2339: Property 'firebase' does not exist on type '{ production: boolean; }'.
-        # AngularFireModule.initializeApp(environment.firebase),
+      - name: Build Android APK
+       run: ionic cordova build android --warning-mode=all
       
-      # Braucht man vielleicht nicht? Schauen ob test trotzdem läuft
-      #- name: Generate the Android App Bundle
-      #  working-directory: ./platforms/android/
-      #  run: ./gradlew bundle
+      - name: Generate the Android App Bundle
+       working-directory: ./platforms/android/
+       run: ./gradlew bundle
 
   #----------------------------------------------------
   test:
@@ -89,21 +80,19 @@ jobs:
         with:
           deno-version: ${{ matrix.deno }} # tests across multiple Deno versions
 
-      # Uncomment this step to verify the use of 'deno fmt' on each commit.
-      # - name: Verify formatting
-      #   run: deno fmt --check
+      Uncomment this step to verify the use of 'deno fmt' on each commit.
+      - name: Verify formatting
+        run: deno fmt --check
 
-      # - name: Run linter
-      #   run: deno lint
+      - name: Run linter
+        run: deno lint
 
-    # Geht beides noch nicht 
+      - name: Cache dependencies
+      # run: deno cache DENO_DIR
+        run: deno cache deps.ts
 
-      # - name: Cache dependencies
-      # # run: deno cache DENO_DIR
-      #   run: deno cache deps.ts
-
-      # - name: Run tests
-      #   run: deno test -A --unstable
+      - name: Run tests
+        run: deno test -A --unstable
 
   #----------------------------------------------------
 
@@ -141,11 +130,7 @@ jobs:
           build: npm run build
           start: npm start
 
-    # - name: "party-tests"
-    #     uses: cypress-io/github-action@v2
-    #     working-directory: /cypress/integration
-    #     run: info_page_spec.js
-
-          #login 
-          #info 
-          #logout 
+    - name: "party-tests"
+        uses: cypress-io/github-action@v2
+        working-directory: /cypress/integration
+        run: info_page_spec.js
