@@ -5,56 +5,57 @@ import { Subject } from 'rxjs';
 import { take } from 'rxjs/operators';
 import firebase from 'firebase/app';
 
-
+//Interface, welches zum Speichern der Party-IDs eines Users verwendet wird
 export interface PartyForUser {
   Partys: [];
 }
 
+//Klasse, welche alle Eigenschaften einer Party definiert
 export class AllPartyData {
 
   constructor(public ausgabe) {
     this.AusgabeArray = ausgabe;
   }
+
   title: string;
   description: string;
   address: string;
   date: string;
   time: string;
-
   AusgabeArray: [];
   Essen: [];
   Trinken: [];
   Sonstiges: [];
   Teilnehmer: [];
   Cocktails: [];
-
   isDone: boolean;
   createdAt: number;
   id: string;
   partymodus: boolean;
-
 }
 
 
 @Injectable({
   providedIn: 'root'
 })
+
+//Zentraler Service, welcher die Datenbankaufrufe verwaltet
 export class SpeicherService {
 
+  //Variablen
   partyArrObsrv: Subject<any> = new Subject<any>();
   partyArr: any[];
   partyData: any = [];
   allIDs: any[];
   userIDArrObsrv: Subject<any> = new Subject<any>();
-  //allEMails: any[];
 
-
+  //Konstruktor zum Initialisieren der benötigten Services
   constructor(
     public afAuth: AngularFireAuth,
     public afFirestore: AngularFirestore
   ) { }
 
-
+  //Methode zum Abrufen aller Party-Daten aus dem Speicher
   async loadAllData(): Promise<any[]> {
     this.partyData = [];
     let userID = "0";
@@ -70,37 +71,40 @@ export class SpeicherService {
           }
         });
       } catch (e) {
-        console.log("Fehler UID SpeicherService: " + e);
+        console.log("Fehler UserID SpeicherService: " + e);
       }
     });
     return this.partyData;
-
-
   }
 
-
-  getPartys(id) {
-    return this.afFirestore.collection("User").doc<PartyForUser>(id).valueChanges();
+  //Rückgabe des Pfades zur Stelle im Speicher, an der die Party-IDs des Users "userID" hinterlegt sind
+  getPartys(userID) {
+    return this.afFirestore.collection("User").doc<PartyForUser>(userID).valueChanges();
   }
-  async getDocuments(id) {
 
-    this.getPartys(id).subscribe(res => {
+  //Alle Party-IDs des Users "userID" werden aus dem Speicher gelesen
+  async getDocuments(userID) {
+    this.getPartys(userID).subscribe(res => {
       this.partyArr = res.Partys;
       this.partyArrObsrv.next(res.Partys);
     });
   }
 
-  getPartyData(id) {
-    return this.afFirestore.collection("Partys").doc<AllPartyData>(id).valueChanges();
+  //Rückgabe des Pfades zur Stelle im Speicher, an der die Party-Daten der Party "partyID" hinterlegt sind
+  getPartyData(partyID) {
+    return this.afFirestore.collection("Partys").doc<AllPartyData>(partyID).valueChanges();
   }
-  getPartyDocuments(id, i) {
-    this.getPartyData(id).subscribe(res => {
+
+  //Alle Party-Daten der Party "partyID" werden aus dem Speicher gelesen
+  getPartyDocuments(partyID, i) {
+    this.getPartyData(partyID).subscribe(res => {
       this.partyData[i] = { title: res.title, description: res.description, address: res.address, date: res.date, time: res.time, createdAt: res.createdAt, isDone: res.isDone, id: res.id, partymodus: res.partymodus };
     })
   }
 
-
+  //Die neue Party "res" wird gespeichert
   async addParty(res) {
+    //die UserID des angemeldeten Users wird abgefragt
     try {
       this.afAuth.currentUser.then((user) => {
         let userID = "0";
@@ -111,27 +115,27 @@ export class SpeicherService {
           return;
         }
 
+        //Die Party wird in der Collection "Partys" gespeichert
         this.afFirestore.collection("Partys").add({
-
           title: res.title,
           description: res.description,
           address: res.address,
           date: res.date,
           time: res.time,
-
           Teilnehmer: [],
-
           createdAt: Date.now(),
           isDone: false,
           partymodus: false
-
         }).then((r) => {
+
+          //Die automatisch generierte Party-ID wird zusätzlich zur Party gespeichert (kann sonst nicht abgefragt werden)
           this.afFirestore.collection("Partys").doc(r.id).update({
             id: r.id
           }).then(() => {
             this.getAllUserData().then(() => {
               this.userIDArrObsrv.pipe(take(1)).subscribe(() => {
 
+                //Es wird geprüft ob der angemeldete User bereits in der User-Collection hinterlegt ist
                 let userVorhanden = false;
                 for (let i = 0; i < this.allIDs.length; i++) {
                   if (this.pruefeUserVorhanden(this.allIDs[i].id, userID)) {
@@ -139,13 +143,16 @@ export class SpeicherService {
                   }
                 }
 
+                //Wenn der User bereits hinterlegt ist (er bereits Partys erstellt hat), wird die Liste, in welcher alle Party-IDs 
+                //der Partys des Users gespeichert sind, um die neue Party erweitert 
                 if (userVorhanden) {
-                  console.log("USER SCHON VORHANDEN")
+                  console.log("User vorhanden")
                   this.afFirestore.collection("User").doc(userID).update({
                     Partys: firebase.firestore.FieldValue.arrayUnion(r.id)
                   });
                 } else {
-                  console.log("USER NICHT VORHANDEN")
+                  //Wenn der User noch keine Party erstellt hat, wird ein neues Array angelegt, in welchem die neue Party-ID gespeichert wird
+                  console.log("User nicht vorhanden")
                   this.afFirestore.collection("User").doc(userID).set({
                     Partys: firebase.firestore.FieldValue.arrayUnion(r.id)
                   })
@@ -158,18 +165,17 @@ export class SpeicherService {
       });
 
     } catch (e) {
-      console.log("Fehler beim Laden (SpeicherService): " + e);
+      console.log("Fehler beim Speichern der Party (SpeicherService): " + e);
     }
-
   }
 
-
-
+  //Rückgabe des Pfades zur Stelle im Speicher, an der alle User (die bereits Partys erstellt haben) gespeichert sind
   getUsers() {
     return this.afFirestore.collection('User').snapshotChanges();
   }
-  async getAllUserData() {
 
+  //Alle User-IDs der User, welche bereits Partys erstellt haben, werden ausgelesen
+  async getAllUserData() {
     await this.getUsers().subscribe(res => {
       this.allIDs = res.map(e => {
         return {
@@ -180,6 +186,7 @@ export class SpeicherService {
     })
   }
 
+  //Es werden zwei User-IDs auf Übereinstimmung geprüft
   pruefeUserVorhanden(pruefeID, userID) {
     let userVorhanden = false;
     if (pruefeID == userID) {
@@ -188,25 +195,24 @@ export class SpeicherService {
     return userVorhanden;
   }
 
+  //Eine Party mit der ID "id" wird gelöscht
   async delete(id): Promise<any> {
-
     this.afAuth.currentUser.then((x) => {
       let userID = x.uid;
-
       this.afFirestore.collection("User").doc(userID).update({
         Partys: firebase.firestore.FieldValue.arrayRemove(id)
       });
-      //this.afFirestore.collection("Partys").doc(id).delete();
     });
   }
 
-
+  //Der Status (in Planung/Planung abgeschlossen) der Party "id" wird getauscht
   updateStatus(id, status) {
     this.afFirestore.collection("Partys").doc(id).update({
       isDone: !status
     });
   }
 
+  //Die Daten der Party "id" werden aktualisiert
   updateParty(res, id) {
     this.afFirestore.collection("Partys").doc(id).update({
       title: res.title,
@@ -217,24 +223,7 @@ export class SpeicherService {
     });
   }
 
-  /*
-    async getTeilnehmer(partyID):Promise<AllPartyData[]> {
-      const teilnehmerPromise = new Promise<AllPartyData[]>((resolveCallback, rejectCallback) => {
-        const ergebnisArray: AllPartyData[]=[];
-        this.getPartyData(partyID).forEach((party)=> {
-          console.log("Teilnehmer: "+party.Teilnehmer);
-          let partyTeilnehmer = new AllPartyData(party.Teilnehmer);
-          ergebnisArray.push(partyTeilnehmer);
-        }).then(()=>{
-          resolveCallback(ergebnisArray);
-        });
-      });
-  
-       //console.log("Teilnehmer: "+(await teilnehmerPromise));
-      return teilnehmerPromise;
-    }*/
-
-
+  //Alle Teilnehmer der Party "partyID" werden ausgelesen
   async getTeilnehmer(partyID): Promise<AllPartyData[]> {
     const ergebnisArray: AllPartyData[] = [];
     this.getPartyData(partyID).forEach(async (party) => {
@@ -244,49 +233,35 @@ export class SpeicherService {
     return ergebnisArray;
   }
 
-  addTeilnehmer(partyID, userMail) {
-
+  //Ein neuer Teilnehmer "user" wird zur Party "partyID" hinzugefügt
+  addTeilnehmer(partyID, user) {
     this.afFirestore.collection("Partys").doc(partyID).update({
-      Teilnehmer: firebase.firestore.FieldValue.arrayUnion(userMail)
-    });
-  }
-/*
-  getAllEmails() {
-    let allEMails: any[];
-    this.getUsers().subscribe(res => {
-
-      console.log("speicherService UserIDs alle" + res);
-
-      allEMails = res.map(e => {
-        return {
-          id: e.payload.doc.id
-        };
-      });
-      //this.userIDArrObsrv.next(res);
-      console.log("Eine UserID" + allEMails[0].id);
-
-    })
-    return allEMails;
-  }*/
-
-  removeTeilnehmer(partyID, userMail) {
-    this.afFirestore.collection("Partys").doc(partyID).update({
-      Teilnehmer: firebase.firestore.FieldValue.arrayRemove(userMail)
+      Teilnehmer: firebase.firestore.FieldValue.arrayUnion(user)
     });
   }
 
+  //Der Teilnehmer "user" der Party "partyID" wird gelöscht
+  removeTeilnehmer(partyID, user) {
+    this.afFirestore.collection("Partys").doc(partyID).update({
+      Teilnehmer: firebase.firestore.FieldValue.arrayRemove(user)
+    });
+  }
+
+  //Das Item "essenArray" wird der Liste "Essen" der Party "partyID" hinzugefügt
   addEssen(partyID, essenArray) {
     this.afFirestore.collection("Partys").doc(partyID).update({
       Essen: firebase.firestore.FieldValue.arrayUnion(essenArray)
     });
   }
 
+  //Das Item "essenArray" wird aus der Liste "Essen" der Party "partyID" gelöscht
   removeEssen(partyID, essenArray) {
     this.afFirestore.collection("Partys").doc(partyID).update({
       Essen: firebase.firestore.FieldValue.arrayRemove(essenArray)
     });
   }
 
+  //Alle Einträge der Liste "Essen" der Party "partyID" werden zurückgegeben
   async getEssen(partyID): Promise<AllPartyData[]> {
     const ergebnisArray: AllPartyData[] = [];
     this.getPartyData(partyID).forEach(async (party) => {
@@ -296,18 +271,21 @@ export class SpeicherService {
     return ergebnisArray;
   }
 
+  //Das Item "trinkenArray" wird der Liste "Trinken" der Party "partyID" hinzugefügt
   addTrinken(partyID, trinkenArray) {
     this.afFirestore.collection("Partys").doc(partyID).update({
       Trinken: firebase.firestore.FieldValue.arrayUnion(trinkenArray)
     });
   }
 
+  //Das Item "trinkenArray" wird aus der Liste "Trinken" der Party "partyID" gelöscht
   removeTrinken(partyID, trinkenArray) {
     this.afFirestore.collection("Partys").doc(partyID).update({
       Trinken: firebase.firestore.FieldValue.arrayRemove(trinkenArray)
     });
   }
 
+  //Alle Einträge der Liste "Trinken" der Party "partyID" werden zurückgegeben
   async getTrinken(partyID): Promise<AllPartyData[]> {
     const ergebnisArray: AllPartyData[] = [];
     this.getPartyData(partyID).forEach(async (party) => {
@@ -317,18 +295,21 @@ export class SpeicherService {
     return ergebnisArray;
   }
 
+  //Das Item "sonstigesArray" wird der Liste "Sonstiges" der Party "partyID" hinzugefügt
   addSonstiges(partyID, sonstigesArray) {
     this.afFirestore.collection("Partys").doc(partyID).update({
       Sonstiges: firebase.firestore.FieldValue.arrayUnion(sonstigesArray)
     });
   }
 
+  //Das Item "sonstigesArray" wird aus der Liste "Sonstiges" der Party "partyID" gelöscht
   removeSonstiges(partyID, sonstigesArray) {
     this.afFirestore.collection("Partys").doc(partyID).update({
       Sonstiges: firebase.firestore.FieldValue.arrayRemove(sonstigesArray)
     });
   }
 
+  //Alle Einträge der Liste "Sonstiges" der Party "partyID" werden zurückgegeben
   async getSonstiges(partyID): Promise<AllPartyData[]> {
     const ergebnisArray: AllPartyData[] = [];
     this.getPartyData(partyID).forEach(async (party) => {
@@ -338,20 +319,7 @@ export class SpeicherService {
     return ergebnisArray;
   }
 
-  /*
-  getUserID() {
-    let userID;
-    this.afAuth.currentUser.then((user) => {
-      try {
-        userID = user.uid;
-      } catch (e) {
-        console.log(e);
-      }
-    });
-    return userID;
-  }*/
-
-
+  //Ein neuer Cocktail wird mit den zugehörigen Informationen zur Party "partyID" hinzugefügt
   addCocktail(partyID,
               idDrink,
               strDrinkThumb,
@@ -427,12 +395,14 @@ export class SpeicherService {
     });
   }
 
+  //Der Cocktail "cocktailID" wird von der Party "partyID" gelöscht
   removeCocktail(partyID, cocktailID) {
     this.afFirestore.collection("Partys").doc(partyID).update({
       Cocktails: firebase.firestore.FieldValue.arrayRemove(cocktailID)
     });
   }
 
+  //Alle gespeicherten Cocktails der Party "partyID" werden zurückgegeben
   async getCocktails(partyID): Promise<AllPartyData[]> {
     const ergebnisArray: AllPartyData[] = [];
     this.getPartyData(partyID).forEach(async (party) => {
@@ -442,17 +412,16 @@ export class SpeicherService {
     return ergebnisArray;
   }
 
+  //Der aktuelle Status des Partymodus (aktiviert/deaktiviert) der Party "partyID" wird zurückgegeben
   async getPartymodusStatus(partyID){
     let partymodusStatus:Boolean;
     this.getPartyData(partyID).forEach((party) => {
-      console.log("Speicher 1:"+party.partymodus)
       partymodusStatus = party.partymodus;
     });
-    
-    console.log("Speicher Modus:"+partymodusStatus)
     return partymodusStatus;
   }
 
+  //Der Status des Partymodus (aktiviert/deaktiviert) der Party "partyID" wird umgekehrt
   async partymodusStarten(partyID, status) {
     this.afFirestore.collection("Partys").doc(partyID).update({
       partymodus: !status

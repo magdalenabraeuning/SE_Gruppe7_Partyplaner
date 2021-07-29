@@ -14,6 +14,7 @@ import { ToastService } from '../toast.service';
 })
 export class PartysPage implements OnInit {
 
+  //Variablen
   tasks: any = [];
   userProfileCollection;
   partyArr: any[];
@@ -22,6 +23,7 @@ export class PartysPage implements OnInit {
   partyArrObsrv: Subject<any> = new Subject<any>();
   myEventList: any;
 
+  //Konstruktor zum Initialisieren der benötigten Services
   constructor(
     public afAuth: AngularFireAuth,
     public afFirestore: AngularFirestore,
@@ -32,6 +34,7 @@ export class PartysPage implements OnInit {
     private toastService: ToastService
   ) { }
 
+  //User wird aus der App ausgeloggt und auf die "Home"-Page geleitet 
   signOut() {
     this.afAuth.signOut().then(() => {
       let navigationTarget = `/home`;
@@ -39,7 +42,7 @@ export class PartysPage implements OnInit {
     });
   }
 
-
+  //Eine neue Party wird erstellt und gespeichert
   async addParty(): Promise<any> {
     this.alertCtrl.create({
       message: "Party erstellen",
@@ -58,7 +61,6 @@ export class PartysPage implements OnInit {
         {
           text: 'Add',
           handler: async (res) => {
-            console.log(res);
             await this.speicherService.addParty(res).then(() => {
               setTimeout(() => this.fetch(), 1000);
               setTimeout(() => this.fetch(), 1000);
@@ -75,6 +77,7 @@ export class PartysPage implements OnInit {
     }).then(a => { a.present() });
   }
 
+  //Beim Initialisieren der Page wird ein Ladebalken angezeigt und alle Partydaten abgerufen
   ngOnInit() {
     this.presentLoading();
     try {
@@ -84,10 +87,12 @@ export class PartysPage implements OnInit {
     }
   }
 
+  //Beim Aufrufen der Page werden alle Partydaten abgerufen bzw. erneuert
   ionViewDidEnter() {
     this.fetch();
   }
 
+  //Prüfe ob bereits Partys für den angemeldeten User angelegt wurden (ob der User in der Datenbank vorhanden ist)
   pruefeUserVorhanden(userID) {
     let userVorhanden = false;
     for (let j = 0; j < this.allIDs.length; j++) {
@@ -95,10 +100,10 @@ export class PartysPage implements OnInit {
         userVorhanden = true;
       }
     }
-    console.log("DAS IST MEIN USER?: " + userVorhanden)
     return userVorhanden;
   }
 
+  //Die Partydaten werden vom SpeicherService abgerufen
   async fetch() {
     this.partyData = [];
     try {
@@ -108,10 +113,12 @@ export class PartysPage implements OnInit {
     }
   }
 
+  //Der Status der Party "id" (In Planung/Planung abgeschlossen) wird geändert
   updateButton(id, status) {
     this.speicherService.updateStatus(id, status);
   }
 
+  //Die Daten der Party "id" werden bearbeitet
   bearbeitenButton(id, oldTitle, oldDescription, oldAddress, oldDate, oldTime) {
     let date: Date = oldDate;
     this.alertCtrl.create({
@@ -133,7 +140,6 @@ export class PartysPage implements OnInit {
         {
           text: 'Speichern',
           handler: async (res) => {
-            console.log(res);
             await this.speicherService.updateParty(res, id);
           }
         }, {
@@ -143,11 +149,9 @@ export class PartysPage implements OnInit {
     }).then(a => { a.present() });
   }
 
-
+  //Party mit der ID "id" wird gelöscht (nach dem Bestätigen einer Sicherheitsfrage)
   async deleteButton(id) {
-
     const sicherheitsfrage = `Willst du diese Party wirklich löschen?`;
-
     const abbrechenButton = {
       text: "Abbrechen",
       role: "Cancel",
@@ -155,7 +159,6 @@ export class PartysPage implements OnInit {
         this.toastService.presentToast("Löschen wurde abgebrochen.");
       }
     }
-
     const jaButton = {
       text: "Weiter",
       handler: async () => {
@@ -165,7 +168,6 @@ export class PartysPage implements OnInit {
         this.toastService.presentToast("Party wurde gelöscht.");
       }
     }
-
     const meinAlert = await this.alertCtrl.create({
       cssClass: 'dialoge',
       header: "Sicherheitsfrage",
@@ -176,24 +178,25 @@ export class PartysPage implements OnInit {
     await meinAlert.present();
   }
 
+  //Navigation zur Page "Info". Es werden die Daten der Party "party" übergeben
   openParty(party) {
     let navigationTarget =
       `/tabbar/info?title=${party.title}&description=${party.description}&address=${party.address}&date=${party.date}&time=${party.time}&id=${party.id}`;
     this.navCtrl.navigateForward(navigationTarget);
   }
 
-
+  //Der Ladebalken wird 4 Sekunden angezeigt (während Daten geladen werden)
   async presentLoading() {
     const loading = await this.loadingController.create({
-      cssClass: 'my-custom-class',
       message: 'Please wait...',
       duration: 4000
     });
     await loading.present();
     await loading.onDidDismiss();
-    console.log('Loading dismissed!');
+    console.log('Loading dismissed');
   }
 
+  //Seite wird neu geladen (Pull-to-Refresh Element)
   doRefresh(event) {
     this.fetch();
     setTimeout(() => {

@@ -12,17 +12,10 @@ const routes: Routes = [
     pathMatch: 'full'
   },
   {
-    path: 'terms',
-    loadChildren: () => import('./terms/terms.module').then( m => m.TermsPageModule)
-  },
-  {
-    path: 'privacy',
-    loadChildren: () => import('./privacy/privacy.module').then( m => m.PrivacyPageModule)
-  },
-  {
     path: 'tabbar',
     loadChildren: () => import('./tabbar/tabbar.module').then( m => m.TabbarPageModule)
-  },  {
+  },
+  {
     path: 'partys',
     loadChildren: () => import('./partys/partys.module').then( m => m.PartysPageModule)
   },
