@@ -19,6 +19,7 @@ Präsentationen: : siehe dieses Repo "Dokumentation.zip"
 # Ausführung & Installation 
 
 In Visual Studio Code & mit Windows: 
+
 Vor dem Start: 
  - Node.js und NPM installieren 
  - Terminal: npm install -g ionic
